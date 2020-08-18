@@ -1,0 +1,5 @@
+tx = ${transformer:"ECB_FX"}
+xml=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+models = tx.run(xml)
+
+print json(models)

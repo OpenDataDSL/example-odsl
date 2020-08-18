@@ -1,0 +1,9 @@
+colin = object as Person
+   first = "Colin"
+   last = "Hartley"
+   dob = "1965-03-10" 
+end
+
+print json(colin)
+
+save ${object:colin}

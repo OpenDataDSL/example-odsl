@@ -1,0 +1,26 @@
+#PricingData = type
+    category as Scalar()
+    product as Scalar()
+    provider as Scalar()
+end
+
+save ${type:#PricingData}
+
+#Agriculture = type extends #PricingData
+    model as Scalar()
+    location as Scalar()
+    class as Scalar()
+    description as Scalar() notfilter
+end
+
+save ${type:#Agriculture}
+
+#ForeignExchange = type extends #PricingData
+    model as Scalar()
+    base as Scalar()
+    currency as Scalar()
+    description as Scalar() notfilter
+end
+
+save ${type:#ForeignExchange}
+

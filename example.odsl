@@ -1,0 +1,86 @@
+arr1=[1,2,3,4,5]
+
+oa = Object()
+oa.arr = [0]
+ob=Object()
+ob.arr = [1]
+
+
+o=Object()
+o.name="Hello"
+o.address=Object()
+o.address.city="London"
+o.address.county="Essex"
+o.data=[oa,ob]
+
+print o.data[0].arr[0]
+
+a=11
+print a
+a=a+2
+print a
+collection = ["a", "b"]
+
+for item in collection
+    print item
+next
+print item
+
+x=3 
+for i = 1 to 10
+    result = test(1,i)
+    print result    
+    x = result
+next
+
+cal=BusinessCalendar()
+
+d=Date()
+print d.dow
+print d.monthName
+print "Is today a holiday? : " + d.isHoliday(cal)
+hol = d.isHoliday(cal)
+
+//assertEquals(false, hol)
+
+x = test(1,2)
+y = test3(1,2,3)
+
+if x == 1
+    qexit = 1
+elseif x == 2
+    qexit = 2
+elseif x == 3
+    qexit = 3
+else
+    qexit = 4
+end
+
+
+spot=TimeSeries("DAILY")
+
+phase "name" retries 0 delay 0 seconds
+    XML=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+    print XML.Sender.name.content
+    
+    
+end
+
+save ${memory:file/"c:/src/example-odsl/memory.json"}
+
+/* 
+Add 2 numbers together
+Params:
+* First Number
+* Second Number
+Result:
+Return the result of the sum
+*/
+function test(a,b)
+    test=a+b
+end
+
+// Add 3 numbers together
+function test3(a,b,c)
+    test3=a+b+c
+end

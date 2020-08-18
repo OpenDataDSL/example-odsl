@@ -1,0 +1,3 @@
+x = ${memory:file/"c:/src/example-odsl/memory.json"}
+
+print json(a)

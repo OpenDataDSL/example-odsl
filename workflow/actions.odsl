@@ -1,0 +1,41 @@
+xml_url = action in "extractors"
+    // Extract XML from a HTTP URL
+    in url as Scalar "The URL to read the XML from"
+    out xml as Object "The XML file converted to an ODSL Object"
+    
+    assertType(input.url, "Scalar")
+    output.xml=${xml:input.url}
+end
+save ${action:public/xml_url}
+
+transform_data = action in "transformers"
+    // Transform data using a transformer
+    in data as Object "The data to transform"
+    in tx as Transformer "The transformer to use"
+    out batch as Batch "The batch of created models"
+    
+    batch=PROCESS.createBatch()
+    models = input.tx.run(input.data)
+    batch.addAll(models)
+    output.batch = batch
+end
+save ${action:public/transform_data}
+
+
+// Run workflow
+wm = Object()
+phase "EXTRACT"
+    am = Object()
+    am.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+    xml_url.run(am, wm)    
+end
+
+phase "TRANSFORM"
+    am = Object()
+    am.data = wm.xml
+    am.tx = ${transformer:"ECB_FX"}
+    transform_data.run(am, wm)
+end
+
+print json(wm.batch)
+

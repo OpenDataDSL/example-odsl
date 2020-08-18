@@ -1,0 +1,7 @@
+job_input = Object()
+job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+job_input.tx = "ECB_FX"
+job_output = Object()
+
+${workflow:"public/xml_data_loader"}.run(job_input, job_output)
+print json(job_output.batch)

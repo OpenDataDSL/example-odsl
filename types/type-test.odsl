@@ -1,0 +1,59 @@
+#Mammal = type
+    gender as Scalar()
+    legs as Scalar(Number)
+end
+
+save ${type:#Mammal}
+
+Person = type extends #Mammal
+    first as Scalar()
+    last as Scalar()
+    dob as Date()
+    email as Scalar(String) matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+
+    name as first + " " + last
+    named as function(salutation)
+        named = salutation + " " + first + " " + last
+    end
+    age as (Date() - dob).years
+    age2 as function()
+        age2 = ${date:"now"} - dob
+    end
+end
+
+save ${type:Person}
+
+print json(Person)
+
+colin = object as Person
+    first = "Colin"
+    last = "Hartley"
+    dob = "1965-03-10T07:30:00"
+    email = "colin.hartley@walkfares.com"
+end
+
+name = colin.name
+print name
+assertEquals("Colin Hartley", name)
+
+d = Date()
+print d.previous()
+
+age = colin.age
+print age
+a2 = colin.age2()
+n = colin.named("Sir")
+print n
+print n + " is " + age + " years old"
+
+assertEquals("Sir Colin Hartley", n)
+
+print colin.age2.years
+print colin.age2.months
+print colin.age2.days
+print colin.age2.hours
+print colin.age2.minutes
+print colin.age2.seconds
+
+
+

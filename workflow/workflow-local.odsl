@@ -1,0 +1,67 @@
+ECB_FX = transform xml into #ForeignExchange as fx
+    create with Cube
+    unique id = "ECB_FX_EUR" + fx.currency
+    SPOT = TimeSeries(xml.Cube.Cube.time, "BUSINESS", fx.rate)
+    category = "Foreign Exchange"
+    product = "ECB_FX"
+    provider = "European Central Bank"
+
+    model = "EUR" + fx.currency
+    description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
+    base = "EUR"
+    currency = fx.currency
+end
+
+xml_url = action in "extractors"
+    // Extract XML from a HTTP URL
+    in url as Scalar "The URL to read the XML from"
+    out xml as Object "The XML file converted to an ODSL Object"
+    
+    assertType(input.url, "Scalar")
+    output.xml=${xml:input.url}
+end
+
+transform_data = action in "transformers"
+    // Transform data using a transformer
+    in data as Object "The data to transform"
+    in tx as Transformer "The transformer to use"
+    out batch as Batch "The batch of created models"
+    
+    batch=PROCESS.createBatch()
+    models = input.tx.run(input.data)
+    batch.addAll(models)
+    output.batch = batch
+end
+
+xml_data_loader = workflow in "data-loaders"
+    // Extract, transform and load data to the HUB
+    in url as Scalar
+    in tx as Transformer
+    out batch as Batch
+
+    phase "EXTRACT"
+        am = Object()
+        am.url = input.url
+        xml_url.run(am, output)    
+    end
+
+    phase "TRANSFORM"
+        am = Object()
+        am.data = output.xml
+        am.tx = input.tx
+        transform_data.run(am, output)
+    end
+
+    phase "SEND"
+        am = Object()
+        am.batch = output.batch
+        send output.batch
+    end
+end
+
+job_input = Object()
+job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+job_input.tx = ECB_FX
+job_output = Object()
+xml_data_loader.run(job_input, job_output)
+print json(job_output.batch)

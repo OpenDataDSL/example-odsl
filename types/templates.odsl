@@ -1,0 +1,76 @@
+CurveConfigInput=type
+    role as Scalar()
+    source as Scalar()
+    id as Scalar()
+    property as Scalar()
+    required as Scalar(Boolean)
+    data as object
+        name as Scalar()
+        desc as Scalar()
+    end
+end
+
+CurveConfig=type
+    name as Scalar()
+    expiryCalendar as Scalar()
+    inputs as List(CurveConfigInput)
+    buildScript as Script()
+end
+
+save ${type:CurveConfigInput}
+save ${type:CurveConfig}
+
+brent = object as CurveConfig
+    name = "ICE Brent Forward Curve"
+    expiryCalendar = "EOMBUSINESS"
+    buildScript = "Bootstrap"
+    inputs[0] = object as CurveConfigInput
+        role = "PRIMARY"
+        id = "ICE_EU/BRENT"
+        property = "CLOSE"
+        required = true
+    end
+end
+
+//save ${object:brent}
+
+custom = object as CurveConfig
+    name = "ICE Brent Forward Curve"
+    expiryCalendar = "EOMBUSINESS"
+    buildScript = "Bootstrap"
+    factor = 2
+    inputs[0] = object as CurveConfigInput
+        role = "PRIMARY"
+        id = "ICE_EU/BRENT"
+        property = "CLOSE"
+        required = true
+    end
+end
+
+//save ${object:custom}
+
+// Example property validation
+Person=type
+    name as Scalar()
+    email as Scalar() matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+end
+Company=type
+    name as Scalar()
+    people as List()
+end
+
+// Example referenced properties
+colin = object as Person
+    name = "Colin Hartley"
+    email = "colin.hartley@walkfares.com"
+end
+ram = object as Person
+    name = "Kodandaramu Rangaiah"
+    email = "krangaiah@walkfares.com"
+end
+walkfares = object as Company
+    name = "Walkfares Ltd"
+    people = [ref(colin), ref(ram)]
+end
+
+print json(walkfares)

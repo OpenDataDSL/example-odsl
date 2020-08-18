@@ -1,0 +1,43 @@
+xml_data_loader = workflow in "data-loaders"
+    // Extract the FX XML file from ECB, transform it and load it to the HUB
+    in url as Scalar
+    in tx as Scalar
+    out batch as Batch
+
+    phase "EXTRACT"
+        am = Object()
+        am.url = input.url
+        ${action:public/"xml_url"}.run(am, output)    
+    end
+
+    phase "TRANSFORM"
+        am = Object()
+        am.data = output.xml
+        am.tx = ${transformer:input.tx}
+        ${action:public/"transform_data"}.run(am, output)
+    end
+
+    phase "SEND"
+        send output.batch
+    end
+end
+save ${workflow:public/xml_data_loader}
+
+job_input = Object()
+job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+job_input.tx = "ECB_FX"
+job_output = Object()
+xml_data_loader.run(job_input, job_output)
+print json(job_output.batch)
+
+process = Process()
+process.service = "ETL"
+process.name = "ECB_FX_WORKFLOW"
+process.description = "ETL Process for ECB_FX"
+process.enabled = true
+process.runAs = "hartco1003@googlemail.com"
+process.workflow = "public/xml_data_loader"
+process.addSetting("url", "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
+process.addSetting("tx", "ECB_FX")
+process.cron = "0 17 ? * MON,TUE,WED,THU,FRI *"
+//save ${process:process}

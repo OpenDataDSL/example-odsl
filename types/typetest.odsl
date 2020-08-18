@@ -1,0 +1,38 @@
+// Declare a type Person
+Person = type
+    name as Scalar(String) 
+    email as Scalar(String) matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+end
+// Declare a type Company
+Company=type
+    name as Scalar(String)
+    people as List(Person)
+end
+
+
+// Create a variable of type Person
+colin = object as Person
+    name = "Colin Hartley"
+    email = "colin.hartley@walkfares.com"    
+end
+
+print json(colin)
+
+ram=object as Person
+    name = "Ram"
+    email = "krangaiah@walkfares.com"
+end
+
+print json(ram)
+
+walkfares = object as Company
+    name = "Walkfares Ltd"
+    people = [colin, ram]
+end
+
+print json(walkfares)
+
+fred=object as Person
+fred.name = "Fred"
+
+print json(fred)

@@ -1,0 +1,35 @@
+readinputs = action in "read-curve-inputs"
+    assertType(input.config, "#CurveConfig")
+    assertType(input.ondate, "CurveDate")
+    inputs = input.config.inputs
+    for i in inputs
+        i.data=${data:i.source/i.id/i.property,"ondate="+message.ondate}
+        if (i.required)
+            if (!i.data)
+                fail "Required data " + i.source + "/" + i.id + " is not available for " + message.ondate
+            end
+        end
+    next
+    output.data = inputs
+end
+
+save ${action:readinputs}
+
+buildcurve = action in "build-curve"
+    assertType(input.config, "#CurveConfig")
+    assertType(input.ondate, "CurveDate")
+    assertHasProperty(input.data, "inputs")
+    script = ${script:config.buildScript}
+    output.curve = script.run(input.config, input.ondate, input.data)    
+end
+
+save ${action:buildcurve}
+
+savecurve = action in "save-curve"
+    assertType(input.config, "#CurveConfig")
+    assertType(input.curve, "Curve")
+    save ${curve:curve}
+end
+
+save ${action:savecurve}
+

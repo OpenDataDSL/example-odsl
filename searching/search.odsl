@@ -1,0 +1,12 @@
+// fx = find ${public:#ForeignExchange}
+
+// for element in fx
+//     print element.description
+// next
+
+ccy = "USD"
+fx = find ${public:#ForeignExchange} where base="EUR" and currency=ccy and index=${date:"today"}
+
+for element in fx
+    print element.description
+next

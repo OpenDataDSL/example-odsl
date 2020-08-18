@@ -1,0 +1,27 @@
+phase "EXTRACT" retries 3 delay 5 minutes then reschedule 1 hour
+    XML=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+    index = XML.Cube.Cube.time
+end
+
+phase "TRANSFORM"
+    batch=PROCESS.createBatch()
+    ECB_FX = transform XML into #ForeignExchange as fx
+        create with Cube
+        unique id = "ECB_FX.EUR" + fx.currency
+        SPOT = TimeSeries(index, "BUSINESS", fx.rate)
+        category = "Foreign Exchange"
+        product = "ECB_FX"
+        provider = "European Central Bank"
+
+        model = "EUR" + fx.currency
+        description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
+        base = "EUR"
+        currency = fx.currency
+    end
+    batch.addAll(ECB_FX.run(XML))
+end
+
+phase "SEND"
+    print json(batch)
+    //send batch
+end

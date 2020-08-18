@@ -1,0 +1,3 @@
+c = ${object:public/"#PricingData/ECB_FX"}
+
+print json(c)

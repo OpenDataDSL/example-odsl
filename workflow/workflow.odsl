@@ -1,0 +1,18 @@
+// Job Configuration
+
+// Workflow Configuration
+wm = Object()
+phase "EXTRACT"
+    am = Object()
+    am.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+    ${action:public/"xml_url"}.run(am, wm)    
+end
+
+phase "TRANSFORM"
+    am = Object()
+    am.data = wm.xml
+    am.tx = ${transformer:"ECB_FX"}
+    ${action:public/"ecb_fx"}.run(am, wm)
+end
+
+print json(wm.batch)

@@ -6,7 +6,7 @@ xml_url = action in "extractors"
     assertType(input.url, "Scalar")
     output.xml=${xml:input.url}
 end
-save ${action:public/xml_url}
+save ${action:private/xml_url}
 
 transform_data = action in "transformers"
     // Transform data using a transformer
@@ -19,8 +19,16 @@ transform_data = action in "transformers"
     batch.addAll(models)
     output.batch = batch
 end
-save ${action:public/transform_data}
+save ${action:private/transform_data}
 
+evaluate_expression = action in "general"
+    // Evaluate an expression
+    in exp as Scalar
+    out val as Object
+
+    output.val = evaluate(exp)
+end
+save ${action:private/evaluate_expression}
 
 // Run workflow
 wm = Object()

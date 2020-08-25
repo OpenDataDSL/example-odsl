@@ -47,15 +47,15 @@ xml_data_loader = workflow in "data-loaders"
 
     phase "TRANSFORM"
         am = Object()
-        am.data = output.xml
+        am.data = output.xml_url.xml
         am.tx = input.tx
         transform_data.run(am, output)
     end
 
     phase "SEND"
         am = Object()
-        am.batch = output.batch
-        send output.batch
+        am.batch = output.transform_data.batch
+        send output.transform_data.batch
     end
 end
 
@@ -64,4 +64,4 @@ job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
 job_input.tx = ECB_FX
 job_output = Object()
 xml_data_loader.run(job_input, job_output)
-print json(job_output.batch)
+print json(job_output.xml_data_loader.transform_data.batch)

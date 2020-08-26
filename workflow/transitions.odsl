@@ -1,0 +1,77 @@
+ifthen = gateway in "general"
+    in exp as Scalar
+    exit "true", "false"    
+    result = evaluate(input.exp)
+    if result == true
+        return "true"
+    end
+    return "false"
+end
+
+print_stuff = action in "general"
+    in message as Scalar    
+    print input.message
+end
+
+test = workflow in "testing"
+    in test as Scalar
+    out result as Scalar
+    exit "ok", "failed"
+
+    WF_START
+        "ok" -> if_gateway
+    end
+    phase "TEST"
+
+        WF_GATEWAY if_gateway ai
+            "true" -> stopok
+            "false" -> printstuff
+            ai.exp = input.test
+            result = ifthen.run(ai, output)
+        end
+
+        WF_ACTION printstuff ai
+            "ok" -> stopfailed
+            ai.message = input.test
+            result = print_stuff.run(ai, output)
+        end
+    end
+
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+        return "failed"
+    end
+end
+
+test2 = workflow in "testing"
+    WF_START
+        "ok" -> testwf
+    end
+
+    WF_WORKFLOW testwf ai
+        "ok" -> stopok
+        ai.test = `"A" == "N"`
+        result = test.run(ai, output)
+    end
+ 
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+        return "failed"
+    end
+end
+
+// job_input = Object()
+// job_input.test = `"A" == "B"`
+// job_output = Object()
+// r = test.run(job_input, job_output)
+// print r
+
+job_input = Object()
+job_output = Object()
+r = test2.run(job_input, job_output)
+print r
+

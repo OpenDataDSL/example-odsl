@@ -4,24 +4,48 @@ xml_data_loader = workflow in "data-loaders"
     in tx as Scalar
     out batch as Batch
 
+    WF_START
+        "ok" -> getxml
+    end
+
     phase "EXTRACT"
-        am = Object()
-        am.url = input.url
-        ${action:private/"xml_url"}.run(am, output)    
+        WF_ACTION getxml ai
+            "ok" -> transformxml
+            "failed" -> stopfailed
+            ai.url = input.url
+            result = ${action:private/"xml_url"}.run(ai, output)    
+
+        end
     end
 
     phase "TRANSFORM"
-        am = Object()
-        am.data = output.xml_url.xml
-        am.tx = ${transformer:input.tx}
-        ${action:private/"transform_data"}.run(am, output)
+        WF_ACTION transformxml ai
+            "ok" -> sendbatch
+            "failed" -> stopfailed
+            ai.data = output.xml_url.xml
+            ai.tx = input.tx
+            result = ${action:private/"transform_data"}.run(ai, output)
+        end
     end
 
     phase "SEND"
-        send output.transform_data.batch
+        WF_ACTION sendbatch ai
+            "ok" -> stopok
+            "failed" -> stopfailed
+            ai.batch = output.transform_data.batch
+            result = ${action:private/"send_batch"}.run(ai, output)
+        end
     end
+
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+        return "failed"
+    end
+
 end
-//save ${workflow:public/xml_data_loader}
+save ${workflow:private/xml_data_loader}
 
 job_input = Object()
 job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"

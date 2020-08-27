@@ -16,9 +16,17 @@ xml_url = action in "extractors"
     // Extract XML from a HTTP URL
     in url as Scalar "The URL to read the XML from"
     out xml as Object "The XML file converted to an ODSL Object"
+    exit "ok", "failed"
     
     assertType(input.url, "Scalar")
+    on error ignore
     output.xml=${xml:input.url}
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end
 end
 
 transform_data = action in "transformers"
@@ -33,29 +41,55 @@ transform_data = action in "transformers"
     output.batch = batch
 end
 
+send_batch = action in "loaders"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    send input.batch
+end
+
 xml_data_loader = workflow in "data-loaders"
     // Extract, transform and load data to the HUB
     in url as Scalar
     in tx as Transformer
     out batch as Batch
 
+    WF_START
+        "ok" -> getxml
+    end
+
     phase "EXTRACT"
-        am = Object()
-        am.url = input.url
-        xml_url.run(am, output)    
+        WF_ACTION getxml ai
+            "ok" -> transformxml
+            "failed" -> stopfailed
+            ai.url = input.url
+            result = xml_url.run(ai, output)
+        end
     end
 
     phase "TRANSFORM"
-        am = Object()
-        am.data = output.xml_url.xml
-        am.tx = input.tx
-        transform_data.run(am, output)
+        WF_ACTION transformxml ai
+            "ok" -> sendbatch
+            "failed" -> stopfailed
+            ai.data = output.xml_url.xml
+            ai.tx = input.tx
+            result = transform_data.run(ai, output)
+        end
     end
 
     phase "SEND"
-        am = Object()
-        am.batch = output.transform_data.batch
-        send output.transform_data.batch
+        WF_ACTION sendbatch ai
+            "ok" -> stopok
+            "failed" -> stopfailed
+            ai.batch = output.transform_data.batch
+            result = send_batch.run(ai, output)
+        end
+    end
+
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+        return "failed"
     end
 end
 

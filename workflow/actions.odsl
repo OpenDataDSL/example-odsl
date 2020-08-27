@@ -2,9 +2,17 @@ xml_url = action in "extractors"
     // Extract XML from a HTTP URL
     in url as Scalar "The URL to read the XML from"
     out xml as Object "The XML file converted to an ODSL Object"
+    exit "ok", "failed"
     
     assertType(input.url, "Scalar")
+    on error ignore
     output.xml=${xml:input.url}
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end
 end
 save ${action:private/xml_url}
 
@@ -30,20 +38,12 @@ evaluate_expression = action in "general"
 end
 save ${action:private/evaluate_expression}
 
-// Run workflow
-wm = Object()
-phase "EXTRACT"
-    am = Object()
-    am.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-    xml_url.run(am, wm)    
+send_batch = action in "loaders"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    send input.batch
 end
+save ${action:private/send_batch}
 
-phase "TRANSFORM"
-    am = Object()
-    am.data = wm.xml
-    am.tx = ${transformer:"ECB_FX"}
-    transform_data.run(am, wm)
-end
 
-print json(wm.batch)
 

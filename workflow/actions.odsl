@@ -23,7 +23,8 @@ transform_data = action in "transformers"
     out batch as Batch "The batch of created models"
     
     batch=PROCESS.createBatch()
-    models = input.tx.run(input.data)
+    tx = ${transformer:"ECB_FX"}
+    models = tx.run(input.data)
     batch.addAll(models)
     output.batch = batch
 end

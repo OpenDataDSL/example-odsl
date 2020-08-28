@@ -52,7 +52,7 @@ job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
 job_input.tx = "ECB_FX"
 job_output = Object()
 xml_data_loader.run(job_input, job_output)
-print json(job_output.transform_data.batch)
+print json(job_output.xml_data_loader.transform_data.batch)
 
 process = Process()
 process.service = "ETL"

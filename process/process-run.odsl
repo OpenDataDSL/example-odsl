@@ -1,0 +1,3 @@
+process = ${process:ETL/"ECB_FX_WORKFLOW"}
+exec = process.run()
+print json(exec)

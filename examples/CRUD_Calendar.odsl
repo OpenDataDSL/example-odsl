@@ -1,0 +1,43 @@
+// Create Private
+HENGCRUD = HolidayCalendar()
+HENGCRUD.addRule("Every Saturday")
+HENGCRUD.addRule("Every Sunday")
+HENGCRUD.addRule("Good Friday")
+HENGCRUD.addRule("Easter Monday")
+HENGCRUD.addRule("First Monday in May named 'Early May'")
+HENGCRUD.addRule("Last Monday in May named 'Spring Bank Holiday'")
+HENGCRUD.addRule("Last Monday in August named 'Summer Bank Holiday'")
+HENGCRUD.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
+HENGCRUD.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
+save ${calendar:HENGCRUD}
+
+// Create Public
+#HENGCRUD = HolidayCalendar()
+#HENGCRUD.addRule("Every Saturday")
+#HENGCRUD.addRule("Every Sunday")
+#HENGCRUD.addRule("Good Friday")
+#HENGCRUD.addRule("Easter Monday")
+#HENGCRUD.addRule("First Monday in May named 'Early May'")
+#HENGCRUD.addRule("Last Monday in May named 'Spring Bank Holiday'")
+#HENGCRUD.addRule("Last Monday in August named 'Summer Bank Holiday'")
+#HENGCRUD.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
+#HENGCRUD.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
+save ${calendar:#HENGCRUD}
+
+// Read Private
+cal = ${calendar:"HENGCRUD"}
+// Read all private
+cals = find ${calendar:""}
+
+// Read Public
+pcal = ${calendar:"#HENGCRUD"}
+// Read all public
+pcals = find ${calendar:public/""}
+
+// Update
+cal.addRule("8th of may named 'VE Day' from 2020 to 2020")
+save ${calendar:cal}
+
+// Delete
+delete ${calendar:"HENGCRUD"}
+delete ${calendar:"#HENGCRUD"}

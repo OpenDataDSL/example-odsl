@@ -1,0 +1,10 @@
+#Agriculture = type extends #PricingData
+    // All agricultural pricing data
+    model as Scalar()
+    location as Scalar()
+    class as Scalar()
+    description as Scalar() notfilter
+end
+
+
+save ${type:#Agriculture}

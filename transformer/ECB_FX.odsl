@@ -23,5 +23,5 @@ end
 
 phase "SEND"
     print json(batch)
-    //send batch
+    send batch
 end

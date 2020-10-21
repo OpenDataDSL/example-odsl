@@ -1,0 +1,32 @@
+// Create a private action
+crud_send_batch = action in "loaders"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    out success as Boolean "True is this was successful"
+    exit "ok","failed"
+    send input.batch
+end
+save ${action:crud_send_batch}
+
+// Create a public action
+#crud_send_batch = action in "loaders"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    send input.batch
+end
+save ${action:#crud_send_batch}
+
+// Read a private action
+pr = ${action:"crud_send_batch"}
+// Read a public action
+pu = ${action:"#crud_send_batch"}
+
+// List all private actions
+prl = find ${action:""}
+// List all public actions
+pul = find ${action:public/""}
+
+// Delete the private action
+delete ${action:"crud_send_batch"}
+// Delete the public action
+delete ${action:"#crud_send_batch"}

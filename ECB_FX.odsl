@@ -1,5 +1,5 @@
-// Create the transformer
 ECB_FX = transform xml into #ForeignExchange as fx
+    // Transform ECB daily FX rates to type #ForeignCurrency
     create with Cube
     unique id = "ECB_FX_EUR" + fx.currency
     SPOT = TimeSeries(xml.Cube.Cube.time, "BUSINESS", fx.rate)
@@ -12,12 +12,6 @@ ECB_FX = transform xml into #ForeignExchange as fx
     base = "EUR"
     currency = fx.currency
 end
-save ${transformer:ECB_FX}
 
-// Test
-xml=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
-models = ECB_FX.run(xml)
-print json(models)
-for model in models
-    save ${object:public/model}
-next
+
+save ${transformer:private/ECB_FX}

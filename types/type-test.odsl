@@ -1,4 +1,5 @@
 #Mammal = type
+    // A mammal
     gender as Scalar()
     legs as Scalar(Number)
 end
@@ -6,6 +7,7 @@ end
 save ${type:#Mammal}
 
 Person = type extends #Mammal
+    // A person
     first as Scalar()
     last as Scalar()
     dob as Date()

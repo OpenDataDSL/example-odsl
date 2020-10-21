@@ -1,0 +1,5 @@
+tx = find ${transformer:private/""}
+
+for element in tx
+    print element.id
+next

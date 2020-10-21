@@ -5,7 +5,9 @@
 // next
 
 ccy = "USD"
-fx = find ${public:#ForeignExchange} where base="EUR" and currency=ccy and index=${date:"today"}
+fx = find ${object:public/"#ForeignExchange"} where base="EUR" and currency=ccy 
+
+fx = find ${object:public/"#ForeignExchange"} where currency="USD"
 
 for element in fx
     print element.description

@@ -1,0 +1,153 @@
+// c = ${type:"Company"}
+// print json(c)
+
+// companies = find ${object:"Company"}
+// print companies
+// ABC = ${object:"Company/ABC"}
+// print ABC
+
+
+
+
+// Declare a type Company
+Company = type
+    name as String()
+end
+
+// Declare an address type
+Address = type
+    street as String() notfilter
+    area as String()
+    city as String()
+    county as String()
+    country as String()
+    postcode as String() notfilter
+end
+
+Person = type
+    // A person
+    first as String()
+    last as String()
+    name as first + " " + last
+    dob as Date()
+    age as (Date() - dob).years
+    email as String() matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+    address as Address()
+end
+
+// // Create a company
+ABC = object as Company
+    name = "ABC Ltd"
+end
+
+// Create a minimal address with a non-defined name and a TimeSeries property
+ABCNewcastle = object as Address
+    name = "Newcastle Address"
+    city = "Newcastle"
+    employees = TimeSeries("MONTHLY")
+end
+
+ABCNewcastle.employees.add("2020-10-01", 25)
+
+// Create an address
+ABCLondon = object as Address
+    street = "123 Abacus Street"
+    area = "Westminster"
+    city = "London"
+    county = "Greater London"
+    country = "England"
+    postcode = "SW1 1AB"
+    name = "London Address"
+end
+
+// delete ${type:"company"}
+// delete ${type:"address"}
+// delete ${type:"person"}
+
+
+// Save the types
+// save ${type:Company}
+// save ${type:Address}
+// save ${type:Person}
+
+// Save the objects
+// save ${object:ABC}
+// save ${object:ABCLondon}
+// save ${object:ABCNewcastle}
+
+
+
+// JaneDoe = object as Person
+//     first = "Jane"
+//     last = "Doe"
+//     dob = "1987-07-11"
+//     email = "janedoe@abc.com"
+//     address = object as Address
+//         city = "Newcastle"
+//     end
+// end
+
+JaneDoe = object as Person
+    first = "Jane"
+    last = "Doe"
+    dob = "1987-07-11"
+    email = "janedoe@abc.com"
+    address = ABCNewcastle
+end
+
+JohnDoe = object as Person
+    first = "John"
+    last = "Doe"
+    dob = "1985-10-19"
+    email = "johndoe@abc.com"
+end
+
+ABCNewcastle.country = "England"
+
+JaneDoe = object as Person
+    first = "Jane"
+    last = "Doe"
+    dob = "1987-07-11"
+    email = "janedoe@abc.com"
+    //address = ref(${object:"Address/ABCNewcastle"})
+end
+
+print JaneDoe
+print JaneDoe.address
+
+
+
+
+
+
+
+
+// // Save the types
+// save ${type:Company}
+// save ${type:Address}
+// save ${type:Person}
+
+// // Save the objects
+save ${object:ABC}
+save ${object:ABCLondon}
+save ${object:ABCNewcastle}
+save ${object:JohnDoe}
+save ${object:JaneDoe}
+
+
+abc = ${object:private/"Company/ABC"}
+
+
+
+// Naming conventions
+
+// Private type, private object
+jd = ${object:"Person/JohnDoe"}
+// Public type, public object
+jd = ${object:"#Person/#JohnDoe"}
+// Public type, private object
+jd = ${object:"#Person/JohnDoe"}
+
+
+
+// print json(abc)

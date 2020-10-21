@@ -1,0 +1,15 @@
+/**
+ Creates a TimeSeries aligned to the business calendar 
+ with a list of values starting on the 1st October 2020
+**/
+ts3 = TimeSeries("2020-10-01", "business", [12.5,12.6,12.7,12.8,12.9])
+
+// Print out the value for the 2nd October 2020
+print ts3["2020-10-02"]
+
+// The 3rd October 2020 is a Saturday, so there is no value 
+print ts3["2020-10-03"]
+
+// Print out the value for the first index
+print ts3[0]
+

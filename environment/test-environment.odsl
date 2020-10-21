@@ -1,0 +1,17 @@
+use test
+
+types = find ${type:private/"*"}
+
+print json(types)
+
+// Person = type
+//     // A person
+//     first as Scalar()
+//     last as Scalar()
+//     dob as Date()
+// end
+// save ${type:Person}
+
+// types = find ${type:private/"*"}
+
+// print json(types)

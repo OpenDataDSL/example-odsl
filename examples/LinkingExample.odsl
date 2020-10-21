@@ -1,0 +1,10 @@
+
+
+//link ${object:"Address/ABCNewcastle"} as address/residents of ${object:"Person/JaneDoe"} from 2018-07-10 to 2020-12-03
+//link ${object:"Address/ABCLondon"} as address/residents of ${object:"Person/JaneDoe"} from 2020-12-04
+jd = ${object:"Person/JaneDoe"}
+
+print jd.links.address[0]
+print jd.links.address[0].indexFrom
+print jd.links.address[0].relative.city
+print jd.links.address[1].relative.city

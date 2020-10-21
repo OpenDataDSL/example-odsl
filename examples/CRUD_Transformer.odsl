@@ -1,0 +1,45 @@
+// Private Transformer
+CRUD_TX = transform xml into #ForeignExchange as fx
+    // Transform ECB daily FX rates to type #ForeignCurrency
+    create with Cube
+    unique id = "ECB_FX_EUR" + fx.currency
+    SPOT = TimeSeries(xml.Cube.Cube.time, "BUSINESS", fx.rate)
+    category = "Foreign Exchange"
+    product = "ECB_FX"
+    provider = "European Central Bank"
+    model = "EUR" + fx.currency
+    description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
+    base = "EUR"
+    currency = fx.currency
+end
+
+save ${transformer:CRUD_TX}
+
+ctx = ${transformer:"CRUD_TX"}
+
+txs = find ${transformer:private/""}
+
+delete ${transformer:"CRUD_TX"}
+
+// Public Transformer
+#CRUD_TX = transform xml into #ForeignExchange as fx
+    // Transform ECB daily FX rates to type #ForeignCurrency
+    create with Cube
+    unique id = "ECB_FX_EUR" + fx.currency
+    SPOT = TimeSeries(xml.Cube.Cube.time, "BUSINESS", fx.rate)
+    category = "Foreign Exchange"
+    product = "ECB_FX"
+    provider = "European Central Bank"
+    model = "EUR" + fx.currency
+    description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
+    base = "EUR"
+    currency = fx.currency
+end
+
+save ${transformer:#CRUD_TX}
+
+pctx = ${transformer:"#CRUD_TX"}
+
+ptxs = find ${transformer:public/""}
+
+delete ${transformer:"#CRUD_TX"}

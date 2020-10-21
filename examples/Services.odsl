@@ -1,0 +1,35 @@
+actions = find ${action:public/""} where category = "extractors"
+
+for a in actions
+    print a.id
+next
+
+xls = ${action:public/"extract_xls"}
+
+print xls.description
+
+env = find ${environment:""}
+for e in env    
+    print json(e)
+next
+
+//test = ${environment:"test"}
+//test.department = "Operations"
+//save ${environment:test}
+
+
+ENG = HolidayCalendar()
+ENG.addRule("every Saturday")
+ENG.addRule("every Sunday")
+ENG.addRule("1st of January named 'New Years Day' on saturday shift 2 days and on sunday shift 1 day")
+ENG.addRule("Good Friday")
+ENG.addRule("Easter Monday")
+ENG.addRule("first monday in may named 'Early May' to 2019")
+ENG.addRule("8th of may named 'VE Day' from 2020 to 2020")
+ENG.addRule("first monday in may named 'Early May' from 2021")
+ENG.addRule("last monday in may named 'Spring Bank Holiday'")
+ENG.addRule("last monday in august named 'Summer Bank Holiday'")
+ENG.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
+ENG.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
+//ENG.id = "#ENG"
+//save ${calendar:ENG}

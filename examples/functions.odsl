@@ -1,0 +1,23 @@
+a = "Hello"
+//print typeOf(a)
+
+d = Date()
+//print properties(d)
+//print methods(d)
+
+//print variables()
+
+pa = properties(d)
+p = pa[name == "day"][0]
+print p.description
+
+obj = Object()
+obj.name = "ODSL"
+obj.weight = 264.5
+obj.start = Date("2020-10-08")
+obj.children = List()
+obj.children.addAll(["O","D","S","L"])
+obj.address = Object()
+obj.address.city = "London"
+print json(obj)
+print obj

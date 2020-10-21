@@ -45,24 +45,6 @@ xml_data_loader = workflow in "data-loaders"
     end
 
 end
-// save ${workflow:private/xml_data_loader}
 
-job_input = Object()
-job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-job_input.tx = "ECB_FX"
-job_output = Object()
-// xml_data_loader.run(job_input, job_output)
-// print json(job_output.xml_data_loader.transform_data.batch)
 
-process = Process()
-process.service = "ETL"
-process.name = "ECB_FX_WORKFLOW"
-process.description = "ETL Process for ECB_FX"
-process.enabled = true
-process.runAs = "hartco1003@googlemail.com"
-process.workflow = "public/xml_data_loader"
-process.input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-process.input.tx = "ECB_FX"
-process.cron = "0 17 ? * MON,TUE,WED,THU,FRI *"
-print json(process)
-save ${process:process}
+save ${workflow:private/"xml_data_loader"}

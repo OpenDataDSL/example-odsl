@@ -1,4 +1,5 @@
 #PricingData = type
+    // Base type for all pricing data
     category as Scalar()
     product as Scalar()
     provider as Scalar()
@@ -6,7 +7,18 @@ end
 
 save ${type:#PricingData}
 
+#Electricity = type extends #PricingData
+    // All electricity pricing data
+    model as Scalar()
+    location as Scalar()
+    class as Scalar()
+    description as Scalar() notfilter
+end
+
+save ${type:#Electricity}
+
 #Agriculture = type extends #PricingData
+    // All agricultural pricing data
     model as Scalar()
     location as Scalar()
     class as Scalar()
@@ -16,6 +28,7 @@ end
 save ${type:#Agriculture}
 
 #ForeignExchange = type extends #PricingData
+    // All foreign exchange (FX) data
     model as Scalar()
     base as Scalar()
     currency as Scalar()

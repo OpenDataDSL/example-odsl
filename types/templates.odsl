@@ -1,4 +1,5 @@
 CurveConfigInput=type
+    // A data input for a curve configuration
     role as Scalar()
     source as Scalar()
     id as Scalar()
@@ -11,6 +12,7 @@ CurveConfigInput=type
 end
 
 CurveConfig=type
+    // A curve configuration
     name as Scalar()
     expiryCalendar as Scalar()
     inputs as List(CurveConfigInput)
@@ -55,6 +57,7 @@ Person=type
     email as Scalar() matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
 end
 Company=type
+    // A company
     name as Scalar()
     people as List()
 end

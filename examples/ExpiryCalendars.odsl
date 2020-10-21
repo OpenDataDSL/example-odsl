@@ -1,0 +1,7 @@
+eombus = ExpiryCalendar(BusinessCalendar())
+eombus.addRule("go to the end of the previous month")
+save ${expiry:eombus}
+
+ondate = CurveDate(Date("2020-05-10"), eombus)
+expiry = ondate.getExpiry("2020M06")
+print expiry

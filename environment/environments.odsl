@@ -1,0 +1,6 @@
+test = Object();
+test.description = "My test environment"
+save ${environment:test}
+
+environments = find ${environment:""}
+print json(environments)

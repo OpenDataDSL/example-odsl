@@ -1,3 +1,20 @@
+xml_url = action in "extractors"
+    // Extract XML from a HTTP URL
+    in url as Scalar "The URL to read the XML from"
+    out xml as Object "The XML file converted to an ODSL Object"
+    exit "ok", "failed"
+    
+    assertType(input.url, "Scalar")
+    on error ignore
+    output.xml=${xml:input.url}
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end
+end
+
 ifthen = gateway in "general"
     in exp as Scalar
     exit "true", "false"    
@@ -21,13 +38,20 @@ test = workflow in "testing"
     WF_START
         "ok" -> if_gateway
     end
-    phase "TEST"
+    phase "TEST" retries 2 delay 1 minute
 
         WF_GATEWAY if_gateway ai
             "true" -> stopok
-            "false" -> printstuff
+            "false" -> getxml
             ai.exp = input.test
             result = ifthen.run(ai, output)
+        end
+
+        WF_ACTION getxml ai
+            "ok" -> printstuff
+            "failed" -> stopfailed
+            ai.url = ""
+            result = xml_url.run(ai, output)
         end
 
         WF_ACTION printstuff ai
@@ -45,6 +69,12 @@ test = workflow in "testing"
     end
 end
 
+job_input = Object()
+job_input.test = `1+2`
+job_output = Object()
+r = test.run(job_input, job_output)
+print r
+
 test2 = workflow in "testing"
     WF_START
         "ok" -> testwf
@@ -52,6 +82,7 @@ test2 = workflow in "testing"
 
     WF_WORKFLOW testwf ai
         "ok" -> stopok
+        "failed" -> stopfailed
         ai.test = `"A" == "N"`
         result = test.run(ai, output)
     end
@@ -64,11 +95,7 @@ test2 = workflow in "testing"
     end
 end
 
-// job_input = Object()
-// job_input.test = `"A" == "B"`
-// job_output = Object()
-// r = test.run(job_input, job_output)
-// print r
+
 
 job_input = Object()
 job_output = Object()

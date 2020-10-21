@@ -1,0 +1,55 @@
+d1 = Date("2020-06-08")
+d2 = ${date:"2020-06-09"}
+
+// Test for date subtraction
+dur1D = d2 - d1
+assertEquals("1D", dur1D)
+
+// Test for date and duration addition
+date10jun = d2 + dur1D
+assertEquals("2020-06-10T00:00:00", date10jun)
+
+// Test for date and scalar addition
+date11jun = d2 + 2
+assertEquals("2020-06-11T00:00:00", date11jun)
+
+// Test for date and scalar subtraction
+date1jun = d2 - 8
+assertEquals("2020-06-01T00:00:00", date1jun)
+
+// Test for date and dynamic duration addition
+datedur = d1 + 1Y10M6h
+assertEquals("2022-04-08T06:00:00", datedur)
+
+// Test for incrementing using a calendar
+date12jun = date11jun.next("business")
+assertEquals("2020-06-12T00:00:00", date12jun)
+date15jun = date12jun.next("business")
+assertEquals("2020-06-15T00:00:00", date15jun)
+date13jun = date12jun.next()
+assertEquals("2020-06-13T00:00:00", date13jun)
+
+// Test for decrementing
+date8jun = d2.previous("business")
+assertEquals("2020-06-08T00:00:00", date8jun)
+date5jun = date8jun.previous("business")
+assertEquals("2020-06-05T00:00:00", date5jun)
+date7jun = date8jun.previous()
+assertEquals("2020-06-07T00:00:00", date7jun)
+
+// Test isHoliday
+nothol = date5jun.isHoliday("business")
+assertFalse(nothol)
+ishol = date7jun.isHoliday("business")
+assertTrue(ishol)
+
+// Test properties
+assertEquals("MONDAY", d1.dow)
+assertEquals(8, d1.day)
+assertEquals("JUNE", d1.monthName)
+assertEquals(6, d1.month)
+assertEquals(2020, d1.year)
+dtime = d1 + 1h10m45s
+assertEquals(1, dtime.hour)
+assertEquals(10, dtime.minute)
+assertEquals(45, dtime.second)

@@ -1,11 +1,11 @@
 // Declare a type Person
 Person = type
-    name as Scalar(String) 
-    email as Scalar(String) matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+    name as String() 
+    email as String() matches "^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
 end
 // Declare a type Company
 Company=type
-    name as Scalar(String)
+    name as String()
     people as List(Person)
 end
 
@@ -30,9 +30,13 @@ walkfares = object as Company
     people = [colin, ram]
 end
 
+
+
 print json(walkfares)
 
 fred=object as Person
 fred.name = "Fred"
 
 print json(fred)
+
+print json(Person)

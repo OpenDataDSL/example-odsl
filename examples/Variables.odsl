@@ -1,0 +1,181 @@
+// Constructing a string scalar
+a = "String"
+
+// Constructing a boolean scalar
+b = true
+
+// Constructing a numeric (integer) scalar
+c = 10
+
+// Constructing a numeric (decimal) scalar
+d = 3.14
+
+// Creates a new date variable with the current date with no time
+today = Date()
+
+obj = Object()
+obj.name = "Object"
+obj.description = "This is a description"
+
+print json(obj)
+
+// Creates a new date variable for the 8th October 2020
+date = Date("2020-10-08")
+
+// Creates a new date variable for the 8th October 2020 at 12:46
+datetime = Date("2020-10-08T12:46:00")
+print datetime.hour
+print datetime.minute
+print datetime.second
+
+/**
+ Creates a new date variable using the start of the delivery period
+ for October 2020 (2020M10) i.e. 1st October 2020
+ **/
+datepc = Date("2020M10")
+
+// Creates a new date variable for the 8th October 2020 using a different format
+df = Date("06/10/2020", "dd/MM/yyyy")
+
+// Creates a new date variable for the next Monday (or today if today is Monday)
+dav = ${date:"monday"}
+
+print today
+print date
+print datetime
+print datepc
+print df
+print dav
+
+// Create a date for the 5th October 2020
+date5oct = Date("2020-10-05")
+
+// Get the previous calendar day
+date4oct = date5oct.previous()
+
+/**
+ Checks if the 4th October 2020 is a holiday according to the 
+ business (Monday to Friday) calendar
+**/
+print date4oct.isHoliday("business")
+
+// Prints out the previous date according to the business calendar
+print date5oct.previous("business")
+
+
+// Test for date and numeric subtraction
+datesub1 = Date("2020-10-08") - 1
+assertEquals("2020-10-07T00:00:00", datesub1)
+
+// Test for date and duration subtraction
+datesub2 = Date("2020-10-08") - 1M1D
+assertEquals("2020-09-07T00:00:00", datesub2)
+
+// Test for date and duration addition
+datedur = Date("2020-10-08") + 1D
+assertEquals("2020-10-09T00:00:00", datedur)
+
+// Test for date and numeric addition
+datenum = Date("2020-10-08") + 5
+assertEquals("2020-10-13T00:00:00", datenum)
+
+
+dur = 60h
+print dur
+dd = Date("2020-10-08") + dur
+print dd
+
+print dur.hours
+print dur.minutes
+
+
+// Create an empty list
+l1 = List()
+
+// Create a list of variables
+l2 = ["Hello", 1, l1]
+
+
+
+print l2.size
+
+print json(l2.subList(1,2))
+
+l2.add("String")
+print json(l2)
+l2.add(0, "First")
+print json(l2)
+
+// Create a list of variables
+l3 = ["Hello", "World"]
+print l3[1]
+
+// Replace World with ODSL
+l3[1] = "ODSL"
+print l3[1]
+
+// Iterate through the list
+for element in l3
+    print element
+next
+
+// Create a new empty object
+obj = Object()
+obj.name = "ODSL"
+obj.weight = 264.5
+obj.start = Date("2020-10-08")
+obj.children = List()
+obj.children.addAll(["O","D","S","L"])
+obj.address = Object()
+obj.address.city = "London"
+print json(obj)
+
+// Create a new secret
+sec = Secret("password", "password!")
+
+// Create a new secret with a description
+sec = Secret("password", "password!", "The password to the system")
+print sec.id
+print sec.description
+print sec
+
+// Create an empty row
+row = Row()
+row.addColumn("id", 1234)
+row.key = "1234-name"
+row.name = "Name"
+print json(row)
+
+// Creates a TimeSeries aligned to the business calendar
+ts1 = TimeSeries("business")
+
+/**
+ Creates a TimeSeries aligned to the business calendar 
+ with the first value of 12.5 on the 1st October 2020
+**/
+ts2 = TimeSeries("2020-10-01", "business", 12.5)
+
+// Add a product property
+ts2.product = "Crude Oil"
+
+/**
+ Creates a TimeSeries aligned to the business calendar 
+ with a list of values starting on the 1st October 2020
+**/
+ts3 = TimeSeries("2020-10-01", "business", [12.5,12.6,12.7,12.8,12.9])
+
+/**
+ Creates a TimeSeries aligned to the business calendar 
+ with the first value of Hello on the 1st October 2020.
+ The fourth parameter is the data type
+**/
+ts4 = TimeSeries("2020-10-01", "business", "Hello", "any")
+
+print json(ts3)
+print ts3.start
+print ts3.calendar
+
+print json(ts3.observations)
+print json(ts3.values)
+
+print json(ts2)

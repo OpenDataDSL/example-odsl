@@ -19,7 +19,7 @@ xml_url = action in "extractors"
     exit "ok", "failed"
     
     assertType(input.url, "Scalar")
-    on error ignore
+    //on error ignore
     output.xml=${xml:input.url}
     if error
         print error
@@ -35,6 +35,8 @@ transform_data = action in "transformers"
     in tx as Transformer "The transformer to use"
     out batch as Batch "The batch of created models"
     
+    PROCESS.service="ETL"
+    PROCESS.name="ECB_FX"
     batch=PROCESS.createBatch()
     models = input.tx.run(input.data)
     batch.addAll(models)
@@ -57,7 +59,7 @@ xml_data_loader = workflow in "data-loaders"
         "ok" -> getxml
     end
 
-    phase "EXTRACT"
+    phase "EXTRACT" retries 1 delay 10 seconds then reschedule 1 hour
         WF_ACTION getxml ai
             "ok" -> transformxml
             "failed" -> stopfailed

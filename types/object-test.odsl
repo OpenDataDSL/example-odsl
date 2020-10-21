@@ -7,3 +7,7 @@ end
 print json(colin)
 
 save ${object:colin}
+
+
+
+delete ${calendar:"test"}

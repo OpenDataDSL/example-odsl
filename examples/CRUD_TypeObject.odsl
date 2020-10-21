@@ -1,0 +1,95 @@
+// Create private type
+TypeCRUD = type
+    name as String()
+end
+save ${type:TypeCRUD}
+
+// Create public type
+#TC = type
+    name as String()
+end
+save ${type:#TC}
+
+// Read private type
+tc = ${type:"TypeCRUD"}
+tl = find ${type:""}
+
+// Read public type
+ptc = ${type:"#TC"}
+ptl = find ${type:public/""}
+
+// Create a private/private object
+ObjCRUD = object as TypeCRUD
+    name = "Hello"
+end
+// Save the object
+save ${object:ObjCRUD}
+
+// Create a public type/private object
+ObjCRUD = object as #TC
+    name = "Hello"
+end
+// Save the object
+save ${object:ObjCRUD}
+
+// Create a public/public object
+#TCCRUD = object as #TC
+    name = "Hello"
+end
+// Save the object
+save ${object:#TCCRUD}
+
+// Read the private/private object
+prpr = ${object:"TypeCRUD/ObjCRUD"}
+// Read the public/private object
+pupr = ${object:"#TC/ObjCRUD"}
+// Read the public/public object
+pupu = ${object:"#TC/#TCCRUD"}
+
+// List private/private
+tcl = find ${object:"TypeCRUD"}
+assertEquals(1, tcl.size)
+// List public type/private objects
+tcl = find ${object:"#TC"}
+assertEquals(1, tcl.size)
+// List public/public
+tcl = find ${object:public/"#TC"}
+assertEquals(1, tcl.size)
+
+// Update
+TypeCRUD = type
+    name as String()
+    description as String()
+end
+save ${type:TypeCRUD}
+
+// Update the object
+prpr.description = "World"
+save ${object:prpr}
+// Update the object
+pupr.description = "World"
+save ${object:prpr}
+// Update the object
+pupu.description = "World"
+save ${object:prpr}
+
+// Delete
+delete ${object:"TypeCRUD/ObjCRUD"}
+delete ${object:"#TC/ObjCRUD"}
+delete ${object:"#TC/#TCCRUD"}
+delete ${type:"TypeCRUD"}
+delete ${type:"#TC"}
+
+print "Complete!"
+
+// Try to save a public object built from a private type - THIS SHOULD FAIL!
+TypeCRUD = type
+    name as String()
+end
+save ${type:TypeCRUD}
+
+#FAIL = object as TypeCRUD
+    name = "Hello"
+end
+// Save the object
+save ${object:#FAIL}

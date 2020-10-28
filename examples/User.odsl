@@ -1,0 +1,31 @@
+// Get a list of users in your tenant
+users = find ${user:""}
+print users
+
+// Get a single user
+me = ${user:"colin.hartley@opendatadsl.com"}
+print me
+
+// Add some attributes
+me.given_name = "Colin"
+me.family_name = "Hartley"
+
+// Save me
+save ${user:me}
+
+// Invite a user to my tenant
+save ${user:"krangaiah@walkfares.com"}
+
+// Remove a user from my tenant
+delete ${user:"hartco1003@gmail.com"}
+
+// Add user to a group
+save ${user:"colin.hartley@opendatadsl.com","transformer"}
+user1 = ${user:"colin.hartley@opendatadsl.com"}
+print user1
+
+// Remove user from group
+delete ${user:"colin.hartley@opendatadsl.com","transformer"}
+user2 = ${user:"colin.hartley@opendatadsl.com"}
+print user2
+

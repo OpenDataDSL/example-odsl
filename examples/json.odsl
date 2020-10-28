@@ -1,0 +1,11 @@
+json = `{
+    data: [
+        {
+            a:"ss"
+        }
+    ]
+}`
+
+input = ${json:json}
+
+print input.data

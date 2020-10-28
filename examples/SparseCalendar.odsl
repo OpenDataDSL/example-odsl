@@ -1,0 +1,22 @@
+// Creates an empty TimeSeries with the sparse calendar
+ts = TimeSeries("SPARSE")
+
+// Add some values at random timepoints
+ts.add("2020-10-01", 12.5)
+ts.add("2020-11-21", 15.5)
+ts.add("2020-09-11", 18.5)
+
+assertEquals(3, ts.observations.size)
+print ts.values
+
+// Creates a TimeSeries with a single observation
+ts = TimeSeries("2020-10-01", "SPARSE", 12.5)
+print ts.values
+
+// Creates a TimeSeries with a single observation and specifies a datatype
+ts = TimeSeries("2020-10-01", "SPARSE", 12.5, "Numeric")
+print ts.values
+
+// Creates a TimeSeries with multiple observations at various time points
+ts = TimeSeries(["2020-11-21T08:40:12","2020-09-11T19:27:22"], "SPARSE", [12.5,15.5])
+print ts.values

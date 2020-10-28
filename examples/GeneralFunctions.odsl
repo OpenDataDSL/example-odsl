@@ -1,0 +1,48 @@
+obj = Object()
+obj.name = "John"
+obj.value = 23
+
+// Clone the obj variable
+clone = clone(obj)
+
+// Check to see that it is exactly the same
+assertEquals("John", clone.name)
+assertEquals(23, clone.value)
+
+// Note - this will fail as they are not the same object
+//assertEquals(obj, clone)
+
+a=10
+b=12
+op="+"
+
+result = evaluate("a" + op + "b")
+print result
+
+// Create an invoice type
+invoice = type
+    description as String()
+    amount as Scalar()
+end
+
+// Create a customer type
+customer = type
+    name as String()
+    invoices as List()
+end
+
+// Create a customer
+john = object as customer
+    name = "John Doe"
+end
+
+// Create an invoice
+inv1 = object as invoice
+    description = "Widget"
+    amount = 12.36
+end
+
+// Add a reference to the invoice
+john.invoices.add(ref(inv1))
+
+print json(john)

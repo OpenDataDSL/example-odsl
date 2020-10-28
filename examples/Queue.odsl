@@ -1,0 +1,23 @@
+print "Getting all queues"
+queues = find ${queue:""}
+print queues
+
+print "Getting default queue"
+def = ${queue:""}
+print def
+
+print "Creating a new queue"
+dev = Object()
+dev.queue = "dummy2"
+dev.handler = "loader"
+save ${queue:dev}
+
+dummy2 = ${queue:"dummy2"}
+print dummy2
+
+print "Delete the new queue"
+delete ${queue:"dummy2"}
+
+print "Getting all queues"
+queues = find ${queue:""}
+print queues

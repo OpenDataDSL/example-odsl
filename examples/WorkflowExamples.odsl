@@ -1,0 +1,17 @@
+xml_url = action in "extractors"
+    // Extract XML from a HTTP URL
+    in url as Scalar "The URL to read the XML from"
+    out xml as Object "The XML file converted to an ODSL Object"
+    exit "ok", "failed"
+    
+    assertType(input.url, "Scalar")
+    on error ignore
+    output.xml=${xml:input.url}
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end
+end
+save ${action:xml_url}

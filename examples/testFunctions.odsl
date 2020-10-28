@@ -1,0 +1,56 @@
+greeting = "Hello"
+obj = Object()
+obj.name = "John"
+obj.value = 23
+
+// You can test scalars
+assertType(greeting, "Scalar")
+
+// You can test objects
+assertType(obj, "Object")
+
+// You can test object properties
+assertType(obj.name, "Scalar")
+
+// You can test custom types
+example = type
+    name as String()
+end
+eobj = object as example
+    name = "John"
+end
+assertType(eobj, "example")
+
+
+// obj doesn't have a property called description
+assertNull(obj.description)
+
+assertHasProperty(obj, "name")
+
+// You can directly test variables
+assertEquals("Hello", greeting)
+
+// You can test properties
+assertEquals(23, obj.value)
+
+// You can test expressions
+assertEquals(23, 14 + 9)
+
+// You can test a variable or variable property
+b = obj.value > 25
+obj.test = b
+assertFalse(b)
+assertFalse(obj.test)
+
+// You can test an expression
+assertFalse(12>13)
+
+// You can test a variable or variable property
+b = obj.value < 25
+obj.test = b
+assertTrue(b)
+assertTrue(obj.test)
+
+// You can test an expression
+assertTrue(12<13)
+

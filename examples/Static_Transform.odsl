@@ -1,0 +1,57 @@
+json = `{
+    timestamp: "12Oct2020",
+    data: [
+        {
+            identity: "A",
+            value: 1.2
+        },
+        {
+            identity: "B",
+            value: 1.5
+        },
+        {
+            identity: "C",
+            value: 999
+        }
+    ]
+}`
+
+input = ${json:json}
+
+example = type
+    name as String()
+    description as String()
+    value as Scalar()
+end
+
+metadata = Object()
+metadata.A = "A description"
+metadata.B = "B description"
+
+tx = transform input into example as x
+    create with data
+    unique name = x.identity
+    on error ignore
+    ignore x.identity == "C"
+    name = x.identity
+    description = metadata.get(x.identity)
+    value = x.value
+end
+
+result = tx.run(input)
+
+rowtx = transform input into rows as x
+    create with data
+    unique name = x.identity
+    on error ignore
+    ignore x.identity == "C"
+    name = x.identity
+    description = metadata.get(x.identity)
+    value = x.value
+end
+
+rowresult = rowtx.run(input)
+
+
+
+print result.size()

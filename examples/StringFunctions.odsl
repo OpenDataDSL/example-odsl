@@ -1,0 +1,39 @@
+print clean("name full of [chars like this[] and that()!")
+
+print compare("Hello", "hello")
+print compare("Hello", "Hello")
+
+str = concatenate("Cares", "s")
+print str
+
+print contains("one,two,three,four,five", "two")
+
+print endsWith("Patent", "tent")
+
+print equals("Hello", "hello")
+print equals("Hello", "Hello")
+
+obj = Object()
+obj.name = "John"
+obj.age = 43
+
+print json(obj)
+
+print left("The end is nigh", 7)
+print length("The end is nigh")
+
+print lower("Who WhAT WhY")
+
+print remove("The end is nigh", "e")
+print remove("The end is nigh", "[ei]")
+
+print replace("The end is nigh", "end", "start")
+
+print replaceAll("The end is nigh", "[ei]", "start")
+
+print substring("The end is nigh", 4, 7)
+print substring("The end is nigh", 8, -1)
+
+print trim(" This String ")
+print "[" + trim(" This String ") + "]"
+

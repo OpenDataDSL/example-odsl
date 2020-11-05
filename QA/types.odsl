@@ -1,0 +1,26 @@
+print "**************************************************************"
+print "*********************** Type Test ****************************"
+print "**************************************************************"
+
+Person = type
+    first as Scalar()
+    last as Scalar()
+    dob as Date()
+    name as first + " " + last
+    named as function(salutation)
+        named = salutation + " " + first + " " + last
+    end
+end
+
+colin = object as Person
+    first = "Colin"
+    last = "Hartley"
+    dob = "1965-03-10"
+end
+
+name = colin.name
+named = colin.named("Sir")
+assertEquals("Colin Hartley", name)
+assertEquals("Sir Colin Hartley", named)
+assertType(colin, "Person")
+assertHasProperty(colin, "name")

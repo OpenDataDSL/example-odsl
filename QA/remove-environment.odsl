@@ -1,0 +1,10 @@
+print "**************************************************************"
+print "*********************** Data Environment Test ****************"
+print "**************************************************************"
+
+print ""
+print ">>> Removing test environment"
+
+delete ${environment:"test"}
+environments = find ${environment:""}
+assertEquals(1, environments.size, "Should have 1 environment")

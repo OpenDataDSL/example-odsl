@@ -72,7 +72,7 @@ xml_data_loader = workflow in "data-loaders"
         WF_ACTION transformxml ai
             "ok" -> sendbatch
             "failed" -> stopfailed
-            ai.data = output.xml_url.xml
+            ai.data = output.getxml.xml
             ai.tx = input.tx
             result = transform_data.run(ai, output)
         end
@@ -82,9 +82,12 @@ xml_data_loader = workflow in "data-loaders"
         WF_ACTION sendbatch ai
             "ok" -> stopok
             "failed" -> stopfailed
-            ai.batch = output.transform_data.batch
+            ai.batch = output.transformxml.batch
             result = send_batch.run(ai, output)
         end
+    end
+
+    phase "LOAD" external
     end
 
     WF_EVENT stopok as "success"
@@ -100,4 +103,4 @@ job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
 job_input.tx = ECB_FX
 job_output = Object()
 xml_data_loader.run(job_input, job_output)
-print json(job_output.xml_data_loader.transform_data.batch)
+print json(job_output.xml_data_loader.transformxml.batch)

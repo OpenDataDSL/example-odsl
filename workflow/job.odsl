@@ -14,7 +14,6 @@ xml_data_loader = workflow in "data-loaders"
             "failed" -> stopfailed
             ai.url = input.url
             result = ${action:private/"xml_url"}.run(ai, output)    
-
         end
     end
 

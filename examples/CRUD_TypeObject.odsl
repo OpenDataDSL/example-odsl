@@ -1,6 +1,6 @@
 // Create private type
 TypeCRUD = type
-    name as String()
+    name as String() default "test"
 end
 save ${type:TypeCRUD}
 

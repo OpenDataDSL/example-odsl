@@ -1,0 +1,25 @@
+test_send_batch = action in "loaders"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    out success as Boolean "True is this was successful"
+    exit "ok","failed"
+    send input.batch
+end
+// save ${action:test_send_batch}
+
+
+act = ${action:"test_send_batch"}
+assertEquals(2, act.version.version)
+print act.id
+act.category = "test"
+// save ${action:act}
+
+// tag ${action:"test_send_batch":1} as PROD
+
+prodaction = ${action:"test_send_batch":PROD}
+assertEquals(1, prodaction.version.version)
+
+versions = ${action:"test_send_batch":*}
+print json(versions)
+
+

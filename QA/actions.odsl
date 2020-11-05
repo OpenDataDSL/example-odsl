@@ -1,0 +1,79 @@
+print "**************************************************************"
+print "*********************** Actions Test *************************"
+print "**************************************************************"
+
+print ""
+print ">>> Creating Actions"
+
+print "> Creating xml_url"
+xml_url = action in "extractors"
+    // Extract XML from a HTTP URL
+    in url as Scalar "The URL to read the XML from"
+    out xml as Object "The XML file converted to an ODSL Object"
+    exit "ok", "failed"
+    
+    assertType(input.url, "Scalar")
+    on error ignore
+    output.xml=${xml:input.url}
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end
+end
+save ${action:xml_url}
+print "> Created xml_url"
+
+print "> Creating transform_data"
+transform_data = action in "transformers"
+    // Transform data using a transformer
+    in data as Object "The data to transform"
+    in tx as Transformer "The transformer to use"
+    out batch as Batch "The batch of created models"
+    
+    batch=PROCESS.createBatch()
+    tx = ${transformer:"ECB_FX"}
+    models = tx.run(input.data)
+    batch.addAll(models)
+    output.batch = batch
+end
+save ${action:transform_data}
+print "> Created transform_data"
+
+print "> Creating send_batch"
+send_batch = action in "loaders"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    send input.batch
+end
+save ${action:send_batch}
+print "> Created send_batch"
+
+print ">>> Running tests"
+allactions = find ${action:""}
+assertEquals(3, allactions.size, "Should have 3 actions")
+
+allaudits = find ${audit:""} where service="action"
+assertEquals(3, allaudits.size, "Should have 3 audit records")
+
+print "> Changing send_batch to create a new version"
+send_batch = action in "general"
+    // Send a batch of data to the server to be updated
+    in batch as Object "The batch to upload"
+    send input.batch
+end
+save ${action:send_batch}
+print "> Changed send_batch"
+
+print ">>> Running tests"
+actiontest = ${action:"send_batch"}
+assertEquals(2, actiontest.version.version, "Should be version 2")
+
+allaudits = find ${audit:""} where service="action"
+assertEquals(4, allaudits.size, "Should have 4 audit records")
+
+print ">>> Test Tagging"
+tag ${action:"send_batch":1} as PROD
+prodver = ${action:"send_batch":PROD}
+assertEquals(1, prodver.version.version)

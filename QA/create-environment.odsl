@@ -1,0 +1,13 @@
+print "**************************************************************"
+print "*********************** Data Environment Test ****************"
+print "**************************************************************"
+
+print ""
+print ">>> Creating test environment"
+
+test = Object()
+test.description = "My test environment"
+save ${environment:test}
+
+environments = find ${environment:""}
+assertEquals(2, environments.size, "Should have 2 environments")

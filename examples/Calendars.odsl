@@ -32,7 +32,6 @@ heng = ${calendar:"#ENG"}
 heng.name = "Holiday calendar for England and Wales"
 save ${calendar:heng}
 
-
 ukp = ${calendar:"ukpeak"}
 
 // Create a daily calendar

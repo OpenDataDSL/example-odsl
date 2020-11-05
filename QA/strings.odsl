@@ -1,0 +1,27 @@
+print "**************************************************************"
+print "*********************** Strings Test *************************"
+print "**************************************************************"
+
+s1="Hello"
+s2="World"
+assertEquals("HelloWorld",concatenate(s1,s2))
+assertEquals(10, length(concatenate(s1,s2)))
+
+// Test Operational concat
+assertEquals("Hello World", s1 + " " + s2)
+
+//test for equal
+assertEquals("false", equals(s1, s2))
+assertEquals("false", s1 == s2)
+
+
+assertEquals("hello",lower(s1))
+assertEquals("WORLD",upper(s2))
+assertEquals("false",compare(s1,s2))
+
+sp= " hello "
+assertEquals("hello",trim(sp))
+
+str = "FXAUDCAD"
+
+assertEquals("AUD",substring(str, 2, 5))

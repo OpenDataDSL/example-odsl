@@ -12,6 +12,7 @@ phase "TRANSFORM"
         category = "Foreign Exchange"
         product = "ECB_FX"
         provider = "European Central Bank"
+        _access = "#F1"
 
         model = "EUR" + fx.currency
         description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
@@ -25,3 +26,4 @@ phase "SEND"
     print json(batch)
     send batch
 end
+

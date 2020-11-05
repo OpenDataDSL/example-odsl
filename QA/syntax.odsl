@@ -1,0 +1,68 @@
+print "**************************************************************"
+print "*********************** Syntax Test **************************"
+print "**************************************************************"
+
+
+print "Test IF statement"
+a=1
+if a==2
+    print "a==2"
+elseif a==3
+    print "a==3"
+else
+    print "a=="+a
+end
+
+print "Test WHILE statement"
+X=1
+while X<5
+   X=X+1
+end
+log info "Creating batch"
+batch=${batch:"TEST"}
+log info "Saving batch"
+
+monday = ${date:"monday"}
+d = ${date:"tuesday"}
+e = d+7
+f = d+1M1D
+dur=1Y10M6h
+g = d+dur
+
+
+print "Testing Arrays and array conditions"
+array = List()
+a1 = Object()
+a1.cat = "FX"
+a1.name = "Foreign Exchange"
+a1.tags=["FX"]
+array.add(a1)
+a2 = Object()
+a2.cat = "AG"
+a2.name = "Agriculture"
+a2.tags=["AG","AGS"]
+array.add(a2)
+v = array[cat=="FX"]
+assertEquals("Foreign Exchange", v[0].name)
+v = array[cat=="AG"]
+assertEquals("Agriculture", v[0].name)
+assertEquals("Foreign Exchange", array[cat=="FX"][0].name)
+assertEquals("Agriculture", array[cat=="AG"][0].name)
+
+a3 = Object()
+a3.cat = "EL"
+a3.name = "Electricity"
+array[2] = a3
+
+assertEquals("Foreign Exchange", array[cat=="FX"][0].name)
+assertEquals("Agriculture", array[cat=="AG"][0].name)
+assertEquals("Electricity", array[cat=="EL"][0].name)
+
+array[cat=="FX"][0].name = "Test"
+assertEquals("Test", array[cat=="FX"][0].name)
+
+print json(array)
+assertEquals("FX", array[cat=="FX"][0].tags[0])
+assertEquals("AG", array[cat=="AG"][0].tags[0])
+assertEquals("AGS", array[cat=="AG"][0].tags[1])
+

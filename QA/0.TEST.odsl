@@ -1,0 +1,47 @@
+/*******************************************************************************
+*    This script loads all the other test scripts and runs them in order
+*
+*    ONLY run this script as it creates the correct user to run
+********************************************************************************/
+
+// Path to the scripts to run
+path = "/src/example-odsl/QA/"
+
+// Set environment to dev, test or prod
+#CONTEXT.environment = "dev"
+
+// Set the user to login for the specific environment
+#CONTEXT.user = "opendatadsl@gmail.com"
+#CONTEXT.password = "OpenDataDSL$1"
+#CONTEXT.login()
+
+// Display user information
+user = ${user:""}
+print "User is: " + user.email
+print "Tenant is: " + user.tenantid
+
+// Create Environment
+${script:file/path+"create-environment.odsl"}.run()
+
+// Use the test environment
+use test
+
+// Tests
+${script:file/path+"syntax.odsl"}.run()
+${script:file/path+"calendars.odsl"}.run()
+${script:file/path+"actions.odsl"}.run()
+${script:file/path+"dates.odsl"}.run()
+${script:file/path+"precision.odsl"}.run()
+${script:file/path+"strings.odsl"}.run()
+${script:file/path+"timeseries.odsl"}.run()
+${script:file/path+"types.odsl"}.run()
+
+// Remove Environment
+${script:file/path+"remove-environment.odsl"}.run()
+
+// Go back to production
+use production
+
+print "**************************************************************"
+print "COMPLETED  - All Tests Passed!"
+print "**************************************************************"

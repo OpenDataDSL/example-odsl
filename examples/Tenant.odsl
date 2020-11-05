@@ -1,0 +1,8 @@
+// Get your tenant information
+tenant = ${tenant:""}
+
+print tenant
+
+// Update tenant
+tenant.accountcontact = "Colin Hartley"
+save ${tenant:tenant}

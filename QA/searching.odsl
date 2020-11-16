@@ -1,0 +1,19 @@
+print "**************************************************************"
+print "*********************** Searching Test ***********************"
+print "**************************************************************"
+
+// Actions
+actions = find ${action}
+pactions = find ${action:public}
+pactions = find ${action:public} where category = "extractors"
+
+// Audit
+records = find ${audit}
+records = find ${audit} where timestamp > "2020-11-03T12:23:40"
+records = find ${audit} where service="action" and id="test_send_batch" and timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+
+// Calendars
+calendars = find ${calendar}
+pcalendars = find ${calendar:public}
+
+print "Completed Searching"

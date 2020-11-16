@@ -24,3 +24,25 @@ assertEquals("Colin Hartley", name)
 assertEquals("Sir Colin Hartley", named)
 assertType(colin, "Person")
 assertHasProperty(colin, "name")
+
+print ">>> Testing saving type"
+save ${type:Person}
+
+types = find ${type:""}
+assertEquals(1, types.size)
+
+Person = type
+    first as Scalar()
+    last as Scalar()
+    dob as Date()
+    email as String()
+    name as first + " " + last
+    named as function(salutation)
+        named = salutation + " " + first + " " + last
+    end
+end
+
+save ${type:Person}
+test = ${type:"Person"}
+assertEquals(2, test.version.version)
+

@@ -1,17 +1,23 @@
-records = find ${audit:""} where id="test_send_batch" and version = 1 and timestamp > ISODate("2020-11-03T12:23:40")
+ar = ${audit:"5fa51a320b29ff000710b00f"}
+
+
+records = find ${audit} where id="date_script" and version = 2
 print records.size
 
-records = find ${audit:""} where id="test_send_batch" and version = 1 and timestamp < ISODate("2020-11-03T12:23:40")
+records = find ${audit} where timestamp > "2020-11-03T12:23:40"
 print records.size
 
-records = find ${audit:""} where id="test_send_batch" and version != 1
+records = find ${audit} where id="test_send_batch" and version = 1 and timestamp < ISODate("2020-11-03T12:23:40")
 print records.size
 
-records = find ${audit:""} where id="test_send_batch" and version = 1
+records = find ${audit} where id="test_send_batch" and version != 1
 print records.size
 
-records = find ${audit:""} where id="test_send_batch" and timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+records = find ${audit} where id="test_send_batch" and version = 1
 print records.size
 
-records = find ${audit:""} where id="test_send_batch" and (version = 1 or version = 2)
+records = find ${audit} where service="action" and id="test_send_batch" and timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+print records.size
+
+records = find ${audit} where id="test_send_batch" and (version = 1 or version = 2)
 print records.size

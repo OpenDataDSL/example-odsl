@@ -5,19 +5,27 @@ test_send_batch = action in "loaders"
     exit "ok","failed"
     send input.batch
 end
-// save ${action:test_send_batch}
+save ${action:test_send_batch}
 
 
-act = ${action:"test_send_batch"}
-assertEquals(2, act.version.version)
+act = ${action:"test_send_batch":1}
+print act.version
+
+
+
+versions = ${action:"test_send_batch":*}
+print versions
+
+
+// assertEquals(2, act.version.version)
 print act.id
 act.category = "test"
-// save ${action:act}
+save ${action:act}
 
-// tag ${action:"test_send_batch":1} as PROD
+tag ${action:"test_send_batch":1} as PROD
 
 prodaction = ${action:"test_send_batch":PROD}
-assertEquals(1, prodaction.version.version)
+// assertEquals(1, prodaction.version.version)
 
 versions = ${action:"test_send_batch":*}
 print json(versions)

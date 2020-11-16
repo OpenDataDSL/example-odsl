@@ -1,0 +1,8 @@
+obj = ${object:"#ForeignExchange/#RSA_FX_ZARUSD"}
+print json(obj)
+
+spot = obj.SPOT
+print json(spot)
+
+ds = ${data:"#ForeignExchange/#RSA_FX_ZARUSD:SPOT"}
+print json(ds)

@@ -1,0 +1,33 @@
+// obj = ${object:"#ForwardCurve/NZ_FONTERRA_SALTED_25KG_NZ"}
+// curve = obj.CURVE["2020-11-03"]
+// print json(curve)
+
+// ots = ${object:"#Electricity/TEST_TS_VERSION"}
+// ts = ots.PRICE
+// print json(ts)
+
+// ts2 = ${data:"#Electricity/TEST_TS_VERSION:PRICE":1}
+// print json(ts2)
+
+// obj = ${object:public/"#ForwardCurve/#SA.AG.MATBA.CORN.ROSARIO"}
+// curve = obj.CURVE["2020-11-10"]
+// print json(curve)
+
+// ddd = find ${object:public/"#ForwardCurve"} where service="ETL" and name="TEST"
+// print ddd
+
+// subs = find ${subscription:public}
+// print subs
+// sample = ${object:"#ETLSample/#ECB_FX_OBJECT"}
+// print sample
+sub = ${subscription:"#ECB_FX_OBJECT"}
+print sub
+
+// delete ${type:"#ETLSample":*}
+
+// #ETLSample = type
+//     name as String()
+//     description as String()
+//     sample as Batch()
+// end
+// save ${type:#ETLSample}

@@ -1,0 +1,27 @@
+// Path to the scripts
+path = "/src/example-odsl/examples/"
+
+date_script = ${script:file/path+"dates.odsl"}
+date_script.category = "test"
+
+save ${script:date_script}
+
+scr = ${script:"date_script"}
+assertEquals(1, scr.version.version)
+
+// Update the script category
+date_script.category = "Test"
+save ${script:date_script}
+
+scr = ${script:"date_script"}
+assertEquals(2, scr.version.version)
+
+tag ${script:"date_script":1} as PROD
+
+scr = ${script:"date_script":PROD}
+assertEquals(1, scr.version.version)
+
+versions = ${script:"date_script":*}
+print json(versions)
+
+

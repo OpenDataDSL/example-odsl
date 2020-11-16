@@ -1,0 +1,50 @@
+print "**************************************************************"
+print "*********************** Subscriptions Test *******************"
+print "**************************************************************"
+
+
+// Create/update a public subscription
+#TEST_RAW = object as Subscription
+    description = "Test public subscription"
+    service = "ETL"
+    name = "TEST"
+    source = "Test Company"
+    loader = "RAW"
+    restricted = false
+    pricing = "#F1"
+    subscription = "This is a test subscription"
+end
+save ${subscription:#TEST_RAW}
+
+// Get all the public subscriptions that match the query
+subs = find ${subscription:public} where service="ETL" and name="TEST"
+assertEquals(1, subs.size)
+
+// Create a user subscription
+mysub = object as Subscription
+    service = "ETL"
+    name = "TEST_RAW"
+    queue = "test"
+    enabled = true
+end
+save ${subscription:mysub}
+
+// Get my subscriptions
+mysubs = find ${subscription}
+assertEquals(1, mysubs.size)
+
+ss = mysubs[0]
+
+// Delete my subscription
+delete ${subscription:ss.id}
+
+// Check it has deleted
+mysubs = find ${subscription}
+assertEquals(0, mysubs.size)
+
+// Delete the public subscription
+delete ${subscription:"#TEST_RAW"}
+
+// Check it has been deleted
+subs = find ${subscription:public} where service="ETL" and name="TEST"
+assertEquals(0, subs.size)

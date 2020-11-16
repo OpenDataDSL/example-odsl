@@ -1,0 +1,12 @@
+
+// link ${object:"#OilData/ICE_BRENT"} as parent/child of ${object:"#OilData/CME_WTI"}
+
+
+brent = ${object:"#OilData/ICE_BRENT"}
+wti = ${object:"#OilData/CME_WTI"}
+
+assertEquals("CME_WTI", brent.links.child[0].relative.id)
+assertEquals("#OilData", brent.links.child[0].relative._type)
+
+assertEquals("ICE_BRENT", wti.links.parent[0].relative.id)
+assertEquals("#OilData", wti.links.parent[0].relative._type)

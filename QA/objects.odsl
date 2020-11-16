@@ -1,0 +1,50 @@
+print "**************************************************************"
+print "*********************** Object Test **************************"
+print "**************************************************************"
+
+// Widget = versioned type
+//     name as String()
+//     price as Number()
+// end
+// save ${type:Widget}
+
+// Cable = versioned type extends Widget
+//     length as Number()
+// end
+// save ${type:Cable}
+
+// Switch = versioned type extends Widget
+//     ports as Number()
+// end
+// save ${type:Switch}
+
+// Cat6Cable = object as Cable
+//     name = "Cat 6 Ethernet cable"
+//     price = 1.55
+//     length = 5
+// end
+// save ${object:Cat6Cable}
+
+// AZ24Switch = object as Switch
+//     name = "AZ 24 port switch"
+//     price = 24.95
+//     ports = 24
+// end
+// save ${object:AZ24Switch}
+
+widgets = find unique ports from ${object:"Widget"} where price < 99
+print widgets.size
+
+// w2 = ${object:"Widget/Cable/Cat5ACable"}
+// print w2
+
+// w1 = ${object:"Widget/Cable/Cat5ACable":1}
+// print w1
+
+// c1 = ${object:"Cable/Cat5ACable":1}
+// print c1
+
+// tag ${object:"Widget/Cable/Cat6Cable":1} as PROD
+
+// pw = ${object:"Widget/Cable/Cat6Cable":PROD}
+// print pw

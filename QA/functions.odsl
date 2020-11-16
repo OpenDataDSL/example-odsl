@@ -1,0 +1,38 @@
+// Test SimpleRegression
+set missing ignore
+
+input = TimeSeries("DAILY")
+input.add("2020-11-01", 12.5)
+// input.add("2020-11-02", NaN)
+input.add("2020-11-03", 12.9)
+input.add("2020-11-04", 11.5)
+input.add("2020-11-05", 11.9)
+
+reg = simpleRegression(input)
+
+print reg.slope
+print reg.slopeStdErr
+print reg.slopeConfidenceInterval
+print reg.intercept
+print reg.interceptStdErr
+print reg.meanSquareErr
+print reg.N
+print reg.R
+print reg.regressionSumSquares
+print reg.RSquare
+print reg.significance
+print reg.sumOfCrossProducts
+print reg.sumSquaredErrors
+print reg.totalSumSquares
+print reg.XSumSquares
+
+// Predict the next value
+print reg.predict(Date("2020-11-06"))
+
+print min(input)
+print max(input)
+print mean(input)
+
+
+data = [1,2,3]
+print mean(data)

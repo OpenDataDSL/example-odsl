@@ -28,13 +28,25 @@ use test
 
 // Tests
 ${script:file/path+"syntax.odsl"}.run()
-${script:file/path+"calendars.odsl"}.run()
-${script:file/path+"actions.odsl"}.run()
 ${script:file/path+"dates.odsl"}.run()
 ${script:file/path+"precision.odsl"}.run()
 ${script:file/path+"strings.odsl"}.run()
-${script:file/path+"timeseries.odsl"}.run()
+${script:file/path+"functions.odsl"}.run()
+
 ${script:file/path+"types.odsl"}.run()
+${script:file/path+"objects.odsl"}.run()
+${script:file/path+"links.odsl"}.run()
+
+${script:file/path+"calendars.odsl"}.run()
+${script:file/path+"actions.odsl"}.run()
+${script:file/path+"timeseries.odsl"}.run()
+${script:file/path+"curves.odsl"}.run()
+${script:file/path+"secrets.odsl"}.run()
+${script:file/path+"processes.odsl"}.run()
+
+${script:file/path+"transformer.odsl"}.run()
+${script:file/path+"searching.odsl"}.run()
+${script:file/path+"subscriptions.odsl"}.run()
 
 // Remove Environment
 ${script:file/path+"remove-environment.odsl"}.run()

@@ -5,6 +5,9 @@ end
 
 phase "TRANSFORM"
     batch=PROCESS.createBatch()
+    batch.service = "ETL"
+    batch.name = "ECB_FX"
+    batch.loader = "OBJECT"
     ECB_FX = transform XML into #ForeignExchange as fx
         create with Cube
         unique id = "ECB_FX.EUR" + fx.currency
@@ -24,6 +27,12 @@ end
 
 phase "SEND"
     print json(batch)
-    send batch
+    #ECB_FX_OBJECT = object as #ETLSample
+        name = "European Central Bank Euro foreign exchange reference rates"
+        description = ""
+        sample = batch
+    end
+    save ${object:#ECB_FX_OBJECT}
+    // send batch
 end
 

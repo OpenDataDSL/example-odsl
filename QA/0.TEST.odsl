@@ -42,6 +42,7 @@ ${script:file/path+"actions.odsl"}.run()
 ${script:file/path+"timeseries.odsl"}.run()
 ${script:file/path+"curves.odsl"}.run()
 ${script:file/path+"secrets.odsl"}.run()
+${script:file/path+"settings.odsl"}.run()
 ${script:file/path+"processes.odsl"}.run()
 
 ${script:file/path+"transformer.odsl"}.run()

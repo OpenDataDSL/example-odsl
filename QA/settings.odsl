@@ -1,0 +1,47 @@
+print "**************************************************************"
+print "*********************** Settings Test ************************"
+print "**************************************************************"
+
+print "Checking there are no settings"
+settings = find ${setting}
+assertEquals(0, settings.size, "There should be no settings")
+
+print "Create a setting"
+ABC_FACTOR = 1.234
+save ${setting:ABC_FACTOR}
+
+print "Checking there is 1 setting"
+settings = find ${setting}
+assertEquals(1, settings.size, "There should be 1 setting")
+
+print "Changing the setting value"
+ABC_FACTOR = 1.267
+save ${setting:ABC_FACTOR}
+
+print "Checking the versions"
+test = ${setting:"ABC_FACTOR"}
+assertEquals(2, test.version.version, "Version should be 2")
+
+print "Tagging a version"
+tag ${setting:"ABC_FACTOR":1} as PROD
+
+print "Getting the tagged version"
+testtag = ${setting:"ABC_FACTOR":PROD}
+assertEquals(1, testtag.version.version, "Version should be 1")
+
+print "Rollback"
+delete ${setting:"ABC_FACTOR"}
+test2 = ${setting:"ABC_FACTOR"}
+assertEquals(1, test2.version.version, "Version should be 1")
+settings = find ${setting}
+assertEquals(1, settings.size, "There should be no settings")
+
+print "Changing the setting value"
+ABC_FACTOR = 1.2999
+save ${setting:ABC_FACTOR}
+
+print "Delete All"
+delete ${setting:"ABC_FACTOR":*}
+settings = find ${setting}
+assertEquals(0, settings.size, "There should be no settings")
+

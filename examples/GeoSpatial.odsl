@@ -1,0 +1,33 @@
+test = Object()
+test.location = Point(-73.96943, 40.78519)
+
+print json(test.location)
+
+road1 = LineString()
+road1.add(-73.96943, 40.78519)
+road1.add(-73.96943, 41.78519)
+test.road1 = road1
+
+print json(road1)
+
+road2 = MultiPoint()
+road2.add(-73.96943, 40.78519)
+road2.add(-73.96943, 41.78519)
+test.road2 = road2
+
+polygon = Polygon()
+polygon.add(road1)
+polygon.add(road2)
+
+print json(polygon)
+
+mp = MultiPolygon()
+mp.add(polygon)
+print json(mp)
+
+gc = GeometryCollection()
+gc.add(road1)
+gc.add(polygon)
+gc.add(mp)
+
+print json(gc)

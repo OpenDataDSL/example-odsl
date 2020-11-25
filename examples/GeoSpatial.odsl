@@ -1,22 +1,61 @@
-test = Object()
-test.location = Point(-73.96943, 40.78519)
+// TestGeometry = type
+//     name as String()
+// end
+// // save ${type:TestGeometry}
 
-print json(test.location)
+// Walkfares = object as TestGeometry
+//     name = "Walkfares"
+//     location = Point(51.75754, 0.54542)
+// end
+// // save ${object:Walkfares}
 
+// BritishMuseum = object as TestGeometry
+//     name = "British Museum"
+//     location = Point(51.51958, -0.12695)
+// end
+// // save ${object:BritishMuseum}
+
+// ElecUnit111 = object as TestGeometry
+//     name = "Electricity unit 111"
+//     location = Point(52.35672, 4.91120)
+// end
+// // save ${object:ElecUnit111}
+
+items = find ${object:"TestGeometry"} where location within Sphere([ 51.72961, 0.47612 ], 20 / 3963.2)
+print items
+items = find ${object:"TestGeometry"} where location within Polygon([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]])
+print items
+london = Polygon([[51.5386, -0.4956],[51.6445, -0.0753],[51.5205, 0.1753],[51.3479, -0.1163],[51.5386, -0.4956]])
+items = find ${object:"TestGeometry"} where location within london
+print items
+items = find ${object:"TestGeometry"} where location intersects london
+print items
+
+
+
+// test = ${object:"#Electricity/#ENTSO.EL.A65.A01.10YNL_L.PT15M"}
+// test.geolocation = Point(52.35672, 4.91120)
+// // save ${object:test}
+
+
+// print json(Walkfares.location)
+
+// test = Object()
 road1 = LineString()
 road1.add(-73.96943, 40.78519)
 road1.add(-73.96943, 41.78519)
-test.road1 = road1
+// test.road1 = road1
 
-print json(road1)
+// print json(road1)
 
-road2 = MultiPoint()
-road2.add(-73.96943, 40.78519)
-road2.add(-73.96943, 41.78519)
-test.road2 = road2
+road2 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
+// road2.add(-73.96943, 40.78519)
+// road2.add(-73.96943, 41.78519)
+// test.road2 = road2
 
-polygon = Polygon()
-polygon.add(road1)
+p = Point([-73.96943, 40.78519])
+
+polygon = Polygon([[-73.96943, 40.78519],[-73.96943, 41.78519]])
 polygon.add(road2)
 
 print json(polygon)
@@ -25,9 +64,14 @@ mp = MultiPolygon()
 mp.add(polygon)
 print json(mp)
 
+mp2 = MultiPolygon([polygon, Polygon([[-73.96943, 40.78519],[-73.96943, 41.78519]])])
+
 gc = GeometryCollection()
 gc.add(road1)
 gc.add(polygon)
 gc.add(mp)
 
 print json(gc)
+
+coll = GeometryCollection([road1, polygon, mp])
+print json(coll)

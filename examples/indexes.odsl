@@ -1,0 +1,38 @@
+// ix = Index()
+// ix.objectType = "Person"
+// ix.name = "multi"
+// ix.keys.id = 1
+// ix.keys.last = 1
+// ix.unique = true
+
+// // print json(ix)
+
+// // save ${index:ix}
+
+// ixs = find ${index:"Person"}
+// for ix in ixs
+//     // print json(ix)
+// next
+
+// ixmulti = ${index:"Person/multi"}
+// print json(ixmulti)
+
+// // delete ${index:"Person/ix"}
+
+
+ixs = find ${index:"TestGeometry"}
+for ix in ixs
+    print json(ix)
+next
+
+// delete ${index:"TestGeometry/myindex"}
+
+ix = Index()
+ix.objectType = "TestGeometry"
+ix.name = "spatial"
+ix.keys.location = "2dsphere"
+// save ${index:ix}
+
+set crs planar
+
+a = Point([900, 200])

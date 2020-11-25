@@ -8,22 +8,24 @@ end
 save ${type:#QUEUE}
 
 // Create a new queue
-myqueue = object as #QUEUE
-    queue = "myqueue"
-    handler = "loader"
-    timeout = "3m"
-    retention = "4d"
-end
-save ${queue:myqueue}
+// myqueue = object as #QUEUE
+//     queue = "myqueue"
+//     handler = "loader"
+//     timeout = "3m"
+//     retention = "4d"
+// end
+// save ${queue:myqueue}
 
 
-print "Getting all queues"
-queues = find ${queue:""}
-print queues
+// print "Getting all queues"
+// queues = find ${queue:""}
+// print queues
 
 // Get the default queue
 def = ${queue:""}
 print def
+def.handler = "loader"
+save ${queue:def}
 
 print "Creating a new queue"
 dev = Object()

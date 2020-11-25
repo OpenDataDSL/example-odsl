@@ -1,38 +1,40 @@
-#PricingData = type
-    // Base type for all pricing data
-    category as Scalar()
-    product as Scalar()
-    provider as Scalar()
-end
+// #PricingData = type
+//     // Base type for all pricing data
+//     category as Scalar()
+//     product as Scalar()
+//     provider as Scalar()
+// end
 
-save ${type:#PricingData}
+// save ${type:#PricingData}
 
-#Electricity = type extends #PricingData
-    // All electricity pricing data
-    model as Scalar()
-    location as Scalar()
-    class as Scalar()
-    description as Scalar() notfilter
-end
+// #Electricity = type extends #PricingData
+//     // All electricity pricing data
+//     model as Scalar()
+//     location as Scalar()
+//     class as Scalar()
+//     description as Scalar() notfilter
+// end
 
-save ${type:#Electricity}
+// save ${type:#Electricity}
 
-#Agriculture = type extends #PricingData
-    // All agricultural pricing data
-    model as Scalar()
-    location as Scalar()
-    class as Scalar()
-    description as Scalar() notfilter
-end
+// #Agriculture = type extends #PricingData
+//     // All agricultural pricing data
+//     model as Scalar()
+//     location as Scalar()
+//     class as Scalar()
+//     description as Scalar() notfilter
+// end
 
-save ${type:#Agriculture}
+// save ${type:#Agriculture}
 
-#ForeignExchange = type extends #PricingData
+#ForeignExchange = type
     // All foreign exchange (FX) data
-    model as Scalar()
-    base as Scalar()
-    currency as Scalar()
-    description as Scalar() notfilter
+    category as String()
+    source as String()
+    product as String()
+    model as String()
+    base as String()
+    currency as String()
 end
 
 save ${type:#ForeignExchange}

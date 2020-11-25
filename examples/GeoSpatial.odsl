@@ -11,7 +11,7 @@
 
 // BritishMuseum = object as TestGeometry
 //     name = "British Museum"
-//     location = Point(51.51958, -0.12695)
+//     location = Point([51.51958, -0.12695])
 // end
 // // save ${object:BritishMuseum}
 
@@ -20,6 +20,8 @@
 //     location = Point(52.35672, 4.91120)
 // end
 // // save ${object:ElecUnit111}
+
+bm20 = Sphere([51.51958, -0.12695], 20/3963.2)
 
 items = find ${object:"TestGeometry"} where location within Sphere([ 51.72961, 0.47612 ], 20 / 3963.2)
 print items
@@ -31,10 +33,17 @@ print items
 items = find ${object:"TestGeometry"} where location intersects london
 print items
 
+road1 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
+road2 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
+mls = MultiLineString()
+mls.add(road1)
+mls.add(road2)
 
+mls = MultiLineString([LineString([[0,0],[1,1]]),LineString([[2,2],[3,3]])])
 
 // test = ${object:"#Electricity/#ENTSO.EL.A65.A01.10YNL_L.PT15M"}
-// test.geolocation = Point(52.35672, 4.91120)
+test = Object()
+test.geolocation = Point([52.35672, 4.91120])
 // // save ${object:test}
 
 
@@ -43,7 +52,7 @@ print items
 // test = Object()
 road1 = LineString()
 road1.add(-73.96943, 40.78519)
-road1.add(-73.96943, 41.78519)
+road1.add(Point([52.35672, 4.91120]))
 // test.road1 = road1
 
 // print json(road1)
@@ -55,8 +64,12 @@ road2 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
 
 p = Point([-73.96943, 40.78519])
 
-polygon = Polygon([[-73.96943, 40.78519],[-73.96943, 41.78519]])
-polygon.add(road2)
+mp1 = MultiPoint([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]])
+mp2 = MultiPoint([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]])
+poly1 = Polygon()
+poly1.add(MultiPoint([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]]))
+poly2 = Polygon([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]])
+poly3 = Polygon([mp1, mp2])
 
 print json(polygon)
 

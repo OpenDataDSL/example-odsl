@@ -1,25 +1,29 @@
-// TestGeometry = type
-//     name as String()
-// end
-// // save ${type:TestGeometry}
+print "**************************************************************"
+print "*********************** Geometry Test ************************"
+print "**************************************************************"
+
+TestGeometry = type
+    name as String()
+end
+save ${type:TestGeometry}
 
 Walkfares = object as TestGeometry
     name = "Walkfares"
     location = Point([51.75754, 0.54542])
 end
-// save ${object:Walkfares}
+save ${object:Walkfares}
 
 BritishMuseum = object as TestGeometry
     name = "British Museum"
     location = Point([51.51958, -0.12695])
 end
-// save ${object:BritishMuseum}
+save ${object:BritishMuseum}
 
 ElecUnit111 = object as TestGeometry
     name = "Electricity unit 111"
     location = Point([52.35672, 4.91120])
 end
-// // save ${object:ElecUnit111}
+save ${object:ElecUnit111}
 
 bm20 = Sphere([51.51958, -0.12695], 20/3963.2)
 geolocation = Point([52.35672, 4.91120])
@@ -29,15 +33,21 @@ p = Polygon()
 p.add(road1)
 print json(p)
 
-// items = find ${object:"TestGeometry"} where location within Sphere([ 51.72961, 0.47612 ], 20 / 3963.2)
-// print items
+items = find ${object:"TestGeometry"} where location within Sphere([ 51.72961, 0.47612 ], 20 / 3963.2)
+assertEquals(1, items.size)
+
+items = find ${object:"TestGeometry"} where location within bm20
+assertEquals(1, items.size)
+
 items = find ${object:"TestGeometry"} where location within Polygon([[ 50, -1 ], [52, -1], [52, 1], [50, 1]])
-print items
+assertEquals(2, items.size)
+
 london = Polygon([[51.5386, -0.4956],[51.6445, -0.0753],[51.5205, 0.1753],[51.3479, -0.1163],[51.5386, -0.4956]])
 items = find ${object:"TestGeometry"} where location within london
-print items
+assertEquals(1, items.size)
+
 items = find ${object:"TestGeometry"} where location intersects london
-print items
+assertEquals(1, items.size)
 
 road1 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
 road2 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
@@ -47,22 +57,17 @@ mls.add(road2)
 
 mls = MultiLineString([LineString([[0,0],[1,1]]),LineString([[2,2],[3,3]])])
 
-test = ${object:"#Electricity/#ENTSO.EL.A65.A01.10YNL_L.PT15M"}
+
 test = Object()
-test.geolocation = Point([52.35672, 4.91120])
-// // save ${object:test}
-
-
-// print json(Walkfares.location)
-
-// test = Object()
 road1 = LineString()
 road1.add(Point([-73.96943, 40.78519]))
 road1.add(Point([52.35672, 4.91120]))
+test.road1 = road1
 
 road2 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
 road2.add(Point([-73.96943, 40.78519]))
 road2.add(Point([-73.96943, 41.78519]))
+test.road2 = road2
 
 
 p = Point([-73.96943, 40.78519])

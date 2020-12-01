@@ -2,11 +2,7 @@ print "**************************************************************"
 print "*********************** Process Test *************************"
 print "**************************************************************"
 
-use test
-
 delete ${process:"GDT_CURVE_SOAP":*}
-
-
 processes = find ${process}
 assertEquals(0, processes.size)
 

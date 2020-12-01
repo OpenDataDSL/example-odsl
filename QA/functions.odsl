@@ -15,7 +15,7 @@ print reg.slopeStdErr
 print reg.slopeConfidenceInterval
 print reg.intercept
 print reg.interceptStdErr
-print reg.meanSquareErr
+print reg.meanSquareError
 print reg.N
 print reg.R
 print reg.regressionSumSquares

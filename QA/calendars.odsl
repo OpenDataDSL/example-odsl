@@ -92,5 +92,5 @@ assertEquals(Date("2020-06-26"), expiry)
 
 // Test saving calendars
 save ${calendar:hcal}
-calcount = find ${calendar:""}
+calcount = find ${calendar}
 assertEquals(1, calcount.size)

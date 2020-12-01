@@ -1,0 +1,4 @@
+// Get the training data
+
+data = find ${data:"#UCITrainingData", "DATA"} where name="UCI_SCCTS_TrainingData"
+print data.size

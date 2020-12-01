@@ -20,6 +20,9 @@ user = ${user:""}
 print "User is: " + user.email
 print "Tenant is: " + user.tenantid
 
+// Remove Environment
+${script:file/path+"remove-environment.odsl"}.run()
+
 // Create Environment
 ${script:file/path+"create-environment.odsl"}.run()
 
@@ -48,6 +51,7 @@ ${script:file/path+"processes.odsl"}.run()
 ${script:file/path+"transformer.odsl"}.run()
 ${script:file/path+"searching.odsl"}.run()
 ${script:file/path+"subscriptions.odsl"}.run()
+${script:file/path+"geometry.odsl"}.run()
 
 // Remove Environment
 ${script:file/path+"remove-environment.odsl"}.run()

@@ -1,12 +1,16 @@
+print "**************************************************************"
+print "*********************** Link Test ****************************"
+print "**************************************************************"
 
-// link ${object:"#OilData/ICE_BRENT"} as parent/child of ${object:"#OilData/CME_WTI"}
+link ${object:"Cable/Cat5ACable"} as parent/child of ${object:"Cable/Cat6Cable"}
 
+cat5a = ${object:"Cable/Cat5ACable"}
+cat6 = ${object:"Cable/Cat6Cable"}
 
-brent = ${object:"#OilData/ICE_BRENT"}
-wti = ${object:"#OilData/CME_WTI"}
+assertEquals("Cat6Cable", cat5a.links.child[0].relative.id)
+assertEquals("Cable", cat5a.links.child[0].relative._type)
 
-assertEquals("CME_WTI", brent.links.child[0].relative.id)
-assertEquals("#OilData", brent.links.child[0].relative._type)
+assertEquals("Cat5ACable", cat6.links.parent[0].relative.id)
+assertEquals("Cable", cat6.links.parent[0].relative._type)
 
-assertEquals("ICE_BRENT", wti.links.parent[0].relative.id)
-assertEquals("#OilData", wti.links.parent[0].relative._type)
+print "Link test complete!"

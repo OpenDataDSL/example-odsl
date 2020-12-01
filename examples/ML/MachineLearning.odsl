@@ -1,0 +1,36 @@
+#MLConfiguration = versioned type
+    name as String()
+end
+// save ${type:#MLConfiguration}
+
+UCISequence = MLConfiguration()
+UCISequence.name = "UCI Sequence"
+UCISequence.seed = 123
+UCISequence.weightInit = MLWeightInit("XAVIER")
+UCISequence.updater = MLNadam()
+UCISequence.gradientNormalization = MLGradientNormalization("ClipElementWiseAbsoluteValue")
+UCISequence.gradientNormalizationThreshold = 0.5
+
+lb = UCISequence.list()
+
+layer1 = MLLSTMLayer()
+layer1.activation = MLActivation("TANH")
+layer1.nIn = 1
+layer1.nOut = 10
+lb.layer(layer1.build())
+
+layer2 = MLRnnOutputLayer()
+layer2.lossFunction = MLLossFunction("MCXENT")
+layer2.activation = MLActivation("SOFTMAX")
+layer2.nIn = 10
+layer2.nOut = 6
+lb.layer(layer2.build())
+
+b = lb.build()
+// print b.toJson()
+
+// save ${object:UCISequence}
+
+// us = ${object:"#MLConfiguration/UCISequence"}
+// print us;
+

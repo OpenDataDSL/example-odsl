@@ -1,0 +1,37 @@
+// Grab the UCI data set for Synthetic Control Chart Time Series
+// https://archive.ics.uci.edu/ml/datasets/Synthetic+Control+Chart+Time+Series
+
+csvdata = ${csv:"https://archive.ics.uci.edu/ml/machine-learning-databases/synthetic_control-mld/synthetic_control.data","separator= +", "headerpos=0", "output=table"}
+
+// Create the training data type
+#UCITrainingData = type
+    name as String()
+    label as Number()
+    labelname as String()
+end
+save ${type:#UCITrainingData}
+
+// Create the label names
+labelnames = ["Normal", "Cyclic", "UpTrend", "DownTrend", "UpShift", "DownShift"]
+
+// Create the training data objects
+PROCESS.service = "ETL"
+PROCESS.name = "UCI_SCCTS_TrainingData"
+batch = PROCESS.createBatch()
+count = 0
+start = "2020-01-01"
+for row in csvdata.rows
+    td = object as #UCITrainingData
+        _id = "td" + count
+        name = "UCI_SCCTS_TrainingData"
+        DATA = TimeSeries(start, "DAILY", row, "numeric")
+    end
+    td.DATA.label = toInt(count / 100)
+    td.DATA.labelname = labelnames[label]
+    batch.add(td)
+    count = count + 1
+next
+
+// Send the batch to the server to be updated
+send batch
+print "Training Data Save completed - " + count + " items"

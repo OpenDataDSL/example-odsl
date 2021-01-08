@@ -2,6 +2,7 @@ print "**************************************************************"
 print "*********************** Subscriptions Test *******************"
 print "**************************************************************"
 
+use test
 
 // Create/update a public subscription
 #TEST_RAW = object as Subscription

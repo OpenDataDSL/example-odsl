@@ -1,20 +1,20 @@
-// Get a list of users in your tenant
-users = find ${user:""}
-print users
+// // Get a list of users in your tenant
+// users = find ${user:""}
+// print users
 
-// Get a single user
-me = ${user:"colin.hartley@opendatadsl.com"}
-print me
+// // Get a single user
+// me = ${user:"colin.hartley@opendatadsl.com"}
+// print me
 
-// Add some attributes
-me.given_name = "Colin"
-me.family_name = "Hartley"
+// // Add some attributes
+// me.given_name = "Colin"
+// me.family_name = "Hartley"
 
-// Save me
-save ${user:me}
+// // Save me
+// save ${user:me}
 
 // Invite a user to my tenant
-save ${user:"krangaiah@walkfares.com"}
+save ${user:"sunil.ramesh@opendatadsl.com"}
 
 // Remove a user from my tenant
 delete ${user:"hartco1003@gmail.com"}

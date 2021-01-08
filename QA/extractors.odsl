@@ -1,0 +1,47 @@
+print "**************************************************************"
+print "*********************** Extractors Test **********************"
+print "**************************************************************"
+
+use test
+
+print ""
+print ">>> Creating Extractors"
+example = extract url into object as html
+    param "ScriptManager1" with  "ScriptManager1|rv1$ctl10$Reserved_AsyncLoadTarget"
+    param "rv1$ctl03$ctl00" with ""
+    param "rv1$ctl03$ctl01" with ""
+    param "rv1$ctl11" with "ltr"
+    select "table:nth-child(1) > tr > td > table > tr > td > table > tr > td > table > tr:nth-child(6) > td:nth-child(3) > table"
+end
+save ${extractor:example}
+
+print ">>> Running tests"
+allactions = find ${extractor:""}
+assertEquals(1, allactions.size, "Should have 1 extractor")
+
+allaudits = find ${audit:""} where service="extractor"
+assertEquals(1, allaudits.size, "Should have 1 extractor records")
+
+print "> Changing  to create a new version"
+example = extract url into object as html
+    param "ScriptManager1" with  "ScriptManager1|rv1$ctl10$Reserved_AsyncLoadTarget"
+    param "rv1$ctl03$ctl00" with ""
+    param "rv1$ctl03$ctl01" with ""
+    param "rv1$ctl11" with "ltr"
+    param "rv1$ctl12" with "quirks"
+    param "__ASYNCPOST" with  "true"
+    select "table:nth-child(1) > tr > td > table > tr > td > table > tr > td > table > tr:nth-child(6) > td:nth-child(3) > table"
+end
+save ${extractor:example}
+
+print ">>> Running tests"
+actiontest = ${extractor:"example"}
+assertEquals(2, actiontest.version.version, "Should be version 2")
+
+allaudits = find ${audit:""} where service="extractor"
+assertEquals(2, allaudits.size, "Should have 2 audit records")
+
+print ">>> Test Tagging"
+tag ${extractor:"example":1} as PROD
+prodver = ${extractor:"example":PROD}
+assertEquals(1, prodver.version.version)

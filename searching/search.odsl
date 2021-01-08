@@ -1,14 +1,27 @@
+execs = find ${exec} where start > Date("2020-12-29") and end < Date("2020-12-31")
+print execs.size()
+
+exec = find ${exec} where name="AHDB_DAIRY"
+print exec.size()
+
+for e in exec
+    print e.id + " - " + e.start
+next
+
+names = find unique name from ${exec}
+print names
+
 // fx = find ${public:#ForeignExchange}
 
 // for element in fx
 //     print element.description
 // next
 
-ccy = "USD"
-fx = find ${object:public/"#ForeignExchange"} where base="EUR" and currency=ccy 
+// ccy = "USD"
+// fx = find ${object:public/"#ForeignExchange"} where base="EUR" and currency=ccy 
 
-fx = find ${object:public/"#ForeignExchange"} where currency="USD"
+// fx = find ${object:public/"#ForeignExchange"} where currency="USD"
 
-for element in fx
-    print element.description
-next
+// for element in fx
+//     print element.description
+// next

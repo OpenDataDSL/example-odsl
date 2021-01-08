@@ -1,0 +1,24 @@
+// Create a new queue
+test = object as #QUEUE
+    queue = "test"
+    handler = "loader"
+    timeout = "3m"
+    retention = "4d"
+end
+save ${queue:test}
+
+
+use test
+
+print "Create a process"
+process = Process()
+process.service = "ETL"
+process.name = "ECB_FX_TEST"
+process.description = "TEST ETL Process for ECB_TEST"
+process.enabled = true
+process.input.url="https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+process.input.tx = "#ECB_FX"
+process.workflow="#wf_xml_data_loader"
+process.cron = "58 14 ? * * *"
+save ${process:process}
+print "Created the process"

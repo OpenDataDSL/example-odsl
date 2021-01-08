@@ -1,0 +1,50 @@
+print "**************************************************************"
+print "*********************** Index Test ***************************"
+print "**************************************************************"
+
+use test
+
+print "Creating type"
+ixtest = type
+    name as String    
+end
+save ${type:ixtest}
+
+print "Creating objects"
+ixobj1 = object as ixtest
+    name = "ix1"
+    geolocation = Point([51.75754, 0.54542])
+end
+save ${object:ixobj1}
+
+ixobj2 = object as ixtest
+    name = "ix2"
+    geolocation = Point([51.55754, 0.54542])
+end
+save ${object:ixobj2}
+
+print "Creating Index"
+ix = Index()
+ix.objectType = "ixtest"
+ix.name = "test"
+ix.keys.name = 1
+ix.unique = true
+save ${index:ix}
+
+print "Creating spatial index"
+ixg = Index()
+ixg.objectType = "ixtest"
+ixg.name = "spatial"
+ixg.keys.geolocation = "2dsphere"
+save ${index:ixg}
+
+print ">>> Running tests"
+indexes = find ${index:"ixtest"}
+assertEquals(3, indexes.size, "Should have 3 indexes")
+
+print "Deleting an index"
+delete ${index:"ixtest/test"}
+
+print ">>> Running tests"
+indexes = find ${index:"ixtest"}
+assertEquals(2, indexes.size, "Should have 2 indexes")

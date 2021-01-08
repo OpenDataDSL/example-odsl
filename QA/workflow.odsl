@@ -1,0 +1,108 @@
+print "**************************************************************"
+print "*********************** Workflow Test ************************"
+print "**************************************************************"
+
+use test
+
+print ""
+print ">>> Creating Workflow"
+
+wf_xml_extract = workflow in "data-loaders"
+    // Extract-transform-load data to the HUB
+    in url as Scalar
+    in tx as Transformer
+    out batch as Batch
+    
+    WF_START
+        "ok" -> act_url_eval
+    end
+
+    phase "EXTRACT"
+        am = Object()
+        am.expr = input.url
+        WF_ACTION act_url_eval ai
+            "ok" -> act_extract_xml
+            "failed" -> stopfailed
+            ai.expr = input.url
+            result = ${action:"#eval_expr"}.run(ai, output)
+        end
+       
+        WF_ACTION act_extract_xml ai
+            "ok" -> stopok
+            "failed" -> stopfailed
+            am = Object()
+            am.url = output.act_url_eval.eval
+            result = ${action:"#extract_xml"}.run(am, output)    
+        end
+    end
+
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+       return "failed"
+    end
+end
+
+save ${workflow:wf_xml_extract}
+print "> Created workflow"
+
+print ">>> Running tests"
+allworkflows = find ${workflow:""}
+assertEquals(1, allworkflows.size, "Should have 1 workflow")
+
+allaudits = find ${audit:""} where service="workflow"
+assertEquals(1, allaudits.size, "Should have 1 audit records")
+
+print "> Changing workflow to create a new version"
+wf_xml_extract = workflow in "data-loaders"
+    // Extract-transform-load data to the HUB
+    in url as Scalar
+    in tx as Transformer
+    out batch as Batch
+    
+    WF_START
+        "ok" -> act_url_eval
+    end
+
+    phase "EXTRACT"
+        am = Object()
+        am.expr = input.url
+        WF_ACTION act_url_eval ai
+            "ok" -> act_extract_xml
+            "failed" -> stopfailed
+            ai.expr = input.url
+            result = ${action:"#eval_expr"}.run(ai, output)
+        end
+       
+        WF_ACTION act_extract_xml ai
+            "ok" -> ok
+            "failed" -> stopfailed
+            am = Object()
+            am.url = output.act_url_eval.eval
+            result = ${action:"#extract_xml"}.run(am, output)    
+        end
+    end
+
+    WF_EVENT ok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+       return "failed"
+    end
+end
+
+save ${workflow:wf_xml_extract}
+print "> Changed workflow"
+
+print ">>> Running tests"
+actiontest = ${workflow:"wf_xml_extract"}
+assertEquals(2, actiontest.version.version, "Should be version 2")
+
+allaudits = find ${audit:""} where service="workflow"
+assertEquals(2, allaudits.size, "Should have 2 audit records")
+
+print ">>> Test Tagging"
+tag ${workflow:"wf_xml_extract":1} as PROD
+prodver = ${workflow:"wf_xml_extract":PROD}
+assertEquals(1, prodver.version.version)

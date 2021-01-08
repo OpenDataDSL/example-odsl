@@ -2,6 +2,10 @@ print "**************************************************************"
 print "*********************** Calendar Test ************************"
 print "**************************************************************"
 
+use test
+
+loadCalendars()
+calendars = find ${calendar}
 eng = ${calendar:"#ENG"}
 
 assertTrue(eng, "Calendar shouldn't be null")
@@ -14,7 +18,7 @@ dates = eng.getDates(start, enddate)
 assertEquals(4, dates.size())
 assertEquals([Date("2020-05-20"),Date("2020-05-21"),Date("2020-05-22"),Date("2020-05-26")], dates)
 
-dates = eng.getDates(start, 3)
+dates = eng.getDatesFrom(start, 3)
 assertEquals(4, dates.size())
 assertEquals([Date("2020-05-20"),Date("2020-05-21"),Date("2020-05-22"),Date("2020-05-26")], dates)
 
@@ -67,7 +71,7 @@ indexes = hh.getDates(hs, he)
 assertEquals(11, indexes.size())
 
 // Hourly Peak calendar
-peak = IntradayCalendar(1h, eng, [0,1,2,3,4,5,6,20,21,22,23])
+peak = IntradayCalendar(1h, hcal, [0,1,2,3,4,5,6,20,21,22,23])
 print peak
 hs = Date("2020-05-20T00:00:00")
 he = Date("2020-05-20T23:00:00")
@@ -81,16 +85,28 @@ indexes = peak.getDates(hs, he)
 assertEquals(26, indexes.size())
 
 // Test Expiry Calendars
-expiry = ExpiryCalendar(hcal)
-expiry.addRule("go back 1 day using calendar")
+expiry = ExpiryCalendar(${calendar:"#ENG"})
+expiry.id = "ExampleExpiry"
+expiry.addRule("go back 1 day using calendar before 2021-01-01")
+expiry.addRule("go back 2 days using calendar after 2021-01-01")
 expiry.addRule("go back 3 days using calendar for quarters")
 ondate = CurveDate(Date("2020-05-10"), expiry)
-expiry = ondate.getExpiry("2020M06")
-assertEquals(Date("2020-05-29"), expiry)
-expiry = ondate.getExpiry("2020Q03")
-assertEquals(Date("2020-06-26"), expiry)
+exp = ondate.getExpiry("2020M06")
+assertEquals(Date("2020-05-29"), exp)
+exp = ondate.getExpiry("2020Q03")
+assertEquals(Date("2020-06-26"), exp)
 
 // Test saving calendars
 save ${calendar:hcal}
 calcount = find ${calendar}
-assertEquals(1, calcount.size)
+print calcount + " Calendars"
+
+// Save expiry calendar
+save ${calendar:expiry}
+
+dbexp = ${calendar:"ExampleExpiry"}
+print dbexp.id
+
+print "**************************************************************"
+print "*********************** Calendar Test Complete ***************"
+print "**************************************************************"

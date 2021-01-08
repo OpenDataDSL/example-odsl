@@ -57,3 +57,5 @@ dtime = d1 + 1h10m45s
 assertEquals(1, dtime.hour)
 assertEquals(10, dtime.minute)
 assertEquals(45, dtime.second)
+
+print "Date test complete"

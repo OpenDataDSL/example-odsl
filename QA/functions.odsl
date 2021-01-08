@@ -1,4 +1,10 @@
-// Test SimpleRegression
+print "Testing data generation"
+for i=1 to 10
+    print random100()
+    print randomInteger(100)
+next
+
+print "Testing SimpleRegression"
 set missing ignore
 
 input = TimeSeries("DAILY")
@@ -36,3 +42,8 @@ print mean(input)
 
 data = [1,2,3]
 print mean(data)
+
+
+function random100()
+    random100 = toInt(random()*100)
+end

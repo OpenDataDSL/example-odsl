@@ -1,24 +1,15 @@
 /*******************************************************************************
 *    This script loads all the other test scripts and runs them in order
 *
-*    ONLY run this script as it creates the correct user to run
+*    ONLY run this script
 ********************************************************************************/
 
 // Path to the scripts to run
 path = "/src/example-odsl/QA/"
 
-// Set environment to dev, test or prod
-#CONTEXT.environment = "dev"
-
-// Set the user to login for the specific environment
-#CONTEXT.user = "opendatadsl@gmail.com"
-#CONTEXT.password = "OpenDataDSL$1"
-#CONTEXT.login()
-
 // Display user information
 user = ${user:""}
 print "User is: " + user.email
-print "Tenant is: " + user.tenantid
 
 // Remove Environment
 ${script:file/path+"remove-environment.odsl"}.run()
@@ -39,22 +30,26 @@ ${script:file/path+"functions.odsl"}.run()
 ${script:file/path+"types.odsl"}.run()
 ${script:file/path+"objects.odsl"}.run()
 ${script:file/path+"links.odsl"}.run()
+${script:file/path+"indexes.odsl"}.run()
 
 ${script:file/path+"calendars.odsl"}.run()
 ${script:file/path+"actions.odsl"}.run()
+${script:file/path+"scripts.odsl"}.run()
+${script:file/path+"workflow.odsl"}.run()
 ${script:file/path+"timeseries.odsl"}.run()
 ${script:file/path+"curves.odsl"}.run()
-${script:file/path+"secrets.odsl"}.run()
 ${script:file/path+"settings.odsl"}.run()
+${script:file/path+"secrets.odsl"}.run()
 ${script:file/path+"processes.odsl"}.run()
 
+${script:file/path+"extractors.odsl"}.run()
 ${script:file/path+"transformer.odsl"}.run()
 ${script:file/path+"searching.odsl"}.run()
 ${script:file/path+"subscriptions.odsl"}.run()
 ${script:file/path+"geometry.odsl"}.run()
 
 // Remove Environment
-${script:file/path+"remove-environment.odsl"}.run()
+// ${script:file/path+"remove-environment.odsl"}.run()
 
 // Go back to production
 use production

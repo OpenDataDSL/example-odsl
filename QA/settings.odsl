@@ -2,46 +2,56 @@ print "**************************************************************"
 print "*********************** Settings Test ************************"
 print "**************************************************************"
 
+use test
+
+#SETTING = versioned type
+    name as String
+end
+save ${type:#SETTING}
+
 print "Checking there are no settings"
-settings = find ${setting}
+settings = find ${object:"#SETTING"}
 assertEquals(0, settings.size, "There should be no settings")
 
 print "Create a setting"
-ABC_FACTOR = 1.234
-save ${setting:ABC_FACTOR}
+ABC_FACTOR = object as #SETTING
+    name = "ABC_FACTOR"
+    value = 1.234
+end
+save ${object:ABC_FACTOR}
 
 print "Checking there is 1 setting"
-settings = find ${setting}
+settings = find ${object:"#SETTING"}
 assertEquals(1, settings.size, "There should be 1 setting")
 
 print "Changing the setting value"
-ABC_FACTOR = 1.267
-save ${setting:ABC_FACTOR}
+ABC_FACTOR.value = 1.267
+save ${object:ABC_FACTOR}
 
 print "Checking the versions"
-test = ${setting:"ABC_FACTOR"}
+test = ${object:"#SETTING/ABC_FACTOR"}
 assertEquals(2, test.version.version, "Version should be 2")
 
 print "Tagging a version"
-tag ${setting:"ABC_FACTOR":1} as PROD
+tag ${object:"#SETTING/ABC_FACTOR":1} as PROD
 
 print "Getting the tagged version"
-testtag = ${setting:"ABC_FACTOR":PROD}
+testtag = ${object:"#SETTING/ABC_FACTOR":PROD}
 assertEquals(1, testtag.version.version, "Version should be 1")
 
 print "Rollback"
-delete ${setting:"ABC_FACTOR"}
-test2 = ${setting:"ABC_FACTOR"}
+delete ${object:"#SETTING/ABC_FACTOR"}
+test2 = ${object:"#SETTING/ABC_FACTOR"}
 assertEquals(1, test2.version.version, "Version should be 1")
-settings = find ${setting}
-assertEquals(1, settings.size, "There should be no settings")
+settings = find ${object:"#SETTING"}
+assertEquals(1, settings.size, "There should be 1 setting")
 
 print "Changing the setting value"
-ABC_FACTOR = 1.2999
-save ${setting:ABC_FACTOR}
+ABC_FACTOR.value = 1.2999
+save ${object:ABC_FACTOR}
 
 print "Delete All"
-delete ${setting:"ABC_FACTOR":*}
-settings = find ${setting}
+delete ${object:"#SETTING/ABC_FACTOR":*}
+settings = find ${object:"#SETTING"}
 assertEquals(0, settings.size, "There should be no settings")
 

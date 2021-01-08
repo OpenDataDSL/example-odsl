@@ -2,25 +2,21 @@ print "**************************************************************"
 print "*********************** Process Test *************************"
 print "**************************************************************"
 
-delete ${process:"GDT_CURVE_SOAP":*}
+use test
+
+delete ${process:"ECB_FX_TEST":*}
 processes = find ${process}
 assertEquals(0, processes.size)
 
 print "Create a process"
 process = Process()
 process.service = "ETL"
-process.name = "GDT_CURVE_SOAP"
-process.description = "ETL Process for GDT SOAP"
+process.name = "ECB_FX_TEST"
+process.description = "TEST ETL Process for ECB_TEST"
 process.enabled = true
-process.runAs = "krangaiah@walkfares.com"
-process.input.latestEvent=""
-process.input.gdt_product="SOAP"
-process.input.latest_url = "https://s3.amazonaws.com/www-production.globaldairytrade.info/results/latest.json"
-process.input.event_url = `"https://s3.amazonaws.com/www-production.globaldairytrade.info/results/" + input.latestEvent + "/event_summary.json"`
-process.input.gdt_product_url = `"https://s3.amazonaws.com/www-production.globaldairytrade.info/results/" + input.latestEvent + "/product_group_" + input.gdt_product + ".json"`
-process.input.expiry_calendar = "EOMBUSINESS"
-process.input.tx = "#GDT_CURVE"
-process.workflow="#wf_gdt_curve_data_loader"
+process.input.url="https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+process.input.tx = "#ECB_FX"
+process.workflow="#wf_xml_data_loader"
 process.cron = "38 07 ? * * *"
 save ${process:process}
 
@@ -37,27 +33,27 @@ processes = find ${process}
 assertEquals(1, processes.size)
 
 print "Checking process info"
-ptest = ${process:"GDT_CURVE_SOAP"}
+ptest = ${process:"ECB_FX_TEST"}
 assertEquals(2, ptest.version.version)
 assertEquals("00 12 ? * * *", ptest.cron)
 
 print "Tag version 1"
-tag ${process:"GDT_CURVE_SOAP":1} as PROD
+tag ${process:"ECB_FX_TEST":1} as PROD
 
 print "Checking process info"
-ptest = ${process:"GDT_CURVE_SOAP":PROD}
+ptest = ${process:"ECB_FX_TEST":PROD}
 assertEquals(1, ptest.version.version)
 assertEquals("38 07 ? * * *", ptest.cron)
 
 print "Rollback to previous version"
-delete ${process:"GDT_CURVE_SOAP"}
+delete ${process:"ECB_FX_TEST"}
 
 print "Checking there is only 1 process"
 processes = find ${process}
 assertEquals(1, processes.size)
 
 print "Checking process info"
-ptest = ${process:"GDT_CURVE_SOAP"}
+ptest = ${process:"ECB_FX_TEST"}
 assertEquals(1, ptest.version.version)
 assertEquals("38 07 ? * * *", ptest.cron)
 
@@ -66,7 +62,7 @@ process.cron = "00 12 ? * * *"
 save ${process:process}
 
 print "Completely remove process"
-delete ${process:"GDT_CURVE_SOAP":*}
+delete ${process:"ECB_FX_TEST":*}
 processes = find ${process}
 print "Checking there are no processes"
 assertEquals(0, processes.size)

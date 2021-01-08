@@ -1,0 +1,40 @@
+print "**************************************************************"
+print "*********************** Scripts Test *************************"
+print "**************************************************************"
+
+use test
+
+// Path to the scripts
+path = "/src/example-odsl/QA/"
+
+print ""
+print ">>> Creating Script"
+
+print "> Creating scripts-example"
+example = ${script:file/path+"scripts-example1.odsl"}
+save ${script:example}
+print "> Created scripts-example"
+
+print ">>> Running tests"
+allscripts = find ${script:""}
+assertEquals(1, allscripts.size, "Should have 1 script")
+
+allaudits = find ${audit:""} where service="script"
+assertEquals(1, allaudits.size, "Should have 1 audit record")
+
+print "> Changing script to create a new version"
+example = ${script:file/path+"scripts-example2.odsl"}
+save ${script:example}
+print "> Changed script"
+
+print ">>> Running tests"
+scripttest = ${script:"example"}
+assertEquals(2, scripttest.version.version, "Should be version 2")
+
+allaudits = find ${audit:""} where service="script"
+assertEquals(2, allaudits.size, "Should have 2 audit records")
+
+print ">>> Test Tagging"
+tag ${script:"example":1} as PROD
+prodver = ${script:"example":PROD}
+assertEquals(1, prodver.version.version)

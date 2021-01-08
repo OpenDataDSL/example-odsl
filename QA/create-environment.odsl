@@ -9,5 +9,5 @@ test = Object()
 test.description = "My test environment"
 save ${environment:test}
 
-environments = find ${environment:""}
+environments = find ${environment}
 assertEquals(2, environments.size, "Should have 2 environments")

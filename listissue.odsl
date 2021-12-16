@@ -1,0 +1,23 @@
+${workflow:"#wf_argus_metadata_loader"}.run(job_input, job_output)
+
+
+input = Object()
+url = "c:\temp\dam_weekly_data_export_oct.xlsx"
+XLS = ${file:url,"output=table,sheetat=3"}
+cells = XLS.range("A2:I*")
+XLS = cells.asTable()
+data = XLS.getColumns()
+input.delivery_date = data.get(0).get(0)
+input.settledata = List()
+input.voldata = List()
+#dstHour = daylightSavings(parse(input.delivery_date,"yyyy-MM-dd"), "Europe/Amsterdam")
+for i = 3 to data.get(1).size()-1
+    if data.get(0).get(i) != "H3" and #dataHour != -1 
+        if startsWith(data.get(1).get(i), "EUR/") == true
+            input.settledata.add(data.get(8).get(i))
+        else
+            input.voldata.add(data.get(8).get(i))
+        end
+    end
+next
+print input

@@ -16,12 +16,12 @@ end
 
 // Declare an address type
 Address = type
-    street as String() notfilter
+    street as String()
     area as String()
     city as String()
     county as String()
     country as String()
-    postcode as String() notfilter
+    postcode as String()
 end
 
 Person = type

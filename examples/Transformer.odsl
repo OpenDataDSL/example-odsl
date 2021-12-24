@@ -1,0 +1,28 @@
+
+print "> Creating tx"
+tx = transform xml into #ForeignExchange as fx
+    // Transform ECB daily FX rates to type #ForeignCurrency
+    create with Cube
+    unique id = "ECB_FX_EUR" + fx.currency
+    SPOT = TimeSeries(xml.Cube.Cube.time, "BUSINESS", fx.rate)
+    category = "Foreign Exchange"
+    product = "ECB_FX"
+    provider = "European Central Bank"
+    model = "EUR" + fx.currency
+    description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
+    base = "EUR"
+    currency = fx.currency
+    // Example of using if / elseif and else
+    if currency == "ZAR"
+        currency = "ZAP"
+    elseif currency == "USD"
+        currency = "USP"
+    else
+        currency = currency + "P"
+    end
+end
+
+XML=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+
+result = tx.run(XML)
+print result

@@ -1,0 +1,16 @@
+// Create an empty holiday calendar
+holiday = HolidayCalendar()
+
+// Add some rules
+holiday.addRule("Every Saturday")
+holiday.addRule("Every Sunday")
+holiday.addRule("First Saturday in January named 'd-day'")
+
+// Get the list of dates
+dates = holiday.getDates(Date("2021-01-01"), Date("2021-01-31"))
+print dates
+
+hols = holiday.getHolidaysForYear(2021)
+for h in hols
+    print h.name + " = " + h.date
+next

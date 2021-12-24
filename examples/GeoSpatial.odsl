@@ -1,6 +1,15 @@
-// TestGeometry = type
-//     name as String()
-// end
+#London = object as #Location
+    name = "London, England"
+    geolocation = Polygon([[51.5386, -0.4956],[51.6445, -0.0753],[51.5205, 0.1753],[51.3479, -0.1163],[51.5386, -0.4956]])
+end
+save ${object:#London}
+
+
+
+
+TestGeometry = type
+    name as String()
+end
 // // save ${type:TestGeometry}
 
 Walkfares = object as TestGeometry

@@ -31,6 +31,8 @@ bm20 = Sphere([51.51958, -0.12695], 20/3963.2)
 geolocation = Point([52.35672, 4.91120])
 road1 = MultiPoint([[-73.96943, 40.78519],[-72.96943, 41.78519],[-73.96943, 42.78519],[-73.96943, 40.78519]])
 print road1.geometry.area
+
+
 p = Polygon()
 p.add(road1)
 print json(p)

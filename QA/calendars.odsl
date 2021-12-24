@@ -4,6 +4,18 @@ print "**************************************************************"
 
 use test
 
+eombus = ExpiryCalendar(BusinessCalendar())
+eombus.addRule("go to the end of the previous month")
+ondate = CurveDate(Date("2020-05-10"), eombus)
+
+tenor = Contract(ondate, "2020M06", 10)
+assertEquals("M01", tenor.relative)
+assertEquals("2020-06-01T00:00:00", tenor.start)
+assertEquals("2020-06-30T00:00:00", tenor.end)
+assertEquals("2020-05-31T00:00:00", tenor.expiry)
+tenor = Contract(ondate, "M01", 10)
+assertEquals("2020M06", tenor.absolute)
+ 
 loadCalendars()
 calendars = find ${calendar}
 eng = ${calendar:"#ENG"}
@@ -57,6 +69,13 @@ assertFalse(hcal.includes(Date("2021-04-02")))
 assertFalse(hcal.includes(Date("2021-04-05")))
 assertFalse(hcal.includes(Date("2021-05-03")))
 
+// ODSL-47
+HUSA = HolidayCalendar()
+HUSA.addRule("Every Saturday")
+HUSA.addRule("Every Sunday")
+HUSA.addRule("4th of July named 'Independence Day' on Saturday shift -1 days and on Sunday shift 1 day")
+assertFalse(HUSA.includes(Date("2021-07-05")))
+
 // Intraday
 hourly = IntradayCalendar(1h)
 hs = Date("2020-05-20T03:00:00")
@@ -106,6 +125,20 @@ save ${calendar:expiry}
 
 dbexp = ${calendar:"ExampleExpiry"}
 print dbexp.id
+
+// Low Sulpur Gasoil
+// https://www.theice.com/products/34361119/Low-Sulphur-Gasoil-Futures/expiry
+rgasoil = ExpiryCalendar(BusinessCalendar())
+rgasoil.addRule("go to the 14th of the current month then align forwards then go back 2 days using calendar")
+ondate = CurveDate(Date("2020-02-10"), rgasoil)
+assertEquals("2021-02-11T00:00:00", ondate.getExpiry("2021M02"))
+assertEquals("2021-03-11T00:00:00", ondate.getExpiry("2021M03"))
+assertEquals("2021-04-12T00:00:00", ondate.getExpiry("2021M04"))
+assertEquals("2021-05-12T00:00:00", ondate.getExpiry("2021M05"))
+assertEquals("2021-06-10T00:00:00", ondate.getExpiry("2021M06"))
+assertEquals("2021-07-12T00:00:00", ondate.getExpiry("2021M07"))
+assertEquals("2021-08-12T00:00:00", ondate.getExpiry("2021M08"))
+assertEquals("2021-09-10T00:00:00", ondate.getExpiry("2021M09"))
 
 print "**************************************************************"
 print "*********************** Calendar Test Complete ***************"

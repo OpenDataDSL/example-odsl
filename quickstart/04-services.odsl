@@ -1,0 +1,61 @@
+
+// Use the date service to create various dates
+print ${date:"today"}
+print ${date:"yesterday"}
+print ${date:"tomorrow"}
+
+print ${date:"startofweek"}
+print ${date:"endofweek"}
+print ${date:"startofmonth"}
+print ${date:"endofmonth"}
+print ${date:"startofyear"}
+print ${date:"endofyear"}
+
+print ${date:"thursday"}
+
+a=10
+
+// Same current memory to a file
+save ${memory:file/"c:/temp/memory.json"}
+
+// Reload memory
+x=${memory:file/"c:/temp/memory.json"}
+
+// Create a private type
+TypeCRUD = type
+    name as String() default "test"
+end
+save ${type:TypeCRUD}
+
+// Get a list of private types
+tl = find ${type}
+for tp in tl
+    print tp.name
+next
+
+// Read private type
+tc = ${type:"TypeCRUD"}
+
+// Delete private type
+delete ${type:"TypeCRUD":*}
+
+// Grab one of the UCI data sets for Balloons
+// https://archive.ics.uci.edu/ml/datasets/Balloons
+
+csvdata = ${csv:"https://archive.ics.uci.edu/ml/machine-learning-databases/balloons/adult+stretch.data","headerpos=0"}
+print csvdata.size
+for row in csvdata
+    print row
+next
+
+// XML examples showing use of an xpath selector
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+print xmldata
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "selector=[currency]"}
+print xmldata
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "selector=[currency='GBP']"}
+print xmldata
+

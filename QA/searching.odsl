@@ -2,7 +2,30 @@ print "**************************************************************"
 print "*********************** Searching Test ***********************"
 print "**************************************************************"
 
-use production
+// use production
+// loadTypes()
+
+
+// Data ranges
+yesterday = ${date:"yesterday"}
+// data = find profile SPOT for ${date:"yesterday"} from ${object:public} where _id == "#ECB_FX.EURZAR"
+// data = find profile SPOT for yesterday from ${object:public} where _id == "#ECB_FX.EURZAR"
+// data = find profile SPOT for last(3) from ${object:public} where _id == "#ECB_FX.EURZAR"
+// data = find profile SPOT for from(${date:"yesterday"}) from ${object:public} where _id == "#ECB_FX.EURZAR"
+// data = find profile SPOT for between(${date:"yesterday"},"2021-12-31") from ${object:public} where _id == "#ECB_FX.EURZAR"
+
+data = find profile SPOT for yesterday from ${object:public} where dataset == "ECB_FX"
+print json(data)
+
+// Data in get query
+data = ${data:"#ECB_FX.EURZAR:SPOT"} for ${date:"yesterday"}
+data = ${data:"#ECB_FX.EURZAR:SPOT"} for yesterday
+data = ${data:"#ECB_FX.EURZAR:SPOT"} for last(3)
+data = ${data:"#ECB_FX.EURZAR:SPOT"} for from(yesterday)
+data = ${data:"#ECB_FX.EURZAR:SPOT"} for between("2021-05-01",yesterday)
+
+// Subscription records
+records = find ${subscriptionrecord} where name like "ch"
 
 // Objects
 lengths = find unique category from ${action}
@@ -20,7 +43,16 @@ services = find unique service from ${audit}
 print services
 records = find ${audit}
 records = find ${audit} where timestamp > "2020-11-03T12:23:40"
-records = find ${audit} where service="action" and id="test_send_batch" and timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+records = find ${audit} where timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+print records.size
+
+sr = find ${audit} where service == "subscriptionrecord"
+
+records = find ${audit} where 
+    timestamp > ${date:"today"} 
+    and timestamp < ${date:"tomorrow"}
+end
+print records.size
 
 // Calendars
 loadCalendars()

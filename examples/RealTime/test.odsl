@@ -1,0 +1,51 @@
+APG = object as RTAtomicInstrument
+    source = "TRAYPORT"
+    name = "(CP) ATOM Austria APG"
+    ticker = "30002065"
+    currency = "EUR"
+    units = "MW"
+end
+
+FREIGHT = object as RTSequenceInstrument
+    source = "TRAYPORT"
+    name = "CS4TC / PM4TC CME"
+    ticker = "10005883"
+    currency = "USD"
+    units = "Days"
+    sequences = object as RTSequence
+        ticker = "10000600"
+        name = "Freight - Freight Months"
+        displayName = "Months"
+        items = object as RTSequenceItem
+            period = "2021M12"
+        end
+    end    
+    sequences = object as RTSequence
+        ticker = "10000601"
+        name = "Freight - Freight Quarters"
+        displayName = "Quarters"
+    end    
+    sequences = object as RTSequence
+        ticker = "10000602"
+        name = "Freight - Freight Years"
+        displayName = "Years"
+    end    
+end
+
+
+
+o1 = object as RTOrder
+    source = "TRAYPORT"
+    instrument = "10005883"
+    sequence = "10000600"
+    item = "2021M12"
+    name = "ASK"
+    price = 25.6
+    volume = 30
+end
+
+print o1
+
+FREIGHT.sequences[ticker == o1.sequence].items[period == o1.item].orderBook.orders.add(o1)
+
+print FREIGHT

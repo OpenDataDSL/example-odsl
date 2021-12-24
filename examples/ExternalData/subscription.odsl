@@ -1,0 +1,58 @@
+// Who am I
+me = ${user:""}
+print me
+
+// Create the subscription
+SQL_DATA_ECB_FX = object as #Subscription
+    name = "SQL_DATA_ECB_FX"
+    description = "Send ECB_FX data to SQL Server"
+    enabled = true
+    objects[0] = object as #SubscriptionObject
+        key = "GBP"
+        id = "#ECB_FX.EURGBP:SPOT"
+    end
+    objects[1] = object as #SubscriptionObject
+        key = "JPY"
+        id = "#ECB_FX.EURJPY:SPOT"
+    end
+    objects[2] = object as #SubscriptionObject
+        key = "USD"
+        id = "#ECB_FX.EURUSD:SPOT"
+    end
+    targets[0] = object as #SubscriptionTarget
+        name = "QueueTarget"
+        queue = "sql"
+    end
+end
+
+save ${subscription:SQL_DATA_ECB_FX}
+
+
+// Create the subscription
+sub_ecb_fx = object as #Subscription
+    name = "sub_ecb_fx"
+    enabled = true
+    objects[0] = object as #SubscriptionObject
+        key = "GBP"
+        id = "#ECB_FX.EURGBP:SPOT"
+    end
+    objects[1] = object as #SubscriptionObject
+        key = "JPY"
+        id = "#ECB_FX.EURJPY:SPOT"
+    end
+    objects[2] = object as #SubscriptionObject
+        key = "USD"
+        id = "#ECB_FX.EURUSD:SPOT"
+    end
+    targets[0] = object as #SubscriptionTarget
+        name = "QueueTarget"
+        queue = "tutorial"
+    end
+end
+
+save ${subscription:sub_ecb_fx}
+
+subs = find ${subscription}
+for s in subs
+    print s.name
+next

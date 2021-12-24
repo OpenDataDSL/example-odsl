@@ -1,0 +1,104 @@
+// Create a TimeSeries
+t1 = TimeSeries("BUSINESS")
+
+// Add some values
+t1.add("2021-01-01", [21.5, 22.6, 23.5, 24.1])
+
+// Create a new TimeSeries with the value 2 added to all values of t1
+t2 = t1 + 2
+
+// Display the values
+print t2.values
+
+// Create a TimeSeries
+t1 = TimeSeries("BUSINESS")
+
+// Add some values
+t1.add("2021-01-01", [21.5, 22.6, 23.5, 24.1])
+
+// Create another TimeSeries
+t2 = TimeSeries("BUSINESS")
+
+// Add some values
+t2.add("2021-01-01", [1.5, 2.6, 2.5])
+
+// Add them together
+t3 = t1 + t2
+
+// Display the values
+print t3.values
+
+
+for tv in t1.values
+    print tv.time + "  t1=" + tv.value + "  t2=" + t2[tv.time]
+next
+
+print t2.values
+
+
+ts1 = TimeSeries("BUSINESS")
+
+// Add some values
+ts1.add("2021-01-01", 21.5)
+
+ts2 = TimeSeries("BUSINESS")
+
+// Add a value for the 1st of January
+ts2.add("2021-01-01", 2)
+
+// Simple TS operations
+ts3 = ts1 + ts2
+assertEquals(23.5, ts3["2021-01-01"])
+ts3 = ts1 - ts2
+assertEquals(19.5, ts3["2021-01-01"])
+ts3 = ts1 / ts2
+assertEquals(10.75, ts3["2021-01-01"])
+ts3 = ts1 * ts2
+assertEquals(43, ts3["2021-01-01"])
+
+// Scalar operations
+ts3 = ts1 + 2
+assertEquals(23.5, ts3["2021-01-01"])
+ts3 = ts1 - 2
+assertEquals(19.5, ts3["2021-01-01"])
+ts3 = 2 - ts1
+assertEquals(-19.5, ts3["2021-01-01"])
+ts3 = ts1 / 2
+assertEquals(10.75, ts3["2021-01-01"])
+ts3 = 21.5 / ts1
+assertEquals(1, ts3["2021-01-01"])
+ts3 = ts1 * 2
+assertEquals(43, ts3["2021-01-01"])
+ts3 = ts2 ^ 2
+assertEquals(4, ts3["2021-01-01"])
+
+// Expressions
+ts3 = (ts1 + ts2) / 2
+assertEquals(11.75, ts3["2021-01-01"])
+
+// Additional data
+ts2.add("2021-01-04", 2)
+ts3 = ts1 + ts2
+assertEquals(23.5, ts3["2021-01-01"])
+assertNull(ts3["2021-01-04"])
+
+
+// Create a TimeSeries
+t1 = TimeSeries("2021-01-01", "BUSINESS", [12.5,12.6,12.7,12.8,12.9])
+
+// Print out some statistics
+print min(t1)
+print max(t1)
+print mean(t1)
+print geomean(t1)
+print count(t1)
+print sum(t1)
+print sumsq(t1)
+print stdev(t1)
+print var(t1)
+
+// Execute and print out the results of the simple regression
+sr = simpleRegression(t1)
+print sr
+
+print sr.intercept

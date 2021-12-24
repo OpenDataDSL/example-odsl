@@ -1,0 +1,43 @@
+TUTORIAL_ODSL_CURVE = object as #CurveConfig
+    name = "Tutorial ODSL Curve"
+    description = "A curve created for the ODSL Curve Tutorial"
+    category = "TUTORIAL"
+    subcategory = "Curve Building"
+    region = "Europe"
+    country = "Italy"
+    expiryCalendar = "#REOMB"
+    buildScript = "curvetutorial"
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "#CLALIT.BUTTER_82.AVGAUC.WP:CURVE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "PREMIUM"
+        factor = 5
+        code = "addPercentage(PRIMARY, factor)"
+        currency = "USD"
+        units = "MT"
+    end
+    outputs[1] = object as #CurveConfigOutput
+        name = "EXTENDED"
+        code = "extendCurve(PREMIUM, 3)"
+        currency = "USD"
+        units = "MT"
+    end
+    outputs[2] = object as #CurveConfigOutput
+        name = "EUR_MT"
+        code = "PREMIUM"
+        currency = "EUR"
+        units = "MT"
+    end
+end
+
+save ${curve:TUTORIAL_ODSL_CURVE}
+
+ondate = Object()
+ondate.date = "2021-10-19"
+print run TUTORIAL_ODSL_CURVE with ondate
+
+c = ${data:"#CLALIT.BUTTER_82.AVGAUC.WP:CURVE"}
+print c.values

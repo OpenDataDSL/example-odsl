@@ -1,0 +1,5 @@
+curve = ${curve:"TUTORIAL_ODSL_CURVE"}
+
+
+premium = ${data:"TUTORIAL_ODSL_CURVE:PREMIUM"}
+print json(premium)

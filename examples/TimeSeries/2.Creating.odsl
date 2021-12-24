@@ -1,0 +1,13 @@
+// Basic Construction with a named calendar
+ts1 = TimeSeries("BUSINESS")
+print json(ts1)
+
+// Basic Construction with a pre-defined calendar
+business = BusinessCalendar()
+ts2 = TimeSeries(business)
+print json(ts2)
+
+// Construction with a calendar and data type
+ts3 = TimeSeries("BUSINESS", "string")
+print json(ts3)
+

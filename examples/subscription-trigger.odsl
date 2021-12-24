@@ -1,0 +1,27 @@
+loadTypes()
+
+json = `{
+      "_type": "#Delta",
+      "id": "BULK_CREAM:AVERAGE",
+      "action": "update",
+      "access": "#F1",
+      "time": "2000-07-09T00:00:00",
+      "currency": "EUR",
+      "units": "KG",
+      "tenors": [
+        {
+          "_type": "#DeltaTenor",
+          "tenor": "SPOT",
+          "old": 1031,
+          "value": 1031
+        }
+      ]
+    }`
+
+B = ${json:json}
+
+for t in B.tenors
+  print t.tenor + " = " + t.value
+next
+
+trigger CORN_CURVE for 2021-05-21

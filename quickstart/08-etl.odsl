@@ -1,0 +1,10 @@
+// url = "https://ahdb.org.uk/dairy/uk-wholesale-prices"
+// selector="#content > div > article > div.orchard-layouts-root > div > div:nth-child(4) > div.col-xs-12.col-sm-7.cell"
+// html = ${html:url, selector}
+// print html
+
+// url = "https://www.zuivelnl.org/uploads/images/Noteringen-week-"+(${date:"today"}.week-01)+"-"+${date:"today"}.year+".pdf"
+// params = "table_content_type=text,separator= ,page_start=2,page_end=2"
+// table = ${pdf:url, params}
+// print json(table)
+

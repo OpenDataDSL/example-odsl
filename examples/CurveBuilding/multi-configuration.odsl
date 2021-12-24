@@ -1,0 +1,38 @@
+CH_MULTI = object as #CurveConfig
+    name = "CH Multiple output curve"
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "CH.INPUT.CURVE:CURVE"
+        required = true
+    end
+    inputs[1] = object as #CurveConfigInput
+        key = "INTEREST"
+        id = "CH.INPUT.INTEREST:CURVE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "USDBBL"
+        expiryCalendar = "REOMHENG"
+        currency = "USD"
+        units = "BBL"
+        factor = 1.2
+        buildScript = "simplebuild"
+    end
+    outputs[1] = object as #CurveConfigOutput
+        name = "GBPBBL"
+        expiryCalendar = "REOMHENG"
+        currency = "GBP"
+        units = "BBL"
+        buildScript = "simplebuild"
+    end
+    outputs[2] = object as #CurveConfigOutput
+        name = "EURMT"
+        expiryCalendar = "REOMHENG"
+        currency = "EUR"
+        units = "MT"
+        density = 7.02
+        buildScript = "simplebuild"
+    end
+end
+
+save ${object:CH_MULTI}

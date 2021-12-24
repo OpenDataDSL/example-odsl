@@ -1,0 +1,60 @@
+
+
+function bootstrap(input)
+    // Create an arbitrage free monthly curve from the input curve
+    bootstrap = bootstrapCurve(input)
+end
+
+function bootstrapAndShape(input)
+    // Create an arbitrage free monthly curve from the input curve and use simple shaping
+    boot = bootstrapCurve(input)
+    bootstrapAndShape = shape(boot)
+end
+
+function multiplyByFactor(input, factor)
+    // Multiply every tenor in the input curve by a factor
+    multiplyByFactor = input * factor
+end
+
+function divideByFactor(input, factor)
+    // Divide every tenor in the input curve by a factor
+    divideByFactor = input / factor
+end
+
+function addPremium(input, premium)
+    // Add a premium value to every tenor in the input curve
+    addPremium = input + premium
+end
+
+function discount(input, discount)
+    // Subtract a discount value from every tenor in the input curve
+    discount = input - discount
+end
+
+function flatCurve(months, value)
+    // Create a flat curve with the supplied value for the supplied number of months
+    flatCurve = Curve(#ondate)
+    m = Contract(#ondate, "M01", value)
+    flatCurve.add(m)
+    for i = 2 to months
+        m = m.next()
+        flatCurve.add(m)
+    next
+end
+
+function ComponentCurve()
+    // Build a Forward Curve using components
+    totalqty = 0
+    ComponentCurve = Curve(#ondate)
+
+    // Check the config for all the input data and quantities
+    for inp in #config.inputs
+        data = variable(inp.key)
+        if data
+            ComponentCurve = ComponentCurve + (data * inp.qty)
+            totalqty = totalqty + inp.qty
+        end
+    next
+
+    ComponentCurve = ComponentCurve / totalqty
+end

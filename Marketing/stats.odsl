@@ -1,0 +1,13 @@
+print ${user:"me"}
+
+// Get number of processes
+processes = find ${process}
+print "Processes: " + processes.size
+
+// Get number of providers
+providers = find unique source from ${object:public}
+print "Providers: " + providers.size
+
+// Get the number of datasets
+sets = find unique dataset from ${object:public}
+print "DataSets: " + sets.size

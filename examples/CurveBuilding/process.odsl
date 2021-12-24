@@ -1,0 +1,8 @@
+// Create the process
+process = Process()
+process.service = "CURVE"
+process.name = "CH_CURVE"
+process.enabled = true
+process.script = "simplebuild"
+
+save ${process:process}

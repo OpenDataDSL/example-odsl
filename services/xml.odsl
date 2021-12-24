@@ -1,0 +1,11 @@
+// XML examples showing use of an xpath selector
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+print xmldata
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "selector=[currency]"}
+print xmldata
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "selector=[currency='GBP']"}
+print xmldata
+

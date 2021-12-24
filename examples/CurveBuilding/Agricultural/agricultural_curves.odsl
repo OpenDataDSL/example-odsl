@@ -1,0 +1,8 @@
+import ${script:"simplecurve"}
+
+function agricultural(input)
+    // Agricultural curve forward filled and extended to end of 3 years
+    filled = forwardFillCurve(input)
+    extended = extendCurve(filled, 3)
+    agricultural = shape(extended)
+end

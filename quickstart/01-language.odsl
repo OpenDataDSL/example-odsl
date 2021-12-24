@@ -1,0 +1,35 @@
+print "Hello World"
+
+// This is a comment
+print "Hello World"
+
+odsl = "OpenDataDSL"
+print "Hello " + odsl
+
+
+MyString = "OpenDataDSL"
+MyNumber = 12.33
+MyBoolean = true
+
+MyVariable = 23.22
+
+
+MyObject = Object()
+MyObject.value = 22
+MyObject.description = "My Dynamic Object"
+
+MyList=List()
+MyList1=[]
+MyList2=["this", "is", "my", "list", 1, 2, 3]
+
+
+MyList2.add("test")
+print MyList2
+
+
+assertEquals(23.22, MyVariable)
+assertTrue(MyVariable == 23.22)
+assertFalse(MyVariable < 23)
+assertType(MyVariable, "Scalar")
+assertNull(test)
+assertHasProperty(MyObject, "description")

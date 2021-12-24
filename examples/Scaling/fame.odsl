@@ -1,0 +1,38 @@
+set precision 2
+
+w1 = WeeklyCalendar("FRIDAY")
+TEST=TimeSeries("1989-01-20", w1, [3,4,2,5,3,5,5,6,4,5,7,6,6,4,7,5,6,5,7,7])
+TEST.observed = "end"
+print TEST.values
+
+NEW=TimeSeries("1989-01-01", "MONTHLY", [1,3,7,5,4])
+NEW.observed = "end"
+print NEW.values
+
+// TEST1
+test1 = scale(TEST, "MONTHLY", "end", "constant")
+print test1.values
+
+// TEST2
+test2 = scale(TEST, "DAILY", "end", "constant")
+print test2.range("1989-01-21", "1989-02-03").values
+
+// TEST2.1
+test2 = scale(TEST, "DAILY", "end", "none")
+print test2.range("1989-01-21", "1989-02-03").values
+
+// TEST3
+test3 = scale(TEST, "MONTHLY", "end", "linear")
+print test3.values
+
+// TEST4
+test4 = scale(TEST, "DAILY", "end", "linear")
+print test4.range("1989-01-27", "1989-02-03").values
+
+// TEST5
+test5 = scale(TEST, "MONTHLY", "end", "cubic")
+print test5.values
+
+// TEST6
+test6 = scale(TEST, "DAILY", "end", "cubic")
+print test6.range("1989-01-27", "1989-02-03").values

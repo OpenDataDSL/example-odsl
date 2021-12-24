@@ -1,0 +1,24 @@
+wf = workflow in "data-loaders"
+    WF_START
+        "ok" -> act_extract_xml
+    end
+
+    phase "EXTRACT" retries 1 delay 30 seconds then reschedule 5 minutes
+        WF_ACTION act_extract_xml ai
+            "ok" -> stopok
+            "failed" -> stopfailed
+            result=${xml:"http://error"}    
+        end
+    end
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+       return "failed"
+    end
+end
+
+io = Object()
+oo = Object()
+wf.run(io, oo)
+

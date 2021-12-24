@@ -1,0 +1,12 @@
+// Who am I
+me = ${user:""}
+print me
+
+// logout
+trigger SQL_DATA_ECB_FX for 2021-06-11
+
+// trigger TEST_FX for 2021-02-23
+// trigger TEST_FX for 2021-06-09
+// trigger TEST_FX for 2021-06-99
+
+trigger sub_ecb_fx for 2021-10-04

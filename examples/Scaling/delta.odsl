@@ -1,0 +1,12 @@
+// Scale 1 year of 15minutely data to delta daily
+print "creating data"
+data = List()
+for i=1 to 96*365
+    data.add(i)
+next
+
+print "creating 15min ts"
+fmts = TimeSeries("2021-01-01", IntradayCalendar(Duration("15m")), data)
+print "rescaling"
+dts = scale(fmts, "DAILY", "delta")
+print dts.values

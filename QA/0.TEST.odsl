@@ -17,6 +17,10 @@ ${script:file/path+"remove-environment.odsl"}.run()
 // Create Environment
 ${script:file/path+"create-environment.odsl"}.run()
 
+// Load all the types and calendars
+loadTypes()
+loadCalendars()
+
 // Use the test environment
 use test
 
@@ -28,6 +32,7 @@ ${script:file/path+"strings.odsl"}.run()
 ${script:file/path+"functions.odsl"}.run()
 
 ${script:file/path+"types.odsl"}.run()
+${script:file/path+"queue.odsl"}.run()
 ${script:file/path+"objects.odsl"}.run()
 ${script:file/path+"links.odsl"}.run()
 ${script:file/path+"indexes.odsl"}.run()

@@ -1,0 +1,4 @@
+SPOT = TimeSeries("#HTR", "numeric")
+index = parse("13-10-2021", "dd-MM-yyyy")
+SPOT.add(index, 1.1, ["NEW","QUOTED"])
+print json(SPOT)

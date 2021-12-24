@@ -1,0 +1,55 @@
+ondate = CurveDate(Date("2021-06-09"), "REOMHENG")
+
+curve = Curve(ondate)
+curve.currency = "EUR"
+curve.units = "MWH"
+curve.add(Contract(ondate, "M01", 26.87))
+curve.add(Contract(ondate, "M02", 26.85))
+curve.add(Contract(ondate, "M03", 26.75))
+curve.add(Contract(ondate, "M04", 26.65))
+curve.add(Contract(ondate, "M05", 26.62))
+curve.add(Contract(ondate, "M06", 26.55))
+curve.add(Contract(ondate, "M07", 26.68))
+curve.add(Contract(ondate, "M08", 26.89))
+curve.add(Contract(ondate, "M09", 27.05))
+curve.add(Contract(ondate, "M10", 27.15))
+curve.add(Contract(ondate, "M11", 27.02))
+curve.add(Contract(ondate, "M12", 26.85))
+curve.add(Contract(ondate, "Q04", 26.92))
+curve.add(Contract(ondate, "Y01", 27.12))
+curve.add(Contract(ondate, "Y02", 27.20))
+
+bootstrapped = bootstrapCurve(curve)
+shaped = shape(bootstrapped)
+
+for tenor in shaped.contracts
+    print tenor.absolute + " : " + tenor.value
+next
+
+
+obj = object as #ForwardCurve
+    CURVE = curve
+    BOOTSTRAPPED = bootstrapped
+    SHAPED = shaped
+end
+
+obj.id = "CH.INPUT.CURVE"
+save ${object:obj}
+
+ondate = CurveDate(Date("2020-12-14"), "REOMHENG")
+
+curve = Curve(ondate)
+curve.add(Contract(ondate, "2021M01", 26.87))
+curve.add(Contract(ondate, "2021Q01", 26.85))
+curve.add(Contract(ondate, "2021Q02", 26.75))
+
+bootstrapped = bootstrapCurve(curve)
+for tenor in bootstrapped.contracts
+    // print tenor.absolute + " : " + tenor.value
+next
+
+c = Contract(ondate, "2021Q01", 26.85)
+contracts = asMonths(c)
+for tenor in contracts
+    // print tenor.absolute + " : " + tenor.value
+next

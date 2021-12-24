@@ -2,15 +2,36 @@ print "**************************************************************"
 print "*********************** Link Test ****************************"
 print "**************************************************************"
 
-link ${object:"Cable/Cat5ACable"} as parent/child of ${object:"Cable/Cat6Cable"}
+use test
 
-cat5a = ${object:"Cable/Cat5ACable"}
-cat6 = ${object:"Cable/Cat6Cable"}
+loadTypes()
 
-assertEquals("Cat6Cable", cat5a.links.child[0].relative.id)
-assertEquals("Cable", cat5a.links.child[0].relative._type)
+cat5a = ${object:"Cat5ACable"}
+print cat5a.id
 
-assertEquals("Cat5ACable", cat6.links.parent[0].relative.id)
-assertEquals("Cable", cat6.links.parent[0].relative._type)
+proc = ${process:"ECB_FX_TEST"}
+// Add a link from a process object
+cat5a.add("process", proc)
+
+// Add a link evaulating the activevar
+cat5a.add("parenttype", ${type:"Widget"})
+
+// Add a link without evaulating the activevar
+cat5a.add("type", `${type:"Cable"}`)
+
+link ${object:"Cat5ACable"} as parent/child of ${object:"Cat6Cable"}
+
+cat6 = ${object:"Cat6Cable"}
+
+cat6.links.add("test1", ${object:"Cat5ACable"})
+cat6.links.add("test2", cat5a)
+
+links = cat6.links
+
+assertEquals("Cat6Cable", cat5a.links.child.id)
+assertEquals("Cable", cat5a.links.child._type)
+
+assertEquals("Cat5ACable", cat6.links.parent.id)
+assertEquals("Cable", cat6.links.parent._type)
 
 print "Link test complete!"

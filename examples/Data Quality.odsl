@@ -1,0 +1,7 @@
+ts1 = TimeSeries("2020-10-01", BusinessCalendar(), [12.5,12.6,12.7,12.8,null,12.9])
+
+ts2 = missing(ts1)
+
+for tv in ts2.values
+    print tv.time + " " + tv.value + " " + tv.status.quality
+next

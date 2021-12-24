@@ -1,0 +1,10 @@
+processes = find unique name from ${process}
+print processes
+
+proc = ${process:"EONIA_FWD_IR_DAILY"}
+print json(proc)
+
+calendars = find ${calendar:public}
+for cal in calendars
+    print cal.code
+next

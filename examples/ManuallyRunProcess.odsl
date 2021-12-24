@@ -1,0 +1,20 @@
+// Who am I
+me = ${user:""}
+print me
+print run ECB_FX
+
+ondate = Object()
+ondate.date = "2021-05-17"
+// print run WHEAT_CURVE with ondate
+
+// print run CONVERSION_TEST with ondate
+
+
+// Run for a range of dates
+calendar = BusinessCalendar()
+dates = calendar.getDates(Date("2021-05-10"), Date("2021-05-14"))
+
+for date in dates
+    ondate.date = date
+    print run CONVERSION_TEST with ondate
+next

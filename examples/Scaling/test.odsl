@@ -1,0 +1,5 @@
+data = ${data:"BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M:VOL"} for last(300)
+
+scd = scale(data, DailyCalendar(), "summed")
+
+print scd.values

@@ -12,12 +12,11 @@ ECB_FX = transform xml into #ForeignExchange as fx
     base = "EUR"
     currency = fx.currency
 end
-save ${transformer:ECB_FX}
 
 // Test
 xml=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
 models = ECB_FX.run(xml)
 print json(models)
 for model in models
-    save ${object:public/model}
+    print model.id
 next

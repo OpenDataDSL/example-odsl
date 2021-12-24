@@ -13,6 +13,17 @@ else
     print "a=="+a
 end
 
+print "Test logical if statement"
+b=2
+if a==1 and b==2
+    print 1
+elseif (a==2 or b==2)
+    print 2
+elseif (a>2 and b==3) or c
+    print 3
+end
+
+
 print "Test WHILE statement"
 X=1
 while X<5

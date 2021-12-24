@@ -1,0 +1,35 @@
+#DeltaTenor = type
+    // Individual tenor changes
+    tenor as String()
+    old as Number()
+    value as Number()
+end
+save ${type:#DeltaTenor}
+
+#Delta = type
+    // TimeSeries and curve changes
+    id as String()
+    action as Dimension()
+    access as String()
+    time as Date()
+    currency as String()
+    units as String()
+    tenors as List(#DeltaTenor)
+end
+save ${type:#Delta}
+
+#SubscriptionTarget = type
+    name as String()
+end
+save ${type:#SubscriptionTarget}
+
+#QueueTarget = type extends #SubscriptionTarget
+    queue as String()
+    subject as String()
+end
+save ${type:#QueueTarget}
+
+#ProcessTarget = type extends #SubscriptionTarget
+    process as String()
+end
+save ${type:#ProcessTarget}

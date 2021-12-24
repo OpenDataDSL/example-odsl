@@ -1,0 +1,28 @@
+// Create Weekly
+tsw = TimeSeries("WEEKLY")
+tsw.start = "2021-01-04"
+for i=1 to 8
+    tsw.addValue(i)
+next
+assertEquals(8, tsw.size)
+
+// Weekly to Daily
+tsd = scale(tsw, "DAILY", "averaged")
+assertEquals(56, tsd.size)
+
+// Weekly to Hourly
+tsh = scale(tsw, "HOURLY", "averaged")
+assertEquals(56*24, tsh.size)
+
+// Weekly to Monthly
+tsm = scale(tsw, "MONTHLY", "averaged")
+assertEquals(2, tsm.size)
+
+// Weekly to Yearly
+tsy = scale(tsw, "YEARLY", "averaged")
+assertEquals(1, tsy.size)
+
+// Daily to Weekly
+tsd = TimeSeries("2021-10-01", "DAILY", [12.5,13,14,15.5,14.2])
+tsw = scale(tsd, WeeklyCalendar("Friday"))
+print tsw.values

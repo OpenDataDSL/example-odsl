@@ -18,6 +18,9 @@ process.input.url="https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
 process.input.tx = "#ECB_FX"
 process.workflow="#wf_xml_data_loader"
 process.cron = "38 07 ? * * *"
+process.properties.vendor = "European Central Bank"
+process.settings.factor = 12
+print json(process)
 save ${process:process}
 
 print "Checking there is only 1 process"

@@ -1,0 +1,107 @@
+CH_CURVE = object as #CurveConfig
+    name = "CH Curve"
+    expiryCalendar = "REOMHENG"
+    buildScript = "simplecurve"
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "CH2_CURVE:CURVE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "CURVE"
+        code = "multiplyByFactor(PRIMARY, factor)"
+        factor = 1.5
+        currency = "EUR"
+        units = "MWH"
+        expiryCalendar = "REOMHENG"
+    end
+end
+save ${curve:CH_CURVE}
+
+
+CH2_CURVE = object as #CurveConfig
+    name = "CH2 Curve"
+    description = "Test Curve Building"
+    category = "TEST"
+    subcategory = "Curve Building"
+    region = "Europe"
+    country = "Germany"
+    expiryCalendar = "REOMHENG"
+    buildScript = "simplecurve"
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "CH.INPUT.CURVE:CURVE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "CURVE"
+        code = "bootstrapAndShape(PRIMARY)"
+        currency = "EUR"
+        units = "MWH"
+        expiryCalendar = "REOMHENG"
+    end
+    outputs[1] = object as #CurveConfigOutput
+        name = "HIGH"
+        code = "multiplyByFactor(CURVE, factor)"
+        factor = 1.2
+        currency = "EUR"
+        units = "MWH"
+        expiryCalendar = "REOMHENG"
+    end
+    outputs[2] = object as #CurveConfigOutput
+        name = "FLAT"
+        code = "flatCurve(24, factor)"
+        factor = 1.2
+        currency = "EUR"
+        units = "MWH"
+        expiryCalendar = "REOMHENG"
+    end
+    outputs[3] = object as #CurveConfigOutput
+        name = "SIMPLE"
+        code = "CURVE + HIGH"
+        currency = "EUR"
+        units = "MWH"
+        expiryCalendar = "REOMHENG"
+    end
+    tags = ["CURVE", "TEST"]
+end
+
+save ${curve:CH2_CURVE}
+
+CONVERSION_TEST = object as #CurveConfig
+    name = "CH Curve"
+    expiryCalendar = "REOMHENG"
+    buildScript = "simplecurve"
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "#MATBAROFEX.ROS.SOJA.FUT:CLOSE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "USD_MT"
+        code = "PRIMARY"
+        currency = "USD"
+        units = "MT"
+        expiryCalendar = "REOMHENG"
+    end
+    outputs[1] = object as #CurveConfigOutput
+        name = "USD_KG"
+        code = "PRIMARY"
+        currency = "USD"
+        units = "KG"
+        expiryCalendar = "REOMHENG"
+    end
+    outputs[2] = object as #CurveConfigOutput
+        name = "EUR_MT"
+        code = "PRIMARY"
+        currency = "EUR"
+        units = "MT"
+        expiryCalendar = "REOMHENG"
+    end
+end
+save ${curve:CONVERSION_TEST}
+
+// Run the curves
+ondate = Object()
+ondate.date = "2021-04-26"
+print run CONVERSION_TEST with ondate

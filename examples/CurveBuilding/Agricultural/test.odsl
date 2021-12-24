@@ -1,0 +1,18 @@
+import ${script:"simplecurve"}
+
+ondate = CurveDate(Date("2021-04-27"), "REOMHENG")
+
+curve = Curve(ondate)
+curve.currency = "EUR"
+curve.units = "MWH"
+curve.add(Contract(ondate, "2021M05", 26.87))
+curve.add(Contract(ondate, "2021M08", 26.65))
+curve.add(Contract(ondate, "2021M09", 26.62))
+
+filled = forwardFillCurve(curve)
+extend = extendCurve(filled, 3)
+final = bootstrapAndShape(extend)
+
+for contract in final.contracts
+    print contract.tenor + " = " + contract.value
+next

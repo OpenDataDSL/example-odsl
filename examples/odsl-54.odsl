@@ -1,0 +1,55 @@
+use odsl54
+
+loadTypes()
+
+// Add a setting
+ODSL = object as #SETTING
+    name = ODSL
+    value = 12.5
+end
+save ${object:ODSL}
+
+// Get a list of objects
+objects = find ${object}
+print "=========== All Objects =============="
+showObjects(objects)
+
+// Get a list of objects of type setting
+objects = find ${object} where _type == "#SETTING"
+print "=========== Settings =============="
+showObjects(objects)
+
+// Get a specific object
+GBP = ${object:"ECB_FX.EURGBP"}
+print GBP
+
+// Get a specific data item
+TS = ${data:"ECB_FX.EURGBP:SPOT"}
+print TS.values
+
+// Find a data item
+di = find ${data} where _type == "#ForeignExchange" and currency == "GBP"
+print di
+
+// Get a curve object
+c = ${object:"NZ_FONTERRA_SALTED_25KG_NZ"}
+// Get a curve ondate list
+c1 = ${data:"NZ_FONTERRA_SALTED_25KG_NZ:CURVE"}
+// Get a curve 
+c2 = ${data:"NZ_FONTERRA_SALTED_25KG_NZ:CURVE:2020-11-03"}
+// Get a curve version
+c3 = ${data:"NZ_FONTERRA_SALTED_25KG_NZ:CURVE:2020-11-03":1}
+print c3.version.version
+// Tag the curve version
+tag ${data:"NZ_FONTERRA_SALTED_25KG_NZ:CURVE:2020-11-03":1} as PROD
+// Get the tagged version
+c4 = ${data:"NZ_FONTERRA_SALTED_25KG_NZ:CURVE:2020-11-03":PROD}
+print c4.version.version
+
+
+
+function showObjects(objs)
+    for o in objs
+        print o.id
+    next
+end

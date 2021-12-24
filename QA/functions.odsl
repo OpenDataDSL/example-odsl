@@ -9,7 +9,7 @@ set missing ignore
 
 input = TimeSeries("DAILY")
 input.add("2020-11-01", 12.5)
-// input.add("2020-11-02", NaN)
+input.add("2020-11-02", 12.75)
 input.add("2020-11-03", 12.9)
 input.add("2020-11-04", 11.5)
 input.add("2020-11-05", 11.9)

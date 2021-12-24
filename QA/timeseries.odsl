@@ -2,7 +2,7 @@ print "**************************************************************"
 print "*********************** TimeSeries Test **********************"
 print "**************************************************************"
 
-ts = TimeSeries("sparse")
+ts = TimeSeries("SPARSE")
 
 // Add initial data
 ts.add("2020-10-01T00:10:00", 12.5)
@@ -10,8 +10,8 @@ ts.add("2020-10-01T00:20:00", 12.6)
 print json(ts)
 assertEquals(12.5, ts["2020-10-01T00:10:00"])
 assertEquals(12.6, ts["2020-10-01T00:20:00"])
-assertEquals(12.5, ts[0])
-assertEquals(12.6, ts[1])
+assertEquals(12.5, ts[0].value)
+assertEquals(12.6, ts[1].value)
 
 // Test adding before start
 ts.add("2020-10-01T00:00:00", 9.0)
@@ -19,9 +19,9 @@ print json(ts)
 assertEquals(9.0, ts["2020-10-01T00:00:00"])
 assertEquals(12.5, ts["2020-10-01T00:10:00"])
 assertEquals(12.6, ts["2020-10-01T00:20:00"])
-assertEquals(9.0, ts[0])
-assertEquals(12.5, ts[1])
-assertEquals(12.6, ts[2])
+assertEquals(9.0, ts[0].value)
+assertEquals(12.5, ts[1].value)
+assertEquals(12.6, ts[2].value)
 
 // Test adding after end
 ts.add("2020-10-18T01:00:00", 15.0)
@@ -30,10 +30,11 @@ assertEquals(9.0, ts["2020-10-01T00:00:00"])
 assertEquals(12.5, ts["2020-10-01T00:10:00"])
 assertEquals(12.6, ts["2020-10-01T00:20:00"])
 assertEquals(15.0, ts["2020-10-18T01:00:00"])
-assertEquals(9.0, ts[0])
-assertEquals(12.5, ts[1])
-assertEquals(12.6, ts[2])
-assertEquals(15.0, ts[3])
+assertEquals(9.0, ts[0].value)
+assertEquals(12.5, ts[1].value)
+assertEquals(12.6, ts[2].value)
+assertEquals(15.0, ts[3].value)
+
 
 // Test adding in the middle
 ts.add("2020-10-01T01:00:00", 12.0)
@@ -43,8 +44,56 @@ assertEquals(12.5, ts["2020-10-01T00:10:00"])
 assertEquals(12.6, ts["2020-10-01T00:20:00"])
 assertEquals(12.0, ts["2020-10-01T01:00:00"])
 assertEquals(15.0, ts["2020-10-18T01:00:00"])
-assertEquals(9.0, ts[0])
-assertEquals(12.5, ts[1])
-assertEquals(12.6, ts[2])
-assertEquals(12.0, ts[3])
-assertEquals(15.0, ts[4])
+assertEquals(9.0, ts[0].value)
+assertEquals(12.5, ts[1].value)
+assertEquals(12.6, ts[2].value)
+assertEquals(12.0, ts[3].value)
+assertEquals(15.0, ts[4].value)
+
+ts1 = TimeSeries("BUSINESS")
+
+// Add some values
+ts1.add("2021-01-01", 21.5)
+
+ts2 = TimeSeries("BUSINESS")
+
+// Add a value for the 1st of January
+ts2.add("2021-01-01", 2)
+
+// Simple TS operations
+ts3 = ts1 + ts2
+assertEquals(23.5, ts3["2021-01-01"])
+ts3 = ts1 - ts2
+assertEquals(19.5, ts3["2021-01-01"])
+ts3 = ts1 / ts2
+assertEquals(10.75, ts3["2021-01-01"])
+ts3 = ts1 * ts2
+assertEquals(43, ts3["2021-01-01"])
+
+// Scalar operations
+ts3 = ts1 + 2
+assertEquals(23.5, ts3["2021-01-01"])
+ts3 = ts1 - 2
+assertEquals(19.5, ts3["2021-01-01"])
+ts3 = 2 - ts1
+assertEquals(-19.5, ts3["2021-01-01"])
+ts3 = ts1 / 2
+assertEquals(10.75, ts3["2021-01-01"])
+ts3 = 21.5 / ts1
+assertEquals(1, ts3["2021-01-01"])
+ts3 = ts1 * 2
+assertEquals(43, ts3["2021-01-01"])
+ts3 = ts2 ^ 2
+assertEquals(4, ts3["2021-01-01"])
+
+// Expressions
+ts3 = (ts1 + ts2) / 2
+assertEquals(11.75, ts3["2021-01-01"])
+
+// Additional data
+ts2.add("2021-01-04", 2)
+ts3 = ts1 + ts2
+assertEquals(23.5, ts3["2021-01-01"])
+assertNull(ts3["2021-01-04"])
+
+

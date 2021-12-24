@@ -1,0 +1,82 @@
+workflow = workflow in "test"
+    WF_START
+        "ok" -> stopok
+    end
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+end
+
+objin = Object()
+objout = Object()
+workflow.run(objin, objout)
+
+hello_message = action in "general"
+    in user as Scalar
+    out message as Scalar
+    exit "ok"
+
+    output.message = "Hello " + input.user
+    return "ok"
+end
+
+workflow = workflow in "test"
+    in user as Scalar
+
+    WF_START
+        "ok" -> act_print
+    end
+
+    phase "MAIN"
+        WF_ACTION act_print ai
+            "ok" -> stopok
+            ai.user = input.user
+            result = hello_message.run(ai, output)
+        end
+    end
+    
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+end
+
+objin = Object()
+objin.user = "ODSL"
+objout = Object()
+workflow.run(objin, objout)
+print objout.workflow.act_print.message
+
+hello_message = action in "general"
+    in user as Scalar
+    out message as Scalar
+    exit "ok"
+
+    output.message = "Hello " + input.user
+    return "ok"
+end
+save ${action:hello_message}
+
+workflow = workflow in "test"
+    in user as Scalar
+
+    WF_START
+        "ok" -> act_print
+    end
+
+    phase "MAIN"
+        WF_ACTION act_print ai
+            "ok" -> stopok
+            ai.user = input.user
+            result = ${action:"hello_message"}.run(ai, output)
+        end
+    end
+    
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+end
+
+objin = Object()
+objin.message = "Hello World"
+objout = Object()
+workflow.run(objin, objout)

@@ -1,0 +1,12 @@
+use test
+
+delete ${queue:"myqueue"}
+
+// Create a new queue
+myqueue = object as #QUEUE
+    queue = "myqueue"
+    handler = "loader"
+    timeout = "PT3M"
+    retention = "P20Y"
+end
+save ${queue:myqueue} "Created new queue"

@@ -1,0 +1,16 @@
+// Grab one of the UCI data sets for Balloons
+// https://archive.ics.uci.edu/ml/datasets/Balloons
+
+csvdata = ${csv:"https://archive.ics.uci.edu/ml/machine-learning-databases/balloons/adult+stretch.data","headerpos=0"}
+print csvdata.size
+for row in csvdata
+    print row
+next
+
+
+// Get the data as a table
+csvdata = ${csv:"https://archive.ics.uci.edu/ml/machine-learning-databases/balloons/adult+stretch.data","headerpos=0", "output=table"}
+print csvdata.rows.size
+for row in csvdata.rows
+    print row
+next

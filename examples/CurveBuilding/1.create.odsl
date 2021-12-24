@@ -1,0 +1,22 @@
+// Create all the elements
+path = "/src/example-odsl/examples/CurveBuilding/"
+
+${script:file/path+"types.odsl"}.run()
+${script:file/path+"actions.odsl"}.run()
+${script:file/path+"workflow.odsl"}.run()
+${script:file/path+"configuration.odsl"}.run()
+${script:file/path+"process.odsl"}.run()
+${script:file/path+"subscription.odsl"}.run()
+
+save ${type:#CurveConfigInput}
+save ${type:#CurveConfig}
+
+save ${action:#read_object}
+
+save ${workflow:#standard_curve_build}
+
+save ${object:CH_CURVE}
+
+save ${process:process}
+
+save ${subscription:CH_CURVE}

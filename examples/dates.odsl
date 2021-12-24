@@ -1,8 +1,11 @@
 date = parse("22Oct2020", "ddMMMyyyy")
-assertEquals("2020-10-22T00:00:00", date)
+assertEquals("2020-10-22", date)
 
 d1 = Date("2020-06-08")
 d2 = ${date:"2020-06-09"}
+
+oneday = Duration("1D")
+print oneday
 
 // Test for date subtraction
 dur1D = d2 - d1

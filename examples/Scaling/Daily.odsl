@@ -1,0 +1,68 @@
+// Hourly to Daily
+ts1 = TimeSeries("HOURLY")
+ts1.start = "2021-01-01"
+
+for i=1 to 48
+    ts1.addValue(i)
+next
+
+print ts1.values
+ts1.observed="summed"
+print ts1.observed
+
+ts2 = scale(ts1, "DAILY")
+print ts2.values
+
+set observed averaged
+set distribution constant
+
+ts2 = scale(ts1, "DAILY")
+print ts2.values
+
+
+ts = scale(ts1, "DAILY", "beginning")
+assertEquals(1, ts["2021-01-01"])
+assertEquals(25, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "end")
+assertEquals(24, ts["2021-01-01"])
+assertEquals(48, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "averaged")
+assertEquals(12.5, ts["2021-01-01"])
+assertEquals(36.5, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "summed")
+assertEquals(300, ts["2021-01-01"])
+assertEquals(876, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "high")
+assertEquals(24, ts["2021-01-01"])
+assertEquals(48, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "low")
+assertEquals(1, ts["2021-01-01"])
+assertEquals(25, ts["2021-01-02"])
+
+tsd = TimeSeries("DAILY")
+tsd.start = "2021-01-01"
+for i=1 to 48
+    tsd.addValue(i)
+next
+ts = scale(tsd, "MONTHLY", "beginning")
+assertEquals(1, ts["2021-01-01"])
+assertEquals(32, ts["2021-02-01"])
+
+// Don't count missing in average calculation
+set missing ignore
+ts = scale(tsd, "MONTHLY", "averaged")
+assertEquals(16, ts["2021-01-01"])
+assertEquals(40, ts["2021-02-01"])
+
+// Count missing in the average calculation
+set missing
+set precision 3
+ts = scale(tsd, "MONTHLY", "averaged")
+assertEquals(16, ts["2021-01-01"])
+assertEquals(24.286, ts["2021-02-01"])
+

@@ -1,0 +1,28 @@
+// logout
+
+// Get the tenant information
+print ${tenant:""}
+
+
+// Create a new queue
+defqueue = object as #QUEUE
+    queue = "default"
+    // timeout = "PT5M"
+    // retention = "PT14D"
+end
+save ${queue:defqueue}
+
+// List the queues
+queues = find ${queue:""}
+print queues
+
+company = Object()
+company.name = ""
+company.address1 = ""
+company.address2 = ""
+company.city = ""
+company.postcode = ""
+company.email = ""
+company.phone = ""
+company.accountContact = ""
+save ${tenant:company}

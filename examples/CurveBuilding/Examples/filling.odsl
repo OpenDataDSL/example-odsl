@@ -1,0 +1,19 @@
+ondate = CurveDate(Date("2020-10-30"), "REOMHENG")
+
+curve = Curve(ondate)
+curve.add(Contract(ondate, "2020M11", 26.87))
+curve.add(Contract(ondate, "2020M12", 26.85))
+curve.add(Contract(ondate, "2021M01", 26.75))
+curve.add(Contract(ondate, "2021M03", 26.62))
+curve.add(Contract(ondate, "2021M04", 26.55))
+
+filled = forwardFillCurve(curve)
+
+for tenor in filled.contracts
+    other = curve[tenor.tenor]
+    if other
+        print tenor.tenor + " = " + tenor.value + " was " + other.value
+    else
+        print tenor.tenor + " = " + tenor.value
+    end
+next

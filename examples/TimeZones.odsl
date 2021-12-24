@@ -1,0 +1,26 @@
+PRICE = TimeSeries("HOURLY")
+PRICE.timezone="Europe/Amsterdam"
+PRICE.currency = "EUR"
+PRICE.units = "MWH"
+
+// index = parse("24-10-2020", "dd-MM-yyyy")
+// values = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+// PRICE.add(index, values)
+
+index = parse("25-10-2020", "dd-MM-yyyy", "Europe/Amsterdam")
+values = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+PRICE.add(index, values)
+
+index = parse("26-10-2020", "dd-MM-yyyy", "Europe/Amsterdam")
+values = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+PRICE.add(index, values)
+
+// print json(PRICE)
+
+print PRICE.localValues
+lv = PRICE.localValues
+uv = PRICE.values
+
+for i=0 to uv.size-1
+    print uv[i].time + " - " + lv[i].time + " = " + uv[i].value
+next

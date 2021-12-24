@@ -1,0 +1,14 @@
+on error ignore
+
+// Create a date variable
+d = Date()
+
+// Call an unknown method that will force throwing an error
+print d.unknown()
+
+// Script continues and we can see the error message in the variable called error
+print "Error is " + error
+
+on error exit
+print d.unknown()
+print "Complete"

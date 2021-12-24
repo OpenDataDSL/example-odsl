@@ -1,0 +1,15 @@
+tsa = TimeSeries("SPARSE")
+tsa.add("2021-01-03", 24)
+
+tsb = TimeSeries("SPARSE")
+tsb.add(Date("2021-01-01"), 24)
+
+print tsa.values
+print tsb.values
+
+barley=${data:"#NCDEX.AG.IN.BARLEYJPR:SPOT"}
+print barley.values
+
+bd=scale(barley, "DAILY", "averaged")
+print bd.values
+

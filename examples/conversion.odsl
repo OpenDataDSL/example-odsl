@@ -1,0 +1,6 @@
+usdmt = ${data:"#CLALIT.AMF.AVGAUC.AWP:AVG"}
+eurmt = ${data:"#CLALIT.AMF.AVGAUC.AWP:AVG","currency=EUR"}
+
+for tsv in usdmt.values
+    print tsv
+next

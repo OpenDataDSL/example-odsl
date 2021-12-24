@@ -1,0 +1,45 @@
+loadTypes()
+
+// // Create transformer
+// ECB_FX_TEST = transform data into #ForeignExchange as fx
+//         create with Cube 
+//         unique id = "ECB_FX_TEST.EUR" + fx.currency
+//         SPOT = TimeSeries(fx.time, "BUSINESS", fx.rate, "numeric")
+//         category = "Foreign Exchange"
+//         source = "ECB_FX_TEST"
+//         sourceName = "European Central Bank"
+//         model = "TEST_EUR" + fx.currency
+//         name = "EUR to " + fx.currency
+//         description = "European Central Bank Euro foreign exchange reference rates EUR/" + fx.currency
+//         base = "EUR"
+//         currency = fx.currency
+//         class = "SPOT"
+//         location = "EUROPE"
+//         _access="#F1"
+//         tags = ["FX","ECB","EUR"]
+//     end
+// save ${transformer:ECB_FX_TEST}
+
+// // Create a process
+// process = Process()
+// process.service = "TEST"
+// process.name = "ECB_FX_TEST"
+// process.description = "***TEST ETL Process for European Central Bank Exchange Rates"
+// process.enabled = true
+// process.workflow = "#wf_xml_data_loader"
+// process.input.url = `"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"`
+// process.input.tx="ECB_FX_TEST"
+// process.cron = "00 17 ? * MON,TUE,WED,THU,FRI *"
+// save ${process:process}
+
+
+Cat6ACable = object as Cable
+    name = "Cat 6A Ethernet cable"
+    price = 1.85
+    length = 15
+end
+
+// Send to a queue
+batch = PROCESS.createBatch()
+batch.add(Cat6ACable)
+send batch

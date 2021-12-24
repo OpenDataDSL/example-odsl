@@ -1,0 +1,21 @@
+// Basic daily calendar
+daily = DailyCalendar()
+dates = daily.getDates("2021-01-01", "2021-01-07")
+print dates
+
+// Holiday calendar
+holiday = HolidayCalendar()
+holiday.addRule("Every Monday")
+dates = holiday.getDates("2021-01-01", "2021-01-07")
+print dates
+
+
+// Business day calendar
+business = BusinessCalendar()
+dates = business.getDates("2021-01-01", "2021-01-07")
+print dates
+
+// Add a holiday rule
+business.addRule("Every Monday")
+dates = business.getDates("2021-01-01", "2021-01-07")
+print dates

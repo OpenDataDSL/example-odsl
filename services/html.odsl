@@ -1,0 +1,7 @@
+url = "https://www.bnm.gov.my/exchange-rates?p_p_id=bnm_exchange_rate_display_portlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_bnm_exchange_rate_display_portlet_monthStart="+ (${date:"today"}.month - 1) +"&_bnm_exchange_rate_display_portlet_yearStart="+${date:"today"}.year+"&_bnm_exchange_rate_display_portlet_monthEnd="+(${date:"today"}.month - 1)+"&_bnm_exchange_rate_display_portlet_yearEnd="+${date:"today"}.year+"&_bnm_exchange_rate_display_portlet_sessionTime=0900&_bnm_exchange_rate_display_portlet_rateType=MR&_bnm_exchange_rate_display_portlet_quotation=rm"
+selector = "#dvData > table > tbody"
+print url
+table = ${html:url, selector, "table"}
+table.setColumnDates(0, "dd MMM yyyy")
+
+print json(table)

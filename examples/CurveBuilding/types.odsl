@@ -1,0 +1,37 @@
+// Create the curve build types
+
+#CurveConfigInput = versioned type
+    // A data input for a curve configuration
+    key as String()
+    id as String()
+    optional as Boolean() default "false"
+    offset as Number()
+end
+
+#CurveConfigOutput = versioned type
+    // A curve output configuration
+    expiryCalendar as String()
+    currency as String()
+    units as String()
+    code as String()
+end
+
+#CurveConfig = versioned type
+    // A curve configuration
+    name as String()
+    description as String()
+
+    category as Dimension()
+    subcategory as Dimension()
+    region as Dimension()
+    country as Dimension()
+
+    buildScript as String()
+    expiryCalendar as String()
+    inputs as List(#CurveConfigInput)
+    outputs as List(#CurveConfigOutput)
+end
+
+save ${type:#CurveConfigInput}
+save ${type:#CurveConfigOutput}
+save ${type:#CurveConfig}

@@ -1,0 +1,7 @@
+a = Batch()
+send a to "test" size 1
+
+send #CONTEXT to "def" size 100
+
+send PROCESS to "" size 10
+

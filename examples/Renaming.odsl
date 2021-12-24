@@ -1,0 +1,28 @@
+// Rename a process
+// rename ${process:"AZURE_TEST1"} as AZURE_TEST
+
+// Rename an action
+// rename ${action:"test1"} as TEST1
+
+// Rename a workflow
+// rename ${workflow:"workflow_test"} as wf_test
+
+// Rename a type
+// rename ${type:"Test"} as TestType
+// rename ${type:"TestType"} as Test
+
+// Rename a transformer
+// rename ${transformer:"ECB_FX"} as ecb
+// rename ${transformer:"ecb"} as ECB_FX
+
+// Rename a script
+// rename ${script:"dates.odsl"} as dates
+
+// Rename an object
+// rename ${object:"false"} as dummy
+
+// Rename an expiry calendarr
+// rename ${expiry:"eombus"} as EOMBUS
+
+// Rename a calendar
+// rename ${calendar:"ukpeak"} as UKP

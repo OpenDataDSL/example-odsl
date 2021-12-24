@@ -1,0 +1,87 @@
+WHEAT_CURVE = object as #CurveConfig
+    name = "Wheat"
+    description = "MATba Wheat Curve"
+    category = "AGRICULTURAL"
+    subcategory = "WHEAT"
+    region = "South America"
+    country = "Argentina"
+    location = "Buenos Aires"
+    expiryCalendar = "#RMATBA"
+    buildScript = "agricultural_curves"
+    tags = ["CURVE", "AGS", "WHEAT"]
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "#MATBAROFEX.BA.TRIGO.FUT:CLOSE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "CURVE"
+        code = "agricultural(PRIMARY)"
+        currency = "USD"
+        units = "MT"
+        expiryCalendar = "#RMATBA"
+    end
+end
+save ${curve:WHEAT_CURVE}
+
+CORN_CURVE = object as #CurveConfig
+    name = "Corn"
+    description = "MATba Corn Curve"
+    category = "AGRICULTURAL"
+    subcategory = "CORN"
+    region = "South America"
+    country = "Argentina"
+    location = "Rosario"
+    expiryCalendar = "#RMATBA"
+    buildScript = "agricultural_curves"
+    tags = ["CURVE", "AGS", "CORN"]
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "#MATBAROFEX.ROS.MAIZ.FUT:CLOSE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "CURVE"
+        code = "agricultural(PRIMARY)"
+        currency = "USD"
+        units = "MT"
+        expiryCalendar = "#RMATBA"
+    end
+end
+save ${curve:CORN_CURVE}
+
+SOYBEAN_CURVE = object as #CurveConfig
+    name = "Soybean"
+    description = "MATba Soybean Curve"
+    category = "AGRICULTURAL"
+    subcategory = "SOYBEAN"
+    region = "South America"
+    country = "Argentina"
+    location = "Rosario"
+    expiryCalendar = "#RMATBA"
+    buildScript = "agricultural_curves"
+    tags = ["CURVE", "AGS", "SOYBEAN"]
+    inputs[0] = object as #CurveConfigInput
+        key = "PRIMARY"
+        id = "#MATBAROFEX.ROS.SOJA.FUT:CLOSE"
+        required = true
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "CURVE"
+        code = "agricultural(PRIMARY)"
+        currency = "USD"
+        units = "MT"
+        expiryCalendar = "#RMATBA"
+    end
+end
+save ${curve:SOYBEAN_CURVE}
+
+// Run the curves
+ondate = Object()
+ondate.date = "2021-04-26"
+print run WHEAT_CURVE with ondate
+print run CORN_CURVE with ondate
+print run SOYBEAN_CURVE with ondate
+
+// Delete a curve configuration
+delete ${curve:"CORN_CURVE"}

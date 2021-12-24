@@ -1,3 +1,35 @@
+print ${tenant:""}
+
+HUSA = HolidayCalendar()
+HUSA.addRule("Every Saturday")
+HUSA.addRule("Every Sunday")
+HUSA.addRule("1st of January named 'New Year' on Saturday shift -1 day on Sunday shift 1 day")
+HUSA.addRule("Second Monday in January named 'Martin Luther King'")
+HUSA.addRule("Second Monday in February named 'President's Day'")
+HUSA.addRule("Good Friday")
+HUSA.addRule("Last Monday in May named 'Memorial Day'")
+HUSA.addRule("4th of July named 'Independence Day' on Saturday shift -1 on Sunday shift 1 day")
+HUSA.addRule("First Monday in September named 'Labor Day'")
+HUSA.addRule("Second Monday in October named 'Columbus Day'")
+HUSA.addRule("Second Monday in November named 'Veterans Day'")
+HUSA.addRule("Fourth Thursday in November named 'Thanks Giving Day'")
+HUSA.addRule("25th of December named 'Christmas Day' on Saturday shift -1 day on Sunday shift 1 day")
+first = Date("2021-12-20")
+last = Date("2022-01-05")
+dates = HUSA.getDates(first, last)
+print dates
+
+HUSA = HolidayCalendar()
+HUSA.addRule("Every Saturday")
+HUSA.addRule("Every Sunday")
+HUSA.addRule("4th of July named 'Independence Day' on Saturday shift -1 days and on Sunday shift 1 day")
+start = Date("2021-07-01")
+enddate = Date("2021-07-10")
+dates = HUSA.getDates(start, enddate)
+print dates
+
+
+
 // Create Private
 HENGCRUD = HolidayCalendar()
 HENGCRUD.addRule("Every Saturday")

@@ -2,20 +2,39 @@ print "**************************************************************"
 print "*********************** Subscriptions Test *******************"
 print "**************************************************************"
 
-use test
-
-// Create/update a public subscription
-#TEST_RAW = object as Subscription
-    description = "Test public subscription"
-    service = "ETL"
-    name = "TEST"
-    source = "Test Company"
-    loader = "RAW"
-    restricted = false
-    pricing = "#F1"
-    subscription = "This is a test subscription"
+fxobjects = List()
+o1 = object as SubscriptionObject
+    key = "USD"
+    id = "#ECB_FX.EURUSD:SPOT"
 end
-save ${subscription:#TEST_RAW}
+fxobjects.add(o1)
+o2 = object as SubscriptionObject
+    key = "GBP"
+    id = "#ECB_FX.EURGBP:SPOT"
+end
+fxobjects.add(o2)
+o3 = object as SubscriptionObject
+    key = "JPY"
+    id = "#ECB_FX.EURJPY:SPOT"
+end
+fxobjects.add(o3)
+
+fxtargets = List()
+t1 = object as SubscriptionTarget
+    name = "QueueTarget"
+    queue = "myqueue"
+end
+fxtargets.add(t1)
+
+// Create/update a subscription
+TEST_FX = object as Subscription
+    name = "TEST_FX"
+    description = "Test public subscription"
+    enabled = true
+    objects = fxobjects
+    targets = fxtargets
+end
+save ${subscription:TEST_FX}
 
 // Get all the public subscriptions that match the query
 subs = find ${subscription:public} where service="ETL" and name="TEST"

@@ -7,4 +7,5 @@ print ">>> Removing test environment"
 
 delete ${environment:"test"}
 environments = find ${environment}
-assertEquals(1, environments.size, "Should have 1 environment")
+
+print "There are currently " + environments.size + " environments"

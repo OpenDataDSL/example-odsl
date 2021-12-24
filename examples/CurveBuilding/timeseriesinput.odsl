@@ -1,0 +1,29 @@
+// Add a subscription to send to a queue
+SUBSTEST = object as #Subscription
+    name = "SUBSTEST"
+    description = "Test TS subscription"
+    enabled = true
+    objects[0] = object as #SubscriptionObject
+        key = "PRIMARY"
+        id = "tsobj:SPOT"
+    end
+    targets[0] = object as #SubscriptionTarget
+        name = "QueueTarget"
+        queue = "myqueue"
+    end
+end
+
+save ${subscription:SUBSTEST}
+
+// Create a timeseries with 1 value
+ts = TimeSeries("BUSINESS")
+ts.add("2021-06-09", 21.34)
+
+// Add to an object
+tsobj = object as #Agriculture
+    SPOT = ts
+end
+
+// Save the object
+save ${object:tsobj}
+

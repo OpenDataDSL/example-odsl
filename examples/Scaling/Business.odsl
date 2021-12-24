@@ -1,0 +1,33 @@
+// Business to Monthly
+tsb = TimeSeries("BUSINESS")
+tsb.start = "2021-01-01"
+for i=1 to 48
+    tsb.addValue(i)
+next
+
+tsm = scale(tsb, "MONTHLY", "beginning")
+print tsm.values
+assertEquals(1, tsm["2021-01-01"])
+assertEquals(22, tsm["2021-02-01"])
+assertEquals(42, tsm["2021-03-01"])
+
+// Monthly to Business
+tsmb = scale(tsm, "BUSINESS", "averaged", "linear")
+print tsmb.values
+
+// Business to Daily
+tsbd = scale(tsb, "DAILY", "none")
+print tsbd.values
+tsbde = scale(tsb, "DAILY", "end")
+print tsbde.values
+
+// Daily to Business
+tsd = TimeSeries("DAILY")
+tsd.start = "2021-01-01"
+for i=1 to 48
+    tsd.addValue(i)
+next
+tsdbn = scale(tsd, "business", "none")
+print tsdbn.values
+tsdbe = scale(tsd, "BUSINESS", "end")
+print tsdbe.values

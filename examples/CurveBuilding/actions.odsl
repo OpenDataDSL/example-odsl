@@ -1,0 +1,61 @@
+#read_object = action in "general"
+    // Read an object
+    in id as Scalar "The ID of the object to read"
+    out obj as Object "The ODSL Object"
+    exit "ok", "failed" 
+
+    on error ignore 
+    output.obj=${object:input.id}
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end        
+end
+
+#load_curve_input_data = action in "curve-building"
+    // Load the input data for a curve
+    in config as Object "The curve configuration object"
+    in ondate as Date "The date to build the curve"
+    out data as Object "The output data objects"
+    exit "ok", "failed" 
+
+    on error ignore 
+    for val in input.config.inputs
+        // Get the data for the ondate
+        ina = val.id + ":" + format(input.ondate, "yyyy-MM-dd")
+        d = ${data:ina}
+        output.data.set(val.key, d)
+    next
+    if error
+        print error
+        return "failed"
+    else
+        return "ok"
+    end        
+end
+
+#build_curve = action in "curve-building"
+    // Build a curve
+    in config as Object "The curve configuration object"
+    in ondate as Date "The date to build the curve"
+    in data as Object "The output data objects"
+    out curve as Curve "The built curve"
+    exit "ok", "failed" 
+
+    on error ignore 
+    script = ${script:input.config.buildscript}
+    if error
+        print error
+        return "failed"
+    else
+        output.curve = script.run()
+        if error
+            print error
+            return "failed"
+        else
+            return "ok"
+        end        
+    end
+end

@@ -1,0 +1,22 @@
+// Standard properties
+ts1 = TimeSeries("BUSINESS")
+ts1.currency = "GBP"
+ts1.units = "KG"
+ts1.timezone = "Europe/London"
+ts1.tenor = "SPOT"
+ts1.source = "Trader A"
+ts1.description = "My Timeseries"
+print json(ts1)
+
+// Custom properties
+ts1 = TimeSeries("BUSINESS")
+ts1.name = "My TimeSeries"
+
+// You can add any type of variable
+ts1.geolocation = Point([51.51958, -0.12695])
+
+// You can also nest properties
+ts1.address = Object()
+ts1.address.city = "London"
+ts1.address.country = "England"
+print json(ts1)

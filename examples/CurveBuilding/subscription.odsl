@@ -1,0 +1,16 @@
+// Create the subscription
+CH_CURVE = object as #Subscription
+    name = "CH_CURVE"
+    description = "Build CH Curve"
+    enabled = true
+    objects[0] = object as #SubscriptionObject
+        key = "PRIMARY"
+        id = "CH.INPUT.CURVE:CURVE"
+    end
+    targets[0] = object as #SubscriptionTarget
+        name = "ProcessTarget"
+        process = "CH_CURVE"
+    end
+end
+
+save ${subscription:CH_CURVE}

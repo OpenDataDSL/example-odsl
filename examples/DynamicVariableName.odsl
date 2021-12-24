@@ -1,0 +1,20 @@
+name="This is it"
+variable(clean(name)) = TimeSeries("DAILY")
+variable(clean(name)).category = "TEST"
+variable(clean(name)).add("2021-05-27", 12.2)
+print variable(clean(name)).get("2021-05-27").value
+
+
+print variable(clean(name)).getProperties().size
+print json(variable(clean(name)))
+variable(clean(name)).units="MT"
+print variable(clean(name)).units
+variable(clean(name)).units="BBL"
+print variable(clean(name)).units
+
+i=0
+j=2
+
+arr = [1,2,3]
+
+print arr[i+j]

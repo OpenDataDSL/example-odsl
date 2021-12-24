@@ -1,7 +1,9 @@
+curve = ${data:"#HUDEX.EL.HU.BL.FUT.CURVE:SETTLE:2021-07-30"}
+print curve.contracts
+
+
 eombus = ExpiryCalendar(BusinessCalendar())
 eombus.addRule("go to the end of the previous month")
-
-
 
 ondate = CurveDate(Date("2020-10-13"), eombus)
 curve = Curve(ondate)
@@ -9,12 +11,12 @@ curve = Curve(ondate)
 curve.currency = "EUR"
 curve.units = "MWH"
 
+curve.add(Contract(ondate, "1W", 25.75))
+
 curve.category = "EUROPEAN POWER"
 
 contract = Contract(ondate, "2020M11", 25.67)
 curve.add(contract)
-
-print contract.periodCodeType
 
 curve.add(Contract(ondate, "2020M12", 25.75))
 curve.add(Contract(ondate, "2021Q01", 25.8))
@@ -23,10 +25,24 @@ curve.add(Contract(ondate, "2021Q03", 25.85))
 curve.add(Contract(ondate, "2021Q04", 25.89))
 curve.add(Contract(ondate, "2022Y", 25.99))
 
-print json(curve)
+assertTrue(curve.contains("M01"))
 
 // Get the expiry date for the December 2020
-print ondate.getExpiry("2020M12")
+assertEquals(Date("2020-11-30"), ondate.getExpiry("2020M12"))
 
 months = curve.contracts.filter("Month")
-print json(months)
+assertEquals(2, months.size)
+
+bcurve = bootstrapCurve(curve)
+assertEquals(26, bcurve.size)
+
+obj = object as #ForwardCurve
+    CURVE = bcurve
+end
+
+obj.id = "CH.CURVE"
+// save ${object:obj}
+
+// Change the curve and re-save it
+obj.CURVE.contracts.M03.value = 25.95
+save ${object:obj}

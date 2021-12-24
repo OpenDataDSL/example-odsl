@@ -1,0 +1,43 @@
+set precision 2
+
+hc1 = HolidayCalendar()
+hc1.addRule("every saturday")
+hc1.addRule("every sunday")
+hc1.addRule("12th of November on saturday shift -1 day and on sunday shift 1 day")
+
+ts = TimeSeries("2021-11-01", hc1, [5,8,9,10,8,6,4,5,7,5,4])
+
+print ts.values
+
+// To Daily
+// No interpolation
+tsd = scale(ts, "DAILY", "none")
+assertEquals([5,8,9,10,8,NaN,NaN,6,4,5,7,NaN,NaN,NaN,5,4], tsd.observations)
+
+// End Interpolation
+tsd = scale(ts, "DAILY", "end")
+// assertEquals([5,8,9,10,8,8,8,6,4,5,7,7,7,7,5,4], tsd.observations)
+
+// Averaged Linear Interpolation
+tsd = scale(ts, "DAILY", "averaged", "linear")
+assertEquals([5,8,9,10,8,7.33,6.67,6,4,5,7,6.5,6,5.5,5,4], tsd.observations)
+
+// Averaged Cubic Interpolation
+tsd = scale(ts, "DAILY", "averaged", "cubic")
+assertEquals([5,8,9,10,8,7.19,6.81,6,4,5,7,7.25,6.75,5.88,5,4], tsd.observations)
+
+// To Holiday
+hc2 = HolidayCalendar()
+hc2.addRule("every saturday")
+hc2.addRule("every sunday")
+hc2.addRule("11th of November on saturday shift -1 day and on sunday shift 1 day")
+
+ts2 = TimeSeries("2021-11-01", hc2, [5,8,9,10,8,6,4,5,7,5,4])
+
+print ts2.values
+
+tsh = scale(ts, hc2)
+print tsh.values
+
+tsh = scale(ts, hc2, "end", "linear")
+print tsh.values

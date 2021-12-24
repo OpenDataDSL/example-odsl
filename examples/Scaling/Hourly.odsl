@@ -1,0 +1,75 @@
+// Hourly to Daily
+ts1 = TimeSeries("HOURLY")
+ts1.start = "2021-01-01"
+
+for i=1 to 48
+    ts1.addValue(i)
+next
+
+print ts1.values
+ts1.observed="summed"
+print ts1.observed
+
+ts2 = scale(ts1, "DAILY")
+print ts2.values
+
+set observed averaged
+
+ts2 = scale(ts1, "DAILY")
+print ts2.values
+
+ts = scale(ts1, "DAILY", "beginning")
+assertEquals(1, ts["2021-01-01"])
+assertEquals(25, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "end")
+assertEquals(24, ts["2021-01-01"])
+assertEquals(48, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "averaged")
+assertEquals(12.5, ts["2021-01-01"])
+assertEquals(36.5, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "summed")
+assertEquals(300, ts["2021-01-01"])
+assertEquals(876, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "high")
+assertEquals(24, ts["2021-01-01"])
+assertEquals(48, ts["2021-01-02"])
+
+ts = scale(ts1, "DAILY", "low")
+assertEquals(1, ts["2021-01-01"])
+assertEquals(25, ts["2021-01-02"])
+
+// Hourly to half hourly
+hh=scale(ts1, "HALFHOURLY", "summed")
+
+assertEquals(96, hh.values.size)
+
+// Test Averaged Constant
+ts = TimeSeries("2021-01-01", "HOURLY", [52, 55])
+hh=scale(ts, "HALFHOURLY", "averaged")
+print hh.values
+assertEquals(52, hh["2021-01-01"])
+assertEquals(52, hh["2021-01-01T00:30:00"])
+assertEquals(55, hh["2021-01-01T01:00:00"])
+assertEquals(55, hh["2021-01-01T01:30:00"])
+
+// Test Averaged Linear
+ts = TimeSeries("2021-01-01", "HOURLY", [52, 55])
+hh=scale(ts, "HALFHOURLY", "averaged", "linear")
+print hh.values
+assertEquals(52, hh["2021-01-01"])
+assertEquals(52, hh["2021-01-01T00:30:00"])
+assertEquals(54, hh["2021-01-01T01:00:00"])
+assertEquals(56, hh["2021-01-01T01:30:00"])
+
+// Test Averaged Cubic
+ts = TimeSeries("2021-01-01", "HOURLY", [52, 55])
+hh=scale(ts, "HALFHOURLY", "averaged", "cubic")
+print hh.values
+assertEquals(52, hh["2021-01-01"])
+assertEquals(53.5, hh["2021-01-01T00:30:00"])
+assertEquals(55, hh["2021-01-01T01:00:00"])
+assertEquals(55, hh["2021-01-01T01:30:00"])

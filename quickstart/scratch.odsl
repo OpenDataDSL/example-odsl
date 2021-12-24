@@ -1,0 +1,69 @@
+hello_message = action in "general"
+    // Greets the passed-in user name
+    in user as Scalar "The user to greet"
+    out message as Scalar
+    exit "ok"
+
+    output.message = "Hello " + input.user
+    return "ok"
+end
+
+workflow = workflow in "test"
+    // Description
+    in user as Scalar "The user to greet"
+    out message as Scalar
+    exit "ok"
+
+    WF_START
+        "ok" -> act_print
+    end
+
+    phase "MAIN"
+        WF_ACTION act_print ai
+            "ok" -> stopok
+            ai.user = input.user
+            result = hello_message.run(ai, output)
+        end
+    end
+    
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+end
+
+print hello_message.inputs[0].id
+print hello_message.inputs[0].argType
+print hello_message.inputs[0].description
+print hello_message.inputs[0].optional
+
+// print workflow.category
+// print workflow.description
+// print workflow.exits
+// print workflow.id
+// print workflow.inputs
+// print workflow.outputs
+// print workflow.script
+print workflow.version
+
+oi = Object()
+oi.user = "World"
+oo = Object()
+print workflow.run(oi, oo)
+print oo
+
+// print hello_message.exits
+
+// print hello_message.category
+// print hello_message.description
+// print hello_message.id
+// print hello_message.inputs
+// print hello_message.links
+// print hello_message.outputs
+// print hello_message.script
+// print hello_message.version
+
+// oi = Object()
+// oi.user = "World"
+// oo = Object()
+// print hello_message.run(oi, oo)
+// print oo

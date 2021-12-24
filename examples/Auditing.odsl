@@ -1,4 +1,18 @@
-ar = ${audit:"5fa51a320b29ff000710b00f"}
+// ar = ${audit:"5fa51a320b29ff000710b00f"}
+
+records = find ${audit}
+print records.size
+
+records = find ${audit} where service="action"
+print records.size
+
+wait 10 seconds
+
+records = find ${audit:public}
+print records.size
+
+records = find ${audit} where timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+print records.size
 
 
 records = find ${audit} where id="date_script" and version = 2
@@ -21,3 +35,10 @@ print records.size
 
 records = find ${audit} where id="test_send_batch" and (version = 1 or version = 2)
 print records.size
+
+summary = aggregate ${audit}
+    group _id="$service", qty=count()
+    sort qty desc
+end
+
+print summary

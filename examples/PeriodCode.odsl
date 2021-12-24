@@ -1,0 +1,13 @@
+#del_dt = parse("2013-04-26","yyyy-MM-dd")
+
+#relcode = "PROMPT"
+
+#ondate = CurveDate(#del_dt, "#REOMB")  
+
+PRICE = Curve(#ondate)
+
+#contract = Contract(#ondate,#relcode, 10)
+
+PRICE.add(#contract)
+
+print json(PRICE)

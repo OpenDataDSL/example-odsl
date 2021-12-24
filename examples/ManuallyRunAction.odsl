@@ -1,0 +1,9 @@
+action = ${action:"#extract_xml"}
+input = Object()
+output = Object()
+
+input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+
+result = action.run(input, output)
+print result
+print json(output)

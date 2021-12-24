@@ -1,0 +1,4 @@
+// Build a simple bootstrapped curve with simple shaping
+boot = bootstrapCurve(PRIMARY)
+result = shape(boot)
+return result

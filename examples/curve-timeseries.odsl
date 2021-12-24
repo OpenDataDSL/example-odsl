@@ -1,0 +1,5 @@
+
+cts = ${data:"#DCE.AG.CN.C.CORN.FUT:HIGH","tenor=M01"}
+
+print cts.values
+

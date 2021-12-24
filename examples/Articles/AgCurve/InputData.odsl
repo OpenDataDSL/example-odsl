@@ -1,0 +1,102 @@
+// Calendar
+cal = ExpiryCalendar(BusinessCalendar())
+cal.addRule("go to the end of the previous month")
+
+// Curve Date
+ondate = CurveDate("2021-09-06", cal)
+
+// Barley
+// IMF Primary Commodity Prices
+barley = TimeSeries("2021-01-01", MonthlyCalendar(), [125.7,137.8,139,154.3,195.8,187.4,180.2,169.8,175.6,208.7])
+barley.currency = "USD"
+barley.units = "MT"
+
+// Hops
+hops = Curve(ondate)
+hops.currency = "USD"
+hops.units = "MT"
+hops.add(Contract(ondate, "M01", 20))
+hops.add(Contract(ondate, "M02", 20.6))
+hops.add(Contract(ondate, "M03", 20.8))
+hops.add(Contract(ondate, "M04", 20.2))
+hops.add(Contract(ondate, "M05", 20.5))
+hops.add(Contract(ondate, "M06", 20.8))
+
+// Water
+water = TimeSeries("2021-01-01", AnnualCalendar(), 1.3289)
+water.currency = "GBP"
+water.units = "m3"
+
+// Energy
+energy = Curve(ondate)
+energy.currency = "EUR"
+energy.units = "MWH"
+energy.add(Contract(ondate, "M01", 10))
+energy.add(Contract(ondate, "M02", 12.6))
+energy.add(Contract(ondate, "M03", 12.8))
+energy.add(Contract(ondate, "M04", 13.2))
+energy.add(Contract(ondate, "M05", 13.5))
+energy.add(Contract(ondate, "M06", 13.8))
+
+#config = object as #CurveConfig
+    name = "Beer Curve"
+    description = "Beer Component Curve"
+    category = "TEST"
+    subcategory = "Curve Building"
+    region = "Europe"
+    country = "Germany"
+    expiryCalendar = "REOMHENG"
+    buildScript = "#CURVE_BUILDING"
+    inputs[0] = object as #CurveConfigInput
+        key = "energy"
+        id = ""
+        required = true
+        qty = 0.001
+    end
+    inputs[1] = object as #CurveConfigInput
+        key = "hops"
+        id = ""
+        required = true
+        qty = 0.2
+    end
+    inputs[2] = object as #CurveConfigInput
+        key = "barley"
+        id = ""
+        required = true
+        qty = 0.3
+    end
+    inputs[3] = object as #CurveConfigInput
+        key = "water"
+        id = ""
+        required = true
+        qty = 0.0005
+    end
+    outputs[0] = object as #CurveConfigOutput
+        name = "CURVE"
+        code = "ComponentCurve()"
+        currency = "EUR"
+        units = "500ml"
+        expiryCalendar = "REOMHENG"
+    end
+end
+
+#ondate = ondate
+beer = ComponentCurve()
+print beer.contracts
+
+// Build a Forward Curve using components
+function ComponentCurve()
+    totalqty = 0
+    ComponentCurve = Curve(#ondate)
+
+    // Check the config for all the input data and quantities
+    for inp in #config.inputs
+        data = variable(inp.key)
+        if data
+            ComponentCurve = ComponentCurve + (data * inp.qty)
+            totalqty = totalqty + inp.qty
+        end
+    next
+
+    ComponentCurve = ComponentCurve / totalqty
+end

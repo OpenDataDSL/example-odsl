@@ -1,15 +1,67 @@
-/**
- Creates a TimeSeries aligned to the business calendar 
- with a list of values starting on the 1st October 2020
-**/
-ts3 = TimeSeries("2020-10-01", "business", [12.5,12.6,12.7,12.8,12.9])
+ts1 = TimeSeries("DAILY")
 
-// Print out the value for the 2nd October 2020
-print ts3["2020-10-02"]
+print ts1.calendar
 
-// The 3rd October 2020 is a Saturday, so there is no value 
-print ts3["2020-10-03"]
+ts2 = TimeSeries("2021-10-01", "DAILY", 12.5)
+ts3 = TimeSeries("2021-10-01", "BUSINESS", [12.5,12.6,12.7,12.8,12.9])
+
+// Print out the value for the 1st October 2021
+print ts3["2021-10-01"]
+
+// The 2nd October 2021 is a Saturday, so there is no value 
+print ts3["2021-10-02"]
 
 // Print out the value for the first index
 print ts3[0]
 
+print ts3.values
+
+ts3.add("2021-10-12", 14)
+ts3.addValue(14.5)
+print ts3.values
+
+QS01 = Object()
+QS01.DATA = ts3
+
+save ${object:QS01}
+
+
+ts3 = TimeSeries("2021-10-14", "BUSINESS", 14.8)
+QS01 = Object()
+QS01.DATA = ts3
+save ${object:QS01}
+
+// Setting the status when the value is added
+ts1 = TimeSeries("BUSINESS")
+ts1.add("2021-10-15", 15.5, ["Valid", "Calculated"])
+
+// Create a valuation date
+ondate = CurveDate("2021-10-01", "#REOMB")
+// Create a curve
+curve = Curve(ondate)
+
+curve.add(Contract(ondate, "2021M11", 25.75))
+QS01 = Object()
+QS01.CURVE = curve
+save ${object:QS01}
+
+ondate = CurveDate("2021-10-01", "#REOMB")
+c1 = Contract(ondate, "2021M11", 25.75)
+print c1.relative
+print c1.start
+print c1.end
+print c1.expiry
+
+// Create a valuation date
+ondate = CurveDate("2021-10-01", "#REOMB")
+// Create a curve
+curve = Curve(ondate)
+
+curve.add(Contract(ondate, "2021M11", 25.75))
+curve.add(Contract(ondate, "2021M12", 25.85))
+curve.add(Contract(ondate, "2022M01", 25.90))
+curve.add(Contract(ondate, "2022M02", 25.92))
+curve.add(Contract(ondate, "2022M03", 25.93))
+QS01 = Object()
+QS01.CURVE = curve
+save ${object:QS01}

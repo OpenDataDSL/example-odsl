@@ -1,0 +1,65 @@
+// Create all the elements
+path = "/src/example-odsl/examples/CurveBuilding/"
+
+${script:file/path+"types.odsl"}.run(true)
+${script:file/path+"actions.odsl"}.run(true)
+
+standard_curve_build = workflow in "curve-builders"
+    // Standard curve build workflow
+    in id as Scalar
+    in ondate as Date
+    
+    WF_START
+        "ok" -> act_init
+    end
+
+    phase "INITIALISE"
+        WF_ACTION act_init ai
+            "ok" -> act_load_inputs
+            "failed" -> stopfailed
+            am = Object()
+            am.id = input.id
+            result = #read_object.run(am, output)    
+        end
+
+        WF_ACTION act_load_inputs ai
+            "ok" -> act_build_curve
+            "failed" -> stopfailed
+            am = Object()
+            am.config = output.act_init.obj
+            result = #load_curve_input_data.run(am, output)    
+        end
+    end
+
+    phase "BUILD"        
+        WF_ACTION act_build_curve ai
+            "ok" -> act_save_curve
+            "failed" -> stopfailed
+            am = Object()
+            am.data = output.act_extract_xml.xml
+            am.tx = ${transformer:input.tx}
+            result = ${action:"#transform_data"}.run(am, output)
+        end
+    end
+
+    phase "SAVE"
+        WF_ACTION act_save_curve ai
+            "ok" -> stopok
+            "failed" -> stopfailed
+            ai.batch = output.act_transform_data_with_meta.batch
+            result = ${action:"#send_batch"}.run(ai, output)
+        end
+    end
+
+    WF_EVENT stopok as "success"
+        return "ok"
+    end
+    WF_EVENT stopfailed as "failed"
+       return "failed"
+    end
+end
+
+input = Object()
+input.id = "CH_CURVE"
+output = Object()
+result = standard_curve_build.run(input, output)

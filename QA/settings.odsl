@@ -5,12 +5,12 @@ print "**************************************************************"
 use test
 
 #SETTING = versioned type
-    name as String
+    name as String()
 end
 save ${type:#SETTING}
 
 print "Checking there are no settings"
-settings = find ${object:"#SETTING"}
+settings = find ${object} where #type == "#SETTING"
 assertEquals(0, settings.size, "There should be no settings")
 
 print "Create a setting"
@@ -21,7 +21,7 @@ end
 save ${object:ABC_FACTOR}
 
 print "Checking there is 1 setting"
-settings = find ${object:"#SETTING"}
+settings = find ${object} where #type == "#SETTING"
 assertEquals(1, settings.size, "There should be 1 setting")
 
 print "Changing the setting value"
@@ -29,21 +29,21 @@ ABC_FACTOR.value = 1.267
 save ${object:ABC_FACTOR}
 
 print "Checking the versions"
-test = ${object:"#SETTING/ABC_FACTOR"}
+test = ${object:"ABC_FACTOR"}
 assertEquals(2, test.version.version, "Version should be 2")
 
 print "Tagging a version"
-tag ${object:"#SETTING/ABC_FACTOR":1} as PROD
+tag ${object:"ABC_FACTOR":1} as PROD
 
 print "Getting the tagged version"
-testtag = ${object:"#SETTING/ABC_FACTOR":PROD}
+testtag = ${object:"ABC_FACTOR":PROD}
 assertEquals(1, testtag.version.version, "Version should be 1")
 
 print "Rollback"
-delete ${object:"#SETTING/ABC_FACTOR"}
-test2 = ${object:"#SETTING/ABC_FACTOR"}
+delete ${object:"ABC_FACTOR"}
+test2 = ${object:"ABC_FACTOR"}
 assertEquals(1, test2.version.version, "Version should be 1")
-settings = find ${object:"#SETTING"}
+settings = find ${object} where #type == "#SETTING"
 assertEquals(1, settings.size, "There should be 1 setting")
 
 print "Changing the setting value"
@@ -51,7 +51,7 @@ ABC_FACTOR.value = 1.2999
 save ${object:ABC_FACTOR}
 
 print "Delete All"
-delete ${object:"#SETTING/ABC_FACTOR":*}
-settings = find ${object:"#SETTING"}
+delete ${object:"ABC_FACTOR":*}
+settings = find ${object} where #type == "#SETTING"
 assertEquals(0, settings.size, "There should be no settings")
 

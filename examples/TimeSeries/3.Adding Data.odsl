@@ -1,0 +1,20 @@
+ts1 = TimeSeries("BUSINESS")
+
+business = BusinessCalendar()
+ts2 = TimeSeries(business)
+
+ts3 = TimeSeries("BUSINESS", "string")
+
+// Add a value for the 1st of January
+ts1.add("2021-01-01", 21.5)
+print json(ts1)
+
+// ts1.add("2021-01-02", 21.5)
+
+ts1.add("2021-01-05", 21.7)
+// ts1.add("2021-01-06", true)
+// ts1.add("2021-01-07", "2021-01-06")
+print json(ts1)
+
+ts3.add("2021-01-05", true)
+// print json(ts3)

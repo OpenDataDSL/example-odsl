@@ -1,0 +1,21 @@
+csv = `index,v1,v2,v3
+01/07/2021,12.2,13.2,14.3
+02/07/2021,12.5,13.2,14.5
+03/07/2021,12.2,13.4,14.3`
+
+ocsv = ${csv:csv}
+
+example = type
+    name as String()
+    value as Number()
+end
+
+tx = transform input into example as x
+    create with x
+    print x
+    name = x
+    value = x
+end
+
+result = tx.run(ocsv)
+print json(result)

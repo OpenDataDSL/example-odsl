@@ -1,0 +1,19 @@
+function addFixedPremium(input)
+    // Add a fixed premium of 0.2 to an input curve
+    addFixedPremium = input + 0.2
+end
+
+function addFixedPercentage(input)
+    // Add a fixed 5% premium to an input curve
+    addFixedPercentage = input * 1.05
+end
+
+function addPremium(input, premium)
+    // Add a premium to an input curve
+    addPremium = input + premium
+end
+
+function addPercentage(input, premium)
+    // Add a premium percentage to an input curve
+    addPercentage = input * (1 + (premium/100))
+end

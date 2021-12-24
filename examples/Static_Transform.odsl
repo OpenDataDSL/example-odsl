@@ -1,3 +1,4 @@
+// The static input JSON
 json = `{
     timestamp: "12Oct2020",
     data: [
@@ -16,18 +17,22 @@ json = `{
     ]
 }`
 
+// Convert to an object
 input = ${json:json}
 
+// Create a type to convert the JSON into
 example = type
     name as String()
     description as String()
     value as Scalar()
 end
 
+// Create some metadata to decorate the output data
 metadata = Object()
 metadata.A = "A description"
 metadata.B = "B description"
 
+// A transformer to convert the JSON into the example type
 tx = transform input into example as x
     create with data
     unique name = x.identity
@@ -38,8 +43,11 @@ tx = transform input into example as x
     value = x.value
 end
 
+// Run the transformer and output the results as JSON
 result = tx.run(input)
+print json(result)
 
+// Another transformer that outputs the results as rows
 rowtx = transform input into rows as x
     create with data
     unique name = x.identity
@@ -50,8 +58,7 @@ rowtx = transform input into rows as x
     value = x.value
 end
 
+// Run the transformer and print out the results and size of the results
 rowresult = rowtx.run(input)
-
-
-
-print result.size()
+print json(rowresult)
+print rowresult.size

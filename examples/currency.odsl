@@ -1,0 +1,29 @@
+loadTypes()
+
+// Get all providers
+providers = find unique source from ${currency:public}
+print providers
+
+// Get base codes for a provider
+bases = find unique base from ${currency:public} where source == "ECB_FX"
+print bases
+
+// Get all currencies for a provider
+currencies = find unique currency from ${currency:public} where source == "ECB_FX" and base="EUR"
+print currencies
+
+// Get all currency ids for a provider
+ccid = find unique _id from ${currency:public} where source == "ECB_FX" and base="EUR"
+print ccid
+
+// Get a specific currency object
+eurusd = ${currency:"#ECB_FX.EURUSD"}
+print eurusd
+
+// Get a specific currency data
+eurusd = ${currency:"#ECB_FX.EURUSD","_profile=SPOT"}
+print eurusd
+
+// Fetch all data for all ECB_FX currencies
+data = find profile SPOT from ${currency:public} where source == "ECB_FX"
+print data

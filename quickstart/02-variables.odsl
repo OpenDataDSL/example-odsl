@@ -1,0 +1,88 @@
+a1 = "My String"
+a2 = "Your String"
+a3 = a1 + " plus " + a2
+print a3
+
+a1=10
+a2=3.4
+a3=a1*a2
+print a3
+
+a1=10
+b1=true
+b2=a1==10
+print b2
+
+// Get the current date
+d1=Date()
+
+// Create a date in a specific format
+d2=Date("01/10/2021", "dd/MM/yyyy")
+print d2
+
+// Create a duration of 1 day and 6 hours
+dur1=Duration("1D6h")
+d2=Date("01/10/2021", "dd/MM/yyyy")
+
+// Add the duration to the date
+d3=d2+dur1
+print d3
+
+// Create an object
+o1=Object()
+
+// Add a secret
+o1.password=Secret("MyPassword")
+
+print o1.password
+
+cal = HolidayCalendar()
+cal.addRule("Every Monday")
+cal.addRule("25th of December named 'Christmas Day' on Saturday shift -1 day on Sunday shift 1 day")
+first = Date("2021-12-20")
+last = Date("2021-12-31")
+dates = cal.getDates(first, last)
+print dates
+
+expiry = ExpiryCalendar(BusinessCalendar())
+expiry.addRule("go back 1 day using calendar")
+
+ondate = CurveDate(Date("2020-12-01"), expiry)
+print ondate
+
+ts = TimeSeries("DAILY")
+ts.add("2021-10-04", 12.5)
+ts.addValue(13.6)
+
+print ts.values
+
+expiry = ExpiryCalendar(BusinessCalendar())
+expiry.addRule("go back 1 day using calendar")
+
+ondate = CurveDate(Date("2020-12-01"), expiry)
+c1 = Curve(ondate)
+
+c1.add(Contract(ondate, "2021M01", 12.5))
+c1.add(Contract(ondate, "2021M02", 12.75))
+c1.add(Contract(ondate, "2021M03", 13.0))
+c1.add(Contract(ondate, "2021M04", 13.5))
+c1.add(Contract(ondate, "2021Q01", 12.75))
+c1.add(Contract(ondate, "2021Q02", 13.25))
+c1.add(Contract(ondate, "2021Q03", 13.75))
+c1.add(Contract(ondate, "2021Y", 13.5))
+
+print c1.contracts
+
+
+
+widget = type
+    description as String()
+    price as Number()
+end
+
+ABC123 = object as widget
+    description = "A small widget for storing beans"
+    price = 6.24
+end
+
+print ABC123

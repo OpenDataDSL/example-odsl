@@ -41,25 +41,11 @@ AZ24Switch = object as Switch
 end
 save ${object:AZ24Switch}
 
-widgets = find ${object:"Widget"}
+widgets = find ${object} where #type == "Widget"
 assertEquals(3, widgets.size, "Should be 3 widgets")
-cables = find ${object:"Cable"}
+cables = find ${object} where #type == "Cable"
 assertEquals(2, cables.size, "Should be 2 cables")
-switches = find ${object:"Switch"}
+switches = find ${object} where #type == "Switch"
 assertEquals(1, switches.size, "Should be 1 switches")
-
-w2 = ${object:"Widget/Cable/Cat5ACable"}
-assertType(w2, "Widget")
-
-w1 = ${object:"Widget/Cable/Cat5ACable":1}
-assertType(w1, "Widget")
-
-c1 = ${object:"Cable/Cat5ACable":1}
-assertType(c1, "Cable")
-
-tag ${object:"Widget/Cable/Cat6Cable":1} as PROD
-
-pw = ${object:"Widget/Cable/Cat6Cable":PROD}
-assertType(pw, "Widget")
 
 print "Object test complete!"

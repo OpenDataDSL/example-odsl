@@ -1,0 +1,606 @@
+xml = `<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="PrezziConvenzionali" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="PrezziConvenzionali">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="xs:string" minOccurs="0" />
+                <xs:element name="Mercato" type="xs:string" minOccurs="0" />
+                <xs:element name="Ora" type="xs:string" minOccurs="0" />
+                <xs:element name="CALA" type="xs:string" minOccurs="0" />
+                <xs:element name="CNOR" type="xs:string" minOccurs="0" />
+                <xs:element name="CSUD" type="xs:string" minOccurs="0" />
+                <xs:element name="NORD" type="xs:string" minOccurs="0" />
+                <xs:element name="SARD" type="xs:string" minOccurs="0" />
+                <xs:element name="SICI" type="xs:string" minOccurs="0" />
+                <xs:element name="SUD" type="xs:string" minOccurs="0" />
+                <xs:element name="AUST" type="xs:string" minOccurs="0" />
+                <xs:element name="COAC" type="xs:string" minOccurs="0" />
+                <xs:element name="CORS" type="xs:string" minOccurs="0" />
+                <xs:element name="FRAN" type="xs:string" minOccurs="0" />
+                <xs:element name="GREC" type="xs:string" minOccurs="0" />
+                <xs:element name="SLOV" type="xs:string" minOccurs="0" />
+                <xs:element name="SVIZ" type="xs:string" minOccurs="0" />
+                <xs:element name="BSP" type="xs:string" minOccurs="0" />
+                <xs:element name="XAUS" type="xs:string" minOccurs="0" />
+                <xs:element name="XFRA" type="xs:string" minOccurs="0" />
+                <xs:element name="XGRE" type="xs:string" minOccurs="0" />
+                <xs:element name="MALT" type="xs:string" minOccurs="0" />
+                <xs:element name="MONT" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>01</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>02</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>03</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>04</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>05</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>06</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>07</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>08</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>09</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>10</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>11</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>12</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>13</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>14</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>15</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>16</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>17</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>18</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>19</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>20</Ora>
+    <CALA>199</CALA>
+    <CNOR>199</CNOR>
+    <CSUD>199</CSUD>
+    <NORD>199</NORD>
+    <SARD>199</SARD>
+    <SICI>199</SICI>
+    <SUD>199</SUD>
+    <AUST>199</AUST>
+    <COAC>199</COAC>
+    <CORS>199</CORS>
+    <FRAN>199</FRAN>
+    <GREC>199</GREC>
+    <SLOV>199</SLOV>
+    <SVIZ>199</SVIZ>
+    <MALT>199</MALT>
+    <MONT>199</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>21</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>22</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>23</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+  <PrezziConvenzionali>
+    <Data>20210910</Data>
+    <Mercato>MGP</Mercato>
+    <Ora>24</Ora>
+    <CALA>165</CALA>
+    <CNOR>165</CNOR>
+    <CSUD>165</CSUD>
+    <NORD>165</NORD>
+    <SARD>165</SARD>
+    <SICI>165</SICI>
+    <SUD>165</SUD>
+    <AUST>165</AUST>
+    <COAC>165</COAC>
+    <CORS>165</CORS>
+    <FRAN>165</FRAN>
+    <GREC>165</GREC>
+    <SLOV>165</SLOV>
+    <SVIZ>165</SVIZ>
+    <MALT>165</MALT>
+    <MONT>165</MONT>
+  </PrezziConvenzionali>
+</NewDataSet>
+`
+
+xslt=`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:template match="PrezziConvenzionali">
+    <observation>
+      <xsl:attribute name="date">
+        <xsl:value-of select="Data"/>
+      </xsl:attribute>
+      <xsl:attribute name="hour">
+        <xsl:value-of select="Ora"/>
+      </xsl:attribute>
+      <xsl:for-each select="*[local-name() != 'Mercato' and local-name() != 'Data' and local-name() != 'Ora']">
+        <item>
+          <xsl:attribute name="name">
+            <xsl:value-of select="name()"/>
+          </xsl:attribute>
+          <xsl:attribute name="value">
+            <xsl:value-of select="text()"/>
+          </xsl:attribute>
+        </item>
+      </xsl:for-each>
+    </observation>
+  </xsl:template>
+</xsl:stylesheet>
+`
+
+xdata = ${xml:xml,"xslt="+xslt}
+
+#GME = transform data into object as x
+  create with item
+  unique model = x.name
+  // on error ignore
+
+  PRICE = TimeSeries("HOURLY")
+  PRICE.add(parse(x.date + ":" + (x.hour - 1), "yyyyMMdd:HH", "Europe/Rome"), x.value)
+
+  source = "GME"
+
+end
+
+models = #GME.run(xdata)
+print json(models)
+
+
+xslt=`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="xml" encoding="utf-8" indent="no"/>
+
+<xsl:template match="/">
+<xsl:variable name="time" select="//@time"/>
+<currencies time="{$time}">
+<xsl:for-each select="//@currency">
+<currency code="{.}" rate="{../@rate}" />
+</xsl:for-each>
+</currencies>
+</xsl:template>
+
+</xsl:stylesheet>
+`
+
+xmldata=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml","xslt="+xslt}
+
+print json(xmldata)

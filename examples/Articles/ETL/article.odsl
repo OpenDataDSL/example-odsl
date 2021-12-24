@@ -1,0 +1,10 @@
+// Create the type
+#ForeignExchange = type
+    // All foreign exchange (FX) data
+    category as String()
+    source as String()
+    product as String()
+    model as String()
+    base as String()
+    currency as String()
+end

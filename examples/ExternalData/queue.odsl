@@ -1,0 +1,14 @@
+// Create a new queue
+sqlqueue = object as #QUEUE
+    queue = "sql"
+end
+save ${queue:sqlqueue}
+
+// List the queues
+queues = find ${queue:""}
+print queues
+
+tutorial = object as #QUEUE
+     queue = "tutorial"
+end
+save ${queue:tutorial}

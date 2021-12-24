@@ -18,6 +18,7 @@ c1.add(Contract(ondate, "2021Q01", 12.75))
 c1.add(Contract(ondate, "2021Q02", 13.25))
 c1.add(Contract(ondate, "2021Q03", 13.75))
 c1.add(Contract(ondate, "2021Y", 13.5))
+c1.add(Contract(ondate, "2022Y", 14))
 
 c2 = Curve(ondate)
 

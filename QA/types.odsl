@@ -4,6 +4,9 @@ print "**************************************************************"
 
 use test
 
+// Completely delete type
+delete ${type:"Person":*}
+
 Person = type
     first as Scalar()
     last as Scalar()
@@ -28,7 +31,7 @@ assertType(colin, "Person")
 assertHasProperty(colin, "name")
 
 print ">>> Testing saving type"
-save ${type:Person}
+save ${type:Person} log "New person type created"
 
 types = find ${type:""}
 assertEquals(1, types.size)
@@ -44,7 +47,25 @@ Person = type
     end
 end
 
-save ${type:Person}
+save ${type:Person} log "Added email address"
 test = ${type:"Person"}
 assertEquals(2, test.version.version)
 
+Person = type
+    first as Scalar()
+    last as Scalar()
+    dob as Date()
+    trace as String()
+    name as first + " " + last
+    named as function(salutation)
+        named = salutation + " " + first + " " + last
+    end
+end
+
+save ${type:Person} log "Removed email address, added trace"
+test = ${type:"Person"}
+assertEquals(3, test.version.version)
+
+delete ${type:"Person"} log "Rolled back to version 2"
+test = ${type:"Person"}
+assertEquals(2, test.version.version)

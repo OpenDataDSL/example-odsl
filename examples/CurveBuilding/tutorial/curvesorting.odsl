@@ -1,0 +1,47 @@
+eombus = ExpiryCalendar(BusinessCalendar())
+eombus.addRule("go to the end of the previous month")
+
+ondate = CurveDate(Date("2020-10-13"), eombus)
+curve = Curve(ondate)
+
+curve.add(Contract(ondate, "2020M12", 25.75))
+print curve.contracts
+curve.add(Contract(ondate, "2021Q01", 25.8))
+print curve.contracts
+curve.add(Contract(ondate, "2021Q02", 25.83))
+print curve.contracts
+curve.add(Contract(ondate, "2021Q03", 25.85))
+print curve.contracts
+curve.add(Contract(ondate, "2021Q04", 25.89))
+print curve.contracts
+curve.add(Contract(ondate, "2022Y", 25.99))
+print curve.contracts
+curve.add(Contract(ondate, "2020M11", 25.67))
+print curve.contracts
+curve.add(Contract(ondate, "2020W50", 25.67))
+print curve.contracts
+
+print json(curve)
+
+fincal = FinancialExpiryCalendar("FINCAL", "#HENG", "#HENG", "#HENG", 0)
+ondate = CurveDate(Date("2020-10-13"), fincal)
+curve = Curve(ondate)
+
+curve.add(Contract(ondate, "1Y", 25.75))
+print curve.contracts
+curve.add(Contract(ondate, "2Y", 25.8))
+print curve.contracts
+curve.add(Contract(ondate, "1M", 25.83))
+print curve.contracts
+curve.add(Contract(ondate, "2M", 25.85))
+print curve.contracts
+curve.add(Contract(ondate, "3M", 25.89))
+print curve.contracts
+curve.add(Contract(ondate, "SP", 25.99))
+print curve.contracts
+curve.add(Contract(ondate, "ON", 25.67))
+print curve.contracts
+curve.add(Contract(ondate, "SW", 25.67))
+print curve.contracts
+curve.add(Contract(ondate, "SN", 25.67))
+print curve.contracts

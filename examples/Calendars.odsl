@@ -1,3 +1,158 @@
+// HUPX
+#HUPX = ExpiryCalendar(DailyCalendar())
+#HUPX.addRule("go back 2 days")
+ondate = CurveDate(Date("2021-06-29"), #HUPX)
+print json(Contract(ondate, "2021M06", 10))
+print json(Contract(ondate, "2021M07", 10))
+
+ondate = CurveDate(Date("2021-06-30"), #HUPX)
+print json(Contract(ondate, "2021M07", 10))
+print json(Contract(ondate, "2021M08", 10))
+
+
+
+// BOM test
+#HENG = ${calendar:"#HENG"}
+#RWKD = ExpiryCalendar(#HENG)
+#RWKD.addRule("go to the end of the current month then align backwards")
+#RWKD.addRule("go back 1 day for balance")
+ondate = CurveDate(Date("2021-01-04"),#RWKD)
+bom0 = Contract(ondate, "BOM", 12)
+bom1 = Contract(ondate, "BOM(1)", 12)
+bom2 = Contract(ondate, "BOM(2)", 12)
+
+assertEquals("2021-01-03", bom0.expiry)
+assertEquals("2021-01-04", bom0.start)
+
+assertEquals("2021-01-04", bom1.expiry)
+assertEquals("2021-01-05", bom1.start)
+
+assertEquals("2021-01-05", bom2.expiry)
+assertEquals("2021-01-06", bom2.start)
+
+
+// Hourly Block Calendars
+#OP1 = HourlyBlockCalendar(DailyCalendar(), 0, 7)
+#OP1.name = "Off-Peak 1"
+save ${calendar:#OP1}
+dates = #OP1.getDates("2021-07-01", "2021-07-01T23:00:00")
+print dates
+
+op1 = ${calendar:"#OP1"}
+dates = op1.getDates("2021-07-01", "2021-07-01T23:00:00")
+print dates
+
+
+
+// Weekend expiry calendar for Friday expiry 
+#HENG = ${calendar:"#HENG"}
+#RWKD = ExpiryCalendar(#HENG)
+#RWKD.addRule("go to the end of the current week then align backwards")
+ondate = CurveDate(Date("2021-07-01"),#RWKD)
+// save ${expiry:#RWKD}
+expiry = ondate.getExpiry("2021WKD13")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2021WKD13")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2021WKD13")
+print ("Delivery End Date:"+ end)
+
+#REOD = ExpiryCalendar(BusinessCalendar())
+#REOD.addRule("go to the end of the day")
+ondate = CurveDate(Date("2021-07-05"),#REOD)
+H1 = Contract(ondate, "H01", 12.2)
+print json(H1)
+H2 = Contract(ondate, "H02", 12.2)
+print json(H2)
+H3 = Contract(ondate, "H03", 12.2)
+print json(H3)
+
+
+
+#RWKD = ExpiryCalendar(DailyCalendar())
+#RWKD.addRule("go to the beginning of the next week")
+// save ${expiry:#RWKD}
+ondate = CurveDate(Date("2021-07-01"),#RWKD)
+assertEquals("2021-07-03", ondate.getStart("2021WKD26"))
+assertEquals("2021-07-04", ondate.getEnd("2021WKD26"))
+assertEquals("2021-07-02", ondate.getExpiry("2021WKD26"))
+
+
+#REOD = ExpiryCalendar(BusinessCalendar())
+#REOD.addRule("go to the end of the day")
+// save ${expiry:#REOD}
+ondate = CurveDate(Date("2021-06-29"),#REOD)
+
+test = Contract(ondate, "D01", 10)
+sat = Contract(ondate, "SAT", 10)
+sun = Contract(ondate, "SUN", 10)
+
+assertEquals("2021-07-03", ondate.getStart("SAT"))
+assertEquals("2021-07-02", ondate.getExpiry("SAT"))
+assertEquals("2021-07-03", ondate.getExpiry("SUN"))
+
+assertEquals("2021-06-29", ondate.getExpiry("D01"))
+assertEquals("2021-06-30", ondate.getStart("D01"))
+
+assertEquals("2021-06-30", ondate.getExpiry("D02"))
+assertEquals("2021-07-01", ondate.getStart("D02"))
+
+assertEquals("2021-07-01", ondate.getExpiry("D03"))
+assertEquals("2021-07-02", ondate.getStart("D03"))
+
+assertEquals("2021-07-02", ondate.getExpiry("D04"))
+assertEquals("2021-07-05", ondate.getStart("D04"))
+
+
+#HTEST = WeeklyCalendar("Wednesday", "#HEEXAG", false)
+dates = #HTEST.getDates("2020-01-01", "2020-01-10")
+print dates
+
+
+// HEEXAG = ${calendar:"#HEEXAG"}
+#HTEST = WeeklyCalendar("Thursday", "#HEEXAG", true)
+dates = #HTEST.getDates("2019-10-01", "2019-11-30")
+print dates
+
+
+// Test weekly calendar with holidays
+wcal = WeeklyCalendar("Wednesday", "#HEEXAG", true)
+dates = wcal.getDates("2020-05-04", "2021-04-28")
+print dates
+
+
+
+// Test weekly calendar
+wmon = WeeklyCalendar("Monday")
+dates = wmon.getDates("2020-05-26", "2020-12-26")
+assertEquals(30, dates.size)
+assertEquals("2020-06-01", dates[0])
+assertEquals("2020-12-21", dates[29])
+
+
+HENG = ${calendar:"HENG"}
+
+loadCalendars()
+rng = ExpiryCalendar(HENG)
+rng.addRule("go to the end of the previous month")
+ondate = CurveDate(Date("2020-02-10"), rng)
+expiry = ondate.getExpiry("2021M06")
+print expiry
+
+
+rgasoil = ExpiryCalendar(BusinessCalendar())
+rgasoil.addRule("go to the 14th of the current month then align forwards then go back 2 days using calendar")
+ondate = CurveDate(Date("2020-02-10"), rgasoil)
+assertEquals("2021-02-11", ondate.getExpiry("2021M02"))
+assertEquals("2021-03-11", ondate.getExpiry("2021M03"))
+assertEquals("2021-04-12", ondate.getExpiry("2021M04"))
+assertEquals("2021-05-12", ondate.getExpiry("2021M05"))
+assertEquals("2021-06-10", ondate.getExpiry("2021M06"))
+assertEquals("2021-07-12", ondate.getExpiry("2021M07"))
+assertEquals("2021-08-12", ondate.getExpiry("2021M08"))
+assertEquals("2021-09-10", ondate.getExpiry("2021M09"))
+
+
 // Create a daily calendar
 daily = DailyCalendar()
 

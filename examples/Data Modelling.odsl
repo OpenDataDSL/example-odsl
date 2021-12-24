@@ -17,10 +17,10 @@ end
 // Declare an address type
 Address = type
     street as String()
-    area as Dimension()
-    city as Dimension()
-    county as Dimension()
-    country as Dimension()
+    area as String()
+    city as String()
+    county as String()
+    country as String()
     postcode as String()
 end
 
@@ -109,7 +109,7 @@ JaneDoe = object as Person
     last = "Doe"
     dob = "1987-07-11"
     email = "janedoe@abc.com"
-    address = ref(${object:"ABCNewcastle"})
+    //address = ref(${object:"Address/ABCNewcastle"})
 end
 
 print JaneDoe
@@ -128,21 +128,26 @@ print JaneDoe.address
 // save ${type:Person}
 
 // // Save the objects
-// save ${object:ABC}
-// save ${object:ABCLondon}
-// save ${object:ABCNewcastle}
-// save ${object:JohnDoe}
-// save ${object:JaneDoe}
+save ${object:ABC}
+save ${object:ABCLondon}
+save ${object:ABCNewcastle}
+save ${object:JohnDoe}
+save ${object:JaneDoe}
 
 
-abc = ${object:"ABC"}
+abc = ${object:private/"Company/ABC"}
 
-people = find ${object} where first="John" and last="Doe"
-print people
+
+
+// Naming conventions
+
+// Private type, private object
+jd = ${object:"Person/JohnDoe"}
+// Public type, public object
+jd = ${object:"#Person/#JohnDoe"}
+// Public type, private object
+jd = ${object:"#Person/JohnDoe"}
 
 
 
 // print json(abc)
-
-link ${object:"ABCNewcastle"} as address/residents of ${object:"JaneDoe"}
-

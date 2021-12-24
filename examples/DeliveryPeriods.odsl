@@ -1,0 +1,15 @@
+ice = ExpiryCalendar(BusinessCalendar())
+ice.addRule("go to the 14th of the current month then go back 2 days using calendar")
+ice.addRule("delivery starts on the 16th of the current month")
+ondate = CurveDate(Date("2021-12-10"), ice)
+
+ic = Contract(ondate, "M01", 10.2)
+assertEquals("2022-01-16", ic.start)
+assertEquals("2022-01-31", ic.end)
+assertEquals("2022-01-12", ic.expiry)
+
+ic = Contract(ondate, "2022M02", 10.2)
+assertEquals("2022-02-16", ic.start)
+assertEquals("2022-02-28", ic.end)
+assertEquals("2022-02-10", ic.expiry)
+

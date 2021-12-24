@@ -1,48 +1,52 @@
-cals = find ${calendar}
-for c in cals
-    print c.code
-next
+use test
+
+// cals = find ${calendar}
+// for c in cals
+//     print c.code
+// next
 
 
-ccal = ${calendar:"cal"}
-
+ccal = ${calendar:"HENGHUSA"}
 print ccal.rules
 
 
-hcal = HolidayCalendar()
-hcal.id = "HENG"
-hcal.addRule("every Saturday")
-hcal.addRule("every Sunday")
-hcal.addRule("1st of January named 'New Years Day' on saturday shift 2 days and on sunday shift 1 day")
-hcal.addRule("Good Friday")
-hcal.addRule("Easter Monday")
-hcal.addRule("first monday in may named 'Early May' to 2019")
-hcal.addRule("8th of may named 'VE Day' from 2020 to 2020")
-hcal.addRule("first monday in may named 'Early May' from 2021")
-hcal.addRule("last monday in may named 'Spring Bank Holiday'")
-hcal.addRule("last monday in august named 'Summer Bank Holiday'")
-hcal.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
-hcal.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
+// hcal = HolidayCalendar()
+// hcal.id = "HENG"
+// hcal.addRule("every Saturday")
+// hcal.addRule("every Sunday")
+// hcal.addRule("1st of January named 'New Years Day' on saturday shift 2 days and on sunday shift 1 day")
+// hcal.addRule("Good Friday")
+// hcal.addRule("Easter Monday")
+// hcal.addRule("first monday in may named 'Early May' to 2019")
+// hcal.addRule("8th of may named 'VE Day' from 2020 to 2020")
+// hcal.addRule("first monday in may named 'Early May' from 2021")
+// hcal.addRule("last monday in may named 'Spring Bank Holiday'")
+// hcal.addRule("last monday in august named 'Summer Bank Holiday'")
+// hcal.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
+// hcal.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
 
-hcal2 = HolidayCalendar()
-hcal2.id = "HUSA"
-hcal2.addRule("every Saturday")
-hcal2.addRule("every Sunday")
-hcal2.addRule("1st of January named 'New Years Day' on saturday shift 2 days and on sunday shift 1 day")
-hcal2.addRule("Good Friday")
-hcal2.addRule("Easter Monday")
-hcal2.addRule("4th of July named 'Independence Day'")
-hcal2.addRule("last monday in august named 'Summer Bank Holiday'")
-hcal2.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
-hcal2.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
+// hcal2 = HolidayCalendar()
+// hcal2.id = "HUSA"
+// hcal2.addRule("every Saturday")
+// hcal2.addRule("every Sunday")
+// hcal2.addRule("1st of January named 'New Years Day' on saturday shift 2 days and on sunday shift 1 day")
+// hcal2.addRule("Good Friday")
+// hcal2.addRule("Easter Monday")
+// hcal2.addRule("4th of July named 'Independence Day'")
+// hcal2.addRule("last monday in august named 'Summer Bank Holiday'")
+// hcal2.addRule("25th of december named 'Christmas Day' on saturday shift 3 days and on sunday shift 2 days")
+// hcal2.addRule("26th of december named 'Boxing Day' on saturday shift 2 days and on sunday shift 1 day")
 
-cal = CombinedHolidayCalendar()
-cal.with(hcal).with(hcal2)
+hc1 = ${calendar:"#HUSA"}
+hc2 = ${calendar:"#HENG"}
 
-print json(cal)
+HENGHUSA = CombinedHolidayCalendar(hc1, hc2)
+
+
+print json(HENGHUSA)
 
 // print cal.getHolidaysForYear(2021)
-print cal.rules
-print cal.includes(Date("2022-07-04"))
+print HENGHUSA.rules
+print HENGHUSA.includes(Date("2022-07-04"))
 
-save ${calendar:cal}
+save ${calendar:HENGHUSA}

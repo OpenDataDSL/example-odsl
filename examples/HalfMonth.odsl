@@ -1,0 +1,23 @@
+#RLPGHM = ExpiryCalendar(BusinessCalendar())
+#RLPGHM.addRule("go to the 9th of the previous month then align for first halfmonth")
+#RLPGHM.addRule("go to the 24th of the previous month then align for second halfmonth")
+
+ondate = CurveDate(Date("2011-12-20"),#RLPGHM)
+
+print"2012HM01"
+expiry = ondate.getExpiry("2012HM01")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2012HM01")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2012HM01")
+print ("Delivery End Date:"+ end)
+print "======================"
+
+print"2012HM02"
+expiry = ondate.getExpiry("2012HM02")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2012HM02")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2012HM02")
+print ("Delivery End Date:"+ end)
+print "======================"

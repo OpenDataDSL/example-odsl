@@ -1,0 +1,7 @@
+// Creating an object to hold our smart data
+#OMIP_SMART = object as #NaturalGas
+    CLOSE = SmartCurve("#OMIP.NG.ES.FGE.FUT.CURVE:SETTLE", "bootstrapCurve(BASE)")
+    dataset = "OMIP_NG_FUT"
+end
+save ${object:#OMIP_SMART}
+

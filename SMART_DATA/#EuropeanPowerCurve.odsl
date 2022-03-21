@@ -1,0 +1,49 @@
+// input = ${data:"#OMIP.NG.ES.FGE.FUT.CURVE:SETTLE:2022-03-18"}
+// test = epc(input)
+
+// for c in test.contracts
+//     print c.absolute + " " + c.start + " " + c.end + " " + c.value
+// next
+
+function epc(curve)
+    // Shape and Bootstrap the quarters/seasons/years to months
+    epc = shape(bootstrapCurve(curve))
+
+    // Grab any weeks, split into days and add to the curve
+    weeks = curve.contracts.filter("Week")
+    for w in weeks
+        epc.add(asDays(w))
+    next
+
+    // Grab any weekends, split into days and add to the curve
+    weekends = curve.contracts.filter("Weekend")
+    for we in weekends
+        epc.add(asDays(we))
+    next
+
+    // Grab any days and add to the curve
+    epc.add(curve.contracts.filter("CalendarDay"))
+
+    // Take the M01 and calculate the arb-free daily values    
+    m01 = epc["M01"]
+    days = asDays(m01)
+    tot = 0
+    for d in days
+        if epc.contains(d)
+            tot = tot + epc[d.tenor].value
+        else
+            tot = tot + m01.value
+        end
+    next
+    arbfree = tot / days.size
+    for d in days
+        if epc.contains(d)
+        else
+            d.value = arbfree
+            epc.add(d)
+        end
+    next
+
+    // Remove the M01
+    epc.remove("M01")
+end

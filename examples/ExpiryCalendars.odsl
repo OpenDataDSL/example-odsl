@@ -1,3 +1,83 @@
+#HEEXELFR = HolidayCalendar()
+#HEEXELFR.addRule("Every Saturday")
+#HEEXELFR.addRule("Every Sunday")
+#HEEXELFR.addRule("1st of January named 'New Year' on saturday shift 2 days on sunday shift 1 day")
+#HEEXELFR.addRule("Good Friday")
+#HEEXELFR.addRule("Easter Monday")
+#HEEXELFR.addRule("First Monday in May named 'Early Bank Holiday'")
+#HEEXELFR.addRule("Last Monday in May named 'Spring Bank Holiday'")
+#HEEXELFR.addRule("Last Monday in August named 'Summer Bank Holiday'")
+// #HEEXELFR.addRule("1st of May named 'Labour Day'")
+// #HEEXELFR.addRule("24th of December named 'Christmas Eve'")
+#HEEXELFR.addRule("25th of December named 'Christmas Day' on saturday shift 2 days on sunday shift 1 day")
+#HEEXELFR.addRule("26th of December named 'Boxing Day' on saturday shift 2 days on sunday shift 2 days")
+// #HEEXELFR.addRule("31st of December named 'New Year Eve'")
+
+
+
+
+#REEXEMF = ExpiryCalendar(#HEEXELFR)
+#REEXEMF.addRule("go to the last Monday of the current month except if there is a holiday within 4 days after then go back 1 week except if there is a holiday within 4 days after then go back 1 week then align")
+
+// save ${expiry:#REEXEMF}
+
+ondate = CurveDate(Date("2021-12-01"),#REEXEMF)
+
+print "========== Month ==========="
+expiry = ondate.getExpiry("2021EOM12")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2021EOM12")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2021EOM12")
+print ("Delivery End Date:"+ end)
+
+print "========== Quarter ==========="
+expiry = ondate.getExpiry("2021EOQ04")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2021EOQ04")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2021EOQ04")
+print ("Delivery End Date:"+ end)
+
+print "========== Year ==========="
+expiry = ondate.getExpiry("2029EOY")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2029EOY")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2029EOY")
+print ("Delivery End Date:"+ end)
+
+
+eexemf = ExpiryCalendar("#HEEXELFR")
+eexemf.addRule("go to the last Monday of the current month except if there is a holiday within 7 days after then go to the penultimate Monday of the month")
+
+ondate = CurveDate(Date("2021-12-01"),eexemf)
+
+
+
+print "========== Month ==========="
+
+expiry = ondate.getExpiry("2021M12")
+
+print ("Contract Expiry Date: "+ expiry)
+
+start = ondate.getStart("2021M12")
+
+print ("Delivery Start Date:"+ start)
+
+end = ondate.getEnd("2021M12")
+
+print ("Delivery End Date:"+ end)
+
+eex = ${expiry:"#REEXELF"}
+
+print eex.calendar.rules
+ondate = CurveDate(Date("2022-01-10"), eex)
+
+ic=Contract(ondate, "2022D0112", 12)
+print ic.expiry
+
+
 ice = ExpiryCalendar(BusinessCalendar())
 ice.addRule("go to the 14th of the current month then go back 2 days using calendar")
 ondate = CurveDate(Date("2021-12-10"), ice)

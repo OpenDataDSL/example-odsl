@@ -1,0 +1,92 @@
+// Creating using a basic object
+CORN_TEST = Object()
+CORN_TEST.CLOSE = SmartCurve("#MATBAROFEX.ROS.CORN.FUT:CLOSE", "interpolate(BASE, 'BACKWARD')")
+CORN_TEST.category = "TUTORIAL"
+
+// Save to the database
+save ${object: CORN_TEST}
+
+// Creating using a type
+CORN_TEST_TYPE = object as #Agriculture
+    CLOSE = SmartCurve("#MATBAROFEX.ROS.CORN.FUT:CLOSE", "interpolate(BASE, 'BACKWARD')")
+    category = "TUTORIAL"
+end
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Create a PREMIUM curve
+CORN_TEST_TYPE = object as #Agriculture
+    CLOSE = SmartCurve("#MATBAROFEX.ROS.CORN.FUT:CLOSE", "interpolate(BASE, 'BACKWARD')")
+    PREMIUM = SmartCurve("CORN_TEST_TYPE:CLOSE", "BASE*1.15")
+    category = "TUTORIAL"
+end
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Add a MID curve to our existing Smart Curve
+CORN_TEST_TYPE = ${object:"CORN_TEST_TYPE"}
+CORN_TEST_TYPE.MID = SmartCurve("#MATBAROFEX.ROS.CORN.FUT:MIN", "(BASE+MAX)/2")
+
+// Add a reference to the MAX curve
+CORN_TEST_TYPE.MID.MAX = ref("data", "#MATBAROFEX.ROS.CORN.FUT:MAX")
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Add a new curve using a factor
+CORN_TEST_TYPE = ${object:"CORN_TEST_TYPE"}
+CORN_TEST_TYPE.SCALED = SmartCurve("CORN_TEST_TYPE:CLOSE", "BASE*factor")
+
+// Add the factor to the Smart Curve
+CORN_TEST_TYPE.SCALED.factor = 0.8
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Use a TimeSeries scaling factor
+CORN_TEST_TYPE = ${object:"CORN_TEST_TYPE"}
+
+// Create a new TimeSeries with 6 months of scaling factors
+CORN_TEST_TYPE.SCALER = TimeSeries("2022-01-01", MonthlyCalendar(), [0.82, 0.85, 0.86, 0.88, 0.9, 0.91])
+
+// Create the Smart Curve
+CORN_TEST_TYPE.TSSCALED = SmartCurve("CORN_TEST_TYPE:CLOSE", "BASE*SCALER")
+
+// Add a reference to the Scaler TimeSeries
+CORN_TEST_TYPE.TSSCALED.SCALER = ref("data", "CORN_TEST_TYPE:SCALER")
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Convert to EUR/MT
+CORN_TEST_TYPE = ${object:"CORN_TEST_TYPE"}
+CORN_TEST_TYPE.EUR_MT = SmartCurve("CORN_TEST_TYPE:CLOSE", "BASE")
+CORN_TEST_TYPE.EUR_MT.currency = "EUR"
+CORN_TEST_TYPE.EUR_MT.units = "MT"
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Convert to USD/BU
+CORN_TEST_TYPE = ${object:"CORN_TEST_TYPE"}
+CORN_TEST_TYPE.USD_BU = SmartCurve("CORN_TEST_TYPE:CLOSE", "BASE")
+CORN_TEST_TYPE.USD_BU.currency = "USD"
+CORN_TEST_TYPE.USD_BU.units = "BU"
+CORN_TEST_TYPE.USD_BU.density = 721
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}
+
+// Test our Smart Curve for 2022-01-12
+CLOSE = SmartCurve("#MATBAROFEX.ROS.CORN.FUT:CLOSE", "interpolate(BASE, 'BACKWARD')")
+print CLOSE.build("2022-01-12")
+
+// Using a custom script
+CORN_TEST_TYPE = ${object:"CORN_TEST_TYPE"}
+CORN_TEST_TYPE.TIMESPREAD = SmartCurve("CORN_TEST_TYPE:CLOSE", "timespread(BASE)")
+CORN_TEST_TYPE.TIMESPREAD.script = "MyFunctions"
+
+// Save to the database
+save ${object: CORN_TEST_TYPE}

@@ -1,0 +1,56 @@
+ondate = CurveDate(Date("2020-10-13"), "#REOMHENG")
+
+curve = Curve(ondate)
+curve.currency = "EUR"
+curve.units = "MWH"
+
+curve.add(Contract(ondate, "2020M11", 25.67))
+curve.add(Contract(ondate, "2020M12", 25.75))
+curve.add(Contract(ondate, "2021Q01", 25.8))
+curve.add(Contract(ondate, "CUSTOM", 26.2, "CUSTOMA", "2021-04-01", "2021-04-03", "2021-03-31"))
+curve.add(Contract(ondate, "2021Q02", 26.8, "2021-04-01", "2021-06-01"))
+
+print curve
+
+for c in curve.contracts
+    print c.tenor
+    print c.absolute
+    print c.start
+    print c.end
+    print c.expiry
+    print c.value
+    print "=================="
+next
+
+print json(curve)
+
+ODSL206 = Object()
+ODSL206.CURVE = curve
+save ${object:ODSL206}
+
+test = ${data:"ODSL206:CURVE:2020-10-13"}
+print json(test)
+
+for c in test.contracts
+    print c.tenor
+    print c.absolute
+    print c.start
+    print c.end
+    print c.expiry
+    print c.value
+    print "=================="
+next
+
+bs = bootstrapCurve(test)
+print bs
+
+for c in bs.contracts
+    print c.tenor
+    print c.absolute
+    print c.start
+    print c.end
+    print c.expiry
+    print c.value
+    print c.ImpliedFrom
+    print "=================="
+next

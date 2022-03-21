@@ -1,0 +1,21 @@
+// Grab a TimeSeries - Europe Brent Spot Price FOB from EIA
+input = ${data:"#EIA.PET.RBRTE.D:SPOT"}
+
+// Print out the last 10 values
+print input.getLastNValues(10)
+
+// Run a simple regression function on the TimeSeries
+reg = simpleRegression(input)
+
+// Predict the next value
+print reg.predict(Date("2022-01-19"))
+
+ts = TimeSeries("DAILY")
+ts.add("2020-11-01", 12.5)
+ts.add("2020-11-02", 12.75)
+ts.add("2020-11-03", 12.9)
+ts.add("2020-11-04", 11.5)
+ts.add("2020-11-05", 11.9)
+
+print ts.getLastNValues(10)
+

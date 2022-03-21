@@ -1,5 +1,19 @@
 use test
 
+bb = HolidayCalendar()
+bb.addRule("every Saturday")
+bb.addRule("every Sunday")
+// save ${calendar:bb}
+
+test = CombinedHolidayCalendar()
+test.with(bb)
+test.addRule("Good Friday")
+
+print test.rules
+// save ${calendar:test}
+
+testcal = ${calendar:"test"}
+
 // cals = find ${calendar}
 // for c in cals
 //     print c.code

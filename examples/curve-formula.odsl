@@ -1,11 +1,63 @@
-ARGUSTEST = Object()
-ARGUSTEST.category = "TEST"
+// ARGUSTEST = Object()
+// ARGUSTEST.category = "TEST"
 
-cf = CurveFormula()
-ARGUSTEST.FORMULA = cf
+// cf = SmartCurve()
+// cf.baseCurve=ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:MID"})
+// cf.expression="bootstrapCurve(BASE)"
+// ARGUSTEST.FORMULA = cf
 
-cf.baseCurve=ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:MID"})
-cf.expression="bootstrapCurve(BASE)"
+// cf2 = SmartCurve()
+// cf2.baseCurve=ref(${data:"ARGUSTEST:FORMULA"})
+// cf2.expression="BASE/2"
+// ARGUSTEST.FORMULA2 = cf2
 
-print json(ARGUSTEST)
-save ${object:ARGUSTEST}
+// cf3 = SmartCurve()
+// cf3.baseCurve=ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:BID"})
+// cf3.expression="(BASE+OFFER)/2"
+// cf3.OFFER=ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:OFFER"})
+// ARGUSTEST.FORMULA3 = cf3
+
+// cf4 = SmartCurve()
+// cf4.baseCurve=ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:BID"})
+// cf4.expression="flatCurve(12,10)"
+// ARGUSTEST.FORMULA4 = cf4
+
+// print json(ARGUSTEST)
+// save ${object:ARGUSTEST}
+
+// sc = SmartCurve(${data:"SMART_TEST:CURVE"}, "BASE")
+// print sc.build("2022-01-10").contracts
+
+sc1 = SmartCurve("#DCE.AG.CN.A.NO1_SOYBEAN.FUT:HIGH", "(BASE+LOW)/2")
+sc1.currency="EUR"
+sc1.units="MT"
+sc1.LOW=ref("data", "#DCE.AG.CN.A.NO1_SOYBEAN.FUT:LOW")
+
+c1 = sc1.build("2021-10-27")
+print c1.contracts
+
+sc1 = SmartCurve()
+sc1.baseCurve=ref(${data:"#DCE.AG.CN.A.NO1_SOYBEAN.FUT:HIGH"})
+sc1.factor=1.2
+sc1.expression="BASE*factor"
+
+c1 = sc1.build("2021-10-27")
+print c1.contracts
+
+sc = SmartCurve(ref(${data:"SMART_TEST:CURVE"}), "BASE*1.02")
+sc.product = "CORN"
+
+
+CORN_TEST = Object()
+CORN_TEST.category = "TEST"
+
+cf = SmartCurve()
+cf.baseCurve=ref(${data:"#MATBAROFEX.ROS.CORN.FUT:CLOSE"})
+cf.expression="interpolate(bootstrapCurve(BASE),'BACKWARD')"
+// cf.expression="bootstrapCurve(BASE)"
+CORN_TEST.BOOTSTRAP = cf
+
+c1 = cf.build("2022-01-07")
+print c1.contracts
+
+save ${object: CORN_TEST}

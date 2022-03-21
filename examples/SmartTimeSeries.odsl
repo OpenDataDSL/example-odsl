@@ -1,0 +1,48 @@
+// BASE = ${data:"#CLALIT.AMF.AVGAUC.AWP:AVG"}
+// OTHER = ${data:"CORN_TEST_TYPE:SCALER"}
+// ts1 = BASE*OTHER
+// ts2 = OTHER*BASE
+// print ts1.values
+// print ts2.values
+
+sts = SmartTimeSeries(Date("2021-01-01"), MonthlyCalendar(), "12.5")
+a = sts.build()
+print a.values
+
+
+
+// d = ${object:"BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M"}
+// ts = SmartTimeSeries("BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M:FORWARD_TOTAL", "scale(BASE, 'MONTHLY', 'delta')")
+// d.MONTHLY_USAGE = ts
+// save ${object: d}
+
+
+// ts1 = ts.build()
+// print ts1.localValues
+
+TEST_SMART_TS = object as #Agriculture
+    category="TUTORIAL"
+end
+
+// TEST_SMART_TS.ASK = TimeSeries("BUSINESS")
+// last = 20
+// TEST_SMART_TS.ASK.add("2022-01-03", last)
+// TEST_SMART_TS.BID = TimeSeries("BUSINESS")
+// TEST_SMART_TS.BID.add("2022-01-03", last-1)
+
+// for i=1 to 100
+//     last = nextValue(last)
+//     TEST_SMART_TS.ASK.addValue(last)
+//     TEST_SMART_TS.BID.addValue(last-1)
+// next
+
+TEST_SMART_TS.MID = SmartTimeSeries("TEST_SMART_TS:ASK", "(BASE+BID)/2")
+TEST_SMART_TS.MID.BID = ref("data","TEST_SMART_TS:BID")
+
+ts = TEST_SMART_TS.MID.build()
+
+save ${object:TEST_SMART_TS}
+
+function nextValue(last)
+    nextValue = last + (random() - 0.5)
+end

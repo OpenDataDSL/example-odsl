@@ -1,3 +1,7 @@
+cals = find ${calendar}
+print cals.size
+
+
 // HUPX
 #HUPX = ExpiryCalendar(DailyCalendar())
 #HUPX.addRule("go back 2 days")

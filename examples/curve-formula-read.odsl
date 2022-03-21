@@ -1,0 +1,14 @@
+// obj = ${object:"ARGUSTEST"}
+// print obj
+
+// f1 = ${data:"ARGUSTEST:FORMULA"}
+// print f1.data
+
+// fc1 = ${data:"ARGUSTEST:FORMULA:2016-01-04"}
+// print fc1.contracts
+
+// fc2 = ${data:"ARGUSTEST:FORMULA2:2016-01-04"}
+// print fc2.contracts
+
+fc3 = ${data:"ARGUSTEST:FORMULA3:2016-01-04"}
+print fc3.contracts

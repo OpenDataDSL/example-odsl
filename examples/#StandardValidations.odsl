@@ -1,0 +1,29 @@
+/**
+ * Standard Validations
+ * @category Validations
+ */
+
+/**
+ * Check a dataset for missing data
+ * @param dataset The name of the dataset to check
+ */
+function missing(dataset)
+
+end
+
+brt = TimeSeries("BUSINESS")
+brt.add("2022-01-03", 10)
+brt.add("2022-01-04", 10)
+brt.add("2022-01-05", 10)
+brt.add("2022-01-06", 10)
+brt.add("2022-01-07", 10)
+brt.add("2022-01-12", 10)
+brt.add("2022-01-13", 10)
+print brt.values
+
+brt.realign()
+print brt.values
+
+brt = ${data: "#EIA.PET.RWTC.D:SPOT"}
+brt.realign()
+print brt.values

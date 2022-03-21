@@ -1,0 +1,30 @@
+#HEEXELF = ${calendar:"#HEEXELF"}
+#REEXEL = ExpiryCalendar(#HEEXELF)
+#REEXEL.addRule("go to the beginning of the next week then align for weekend")
+save ${expiry:#REEXEL}
+
+ondate = CurveDate(Date("2021-01-04"),#REEXEL)
+
+print "===========Weekend==========="
+expiry = ondate.getExpiry("2021WKD48")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2021WKD48")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2021WKD48")
+print ("Delivery End Date:"+ end)
+
+
+#HEEXELF = ${calendar:"#HEEXELF"}
+#REEXEL = ExpiryCalendar(#HEEXELF)
+#REEXEL.addRule("go to the end of the current day then align forwards for calendar days")
+save ${expiry:#REEXEL}
+
+ondate = CurveDate(Date("2021-01-04"),#REEXEL)
+
+print "========== Day ==========="
+expiry = ondate.getExpiry("2021D0108")
+print ("Contract Expiry Date: "+ expiry)
+start = ondate.getStart("2021D0108")
+print ("Delivery Start Date:"+ start)
+end = ondate.getEnd("2021D0108")
+print ("Delivery End Date:"+ end)

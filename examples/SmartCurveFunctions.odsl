@@ -1,0 +1,66 @@
+// eombus = ExpiryCalendar(BusinessCalendar())
+// eombus.addRule("go to the end of the previous month")
+// ondate = CurveDate(Date("2020-10-13"), eombus)
+
+// curve = Curve(ondate)
+// curve.currency = "EUR"
+// curve.units = "MWH"
+
+// curve.add(Contract(ondate, "2020M11", 25.67))
+// curve.add(Contract(ondate, "2020M12", 25.75))
+// curve.add(Contract(ondate, "2021M03", 25.8))
+// curve.add(Contract(ondate, "2021M07", 25.83))
+// curve.add(Contract(ondate, "2021Q03", 25.85))
+// curve.add(Contract(ondate, "2021Q04", 25.89))
+// curve.add(Contract(ondate, "2022Y", 25.99))
+
+// filled = interpolate(curve, "BACKWARD")
+
+// print filled
+
+
+ondate = CurveDate(Date("2022-01-12"), "#REOMB")
+curve = Curve(ondate)
+
+curve.add(Contract(ondate, "2022M02", 25.67))
+curve.add(Contract(ondate, "2022M03", 25.75))
+curve.add(Contract(ondate, "2022M04", 26.75))
+
+ts = timespread(curve)
+print ts
+
+function interpolate(input, method)
+    // Fill missing months using the supplied method - method can be BACKWARD
+    interpolate = Curve(input.ondate)
+    if method == "BACKWARD"
+        months = input.contracts.filter("Month")
+        interpolate.add(months[0])
+        last = months[0].relativePeriodCode.period + 1
+        for i = 1 to months.size - 1
+            c = months[i]
+            interpolate.add(c)
+
+            ct = c.relativePeriodCode.period
+            for p = last to ct
+                cc = Contract(input.ondate, "M0" + p, c.value)
+                interpolate.add(cc)
+            next
+
+            last = ct + 1
+        next
+    end
+end
+
+function timespread(input)
+    // Create a curve with spreads created from the months in the input curve after bootstrapping
+    boots = bootstrapCurve(input)
+    timespread = Curve(input.ondate)
+    last = boots.contracts[0]
+    for i = 1 to boots.contracts.size - 1
+        m = boots.contracts[i]
+        value = m.value - last.value
+        spread = Contract(input.ondate, last.tenor + "-" + m.tenor, value)
+        timespread.add(spread)
+        last = m
+    next
+end

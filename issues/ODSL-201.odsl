@@ -1,0 +1,6 @@
+obj = List()
+obj.add("1")
+
+for i = 0 to obj.size-1
+    print obj.get(i)
+next 

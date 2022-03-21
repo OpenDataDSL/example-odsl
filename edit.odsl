@@ -1,50 +1,6 @@
-xml_data_loader = workflow in "data-loaders"
-    // Extract the FX XML file from ECB, transform it and load it to the HUB
-    in url as Scalar
-    in tx as Scalar
-    out batch as Batch
+UFW = SmartTimeSeries("BWSSB.WA.FLOW.DMA.MAG8000_197705H356.15M:MONTHLY_USAGE", "(BASE-(BASE*0.75)+(BASE*0.10)+(BASE*0.05)+(BASE*0.05))/BASE")
+// UFW = SmartTimeSeries("BWSSB.WA.FLOW.DMA.MAG8000_197705H356.15M:MONTHLY_USAGE", "(BASE-1000)/BASE")
 
-    WF_START
-        "ok" -> getxml
-    end
+d = UFW.build()
 
-    phase "EXTRACT"
-        WF_ACTION getxml ai
-            "ok" -> transformxml
-            "failed" -> stopfailed
-            ai.url = input.url
-            result = ${action:private/"xml_url"}.run(ai, output)    
-
-        end
-    end
-
-    phase "TRANSFORM"
-        WF_ACTION transformxml ai
-            "ok" -> sendbatch
-            "failed" -> stopfailed
-            ai.data = output.xml_url.xml
-            ai.tx = input.tx
-            result = ${action:private/"transform_data"}.run(ai, output)
-        end
-    end
-
-    phase "SEND"
-        WF_ACTION sendbatch ai
-            "ok" -> stopok
-            "failed" -> stopfailed
-            ai.batch = output.transform_data.batch
-            result = ${action:private/"send_batch"}.run(ai, output)
-        end
-    end
-
-    WF_EVENT stopok as "success"
-        return "ok"
-    end
-    WF_EVENT stopfailed as "failed"
-        return "failed"
-    end
-
-end
-
-
-save ${workflow:private/"xml_data_loader"}
+print d.values

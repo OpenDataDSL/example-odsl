@@ -1,6 +1,9 @@
-
+/**
+ * Bootstrap an input curve
+ * to create a monthly arbitrage-free curve
+ * @param input The input curve
+ */
 function bootstrap(input)
-    // Create an arbitrage free monthly curve from the input curve
     bootstrap = bootstrapCurve(input)
 end
 
@@ -39,4 +42,26 @@ function flatCurve(months, value)
         m = m.next()
         flatCurve.add(m)
     next
+end
+
+function interpolate(input, method)
+    // Fill missing months using the supplied method - method can be BACKWARD
+    interpolate = Curve(input.ondate)
+    if method == "BACKWARD"
+        months = input.contracts.filter("Month")
+        interpolate.add(months[0])
+        last = months[0].relativePeriodCode.period + 1
+        for i = 1 to months.size - 1
+            c = months[i]
+            interpolate.add(c)
+
+            ct = c.relativePeriodCode.period
+            for p = last to ct
+                cc = Contract(input.ondate, "M0" + p, c.value)
+                interpolate.add(cc)
+            next
+
+            last = ct + 1
+        next
+    end
 end

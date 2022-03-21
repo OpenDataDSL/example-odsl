@@ -1,0 +1,18 @@
+print "adding ecb_fx processes"
+process = Process()
+process.service = "ETL"
+process.name = "ECB_FX"
+process.description = "ETL Process for European Central Bank Exchange Rates"
+process.enabled = true
+process.workflow = "#wf_ecb_fx_data_loader"
+process.input.url = `"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"`
+process.input.tx="#ECB_FX"
+process.input.transformer="#transform_ecb_fx_data"
+process.cron = "52 10 ? * MON-FRI *"
+process.calendar="#HTR"
+save ${process:process}
+
+// print run ECB_FX
+
+// cl = find ${crontablog}
+// print cl

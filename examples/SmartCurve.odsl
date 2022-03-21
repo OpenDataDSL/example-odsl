@@ -1,0 +1,40 @@
+cf = SmartCurve("#MATBAROFEX.ROS.CORN.FUT:CLOSE","bootstrapCurve(BASE)")
+c1 = cf.build("2022-02-10")
+print c1.contracts
+
+
+EEXC = ${data:"EEX.EL.DE.B.FUT:SETTLE:2021-01-12"}
+
+EEX = SmartCurve("EEX.EL.DE.B.FUT:SETTLE","bootstrapCurve(BASE)")
+print EEX.build("2021-01-12")
+
+
+SOYBEAN = Object()
+SOYBEAN.CURVE = SmartCurve("#DCE.AG.CN.A.NO1_SOYBEAN.FUT:CLOSE", "agricultural(BASE)")
+SOYBEAN.CURVE.script = "SmartCurveCustomScript"
+
+c1 = SOYBEAN.CURVE.build("2021-10-27")
+print c1.contracts
+
+
+sc = SmartCurve()
+sc.baseCurve = ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:MID"})
+sc.expression="bootstrapCurve(BASE)"
+
+curve = sc.build("2016-01-04")
+
+print curve.contracts
+
+sc1 = SmartCurve()
+sc1.baseCurve=ref(${data:"ARGUS.FCE.1.1.FWD.CURVE:BID"})
+sc1.expression="flatCurve(12,10)"
+
+c1 = sc1.build("2016-01-04")
+
+print c1.contracts
+
+
+function discount(input, discount)
+    // Subtract a discount value from every tenor in the input curve
+    discount = input - discount
+end

@@ -1,19 +1,17 @@
 
 // Define a queue type
-// #QUEUE = type
-//     queue as String() matches "^[a-zA-Z0-9-_]+$"
-//     handler as String()
-//     timeout as String()
-//     retention as String()
-// end
-// save ${type:#QUEUE}
+#QUEUE = type
+    queue as String() matches "^[a-zA-Z0-9-_]+$"
+    handler as String()
+    timeout as String()
+    retention as String()
+end
+save ${type:#QUEUE}
 
 // Create a new queue
 // myqueue = object as #QUEUE
-//     queue = "myqueue"
+//     queue = "default"
 //     handler = "loader"
-//     timeout = "3m"
-//     retention = "4d"
 // end
 // save ${queue:myqueue}
 

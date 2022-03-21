@@ -1,0 +1,19 @@
+ecal = ExpiryCalendar(BusinessCalendar())
+ecal.addRule("go back 1 day using calendar")
+ondate = CurveDate(Date("2020-10-13"), ecal)
+curve = Curve(ondate)
+
+curve.add(Contract(ondate, "2020EOM11", 25.67))
+curve.add(Contract(ondate, "2020EOM12", 25.75))
+curve.add(Contract(ondate, "2021EOQ01", 25.8))
+curve.add(Contract(ondate, "2021EOY", 25.9))
+
+for c in curve.contracts
+    print c.tenor + " " + c.absolute + " " + c.start + " " + c.end
+next
+
+bc = bootstrapCurve(curve)
+
+for c in bc.contracts
+    print c.tenor + " " + c.absolute + " " + c.start + " " + c.end + " " + c.ImpliedFrom
+next

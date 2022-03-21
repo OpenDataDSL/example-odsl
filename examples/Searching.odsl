@@ -1,10 +1,25 @@
-processes = find unique name from ${process}
-print processes
-
-proc = ${process:"EONIA_FWD_IR_DAILY"}
-print json(proc)
-
-calendars = find ${calendar:public}
-for cal in calendars
-    print cal.code
+for i = 0 to 10
+    if i == 5
+        i = 9
+    end
+    print i
 next
+
+
+objects = find top 15 ${object} where dataset="ARGUS_DEL"
+
+for o in objects
+    print o.id + " " + o.dataset
+next
+
+
+// processes = find unique name from ${process}
+// print processes
+
+// proc = ${process:"EONIA_FWD_IR_DAILY"}
+// print json(proc)
+
+// calendars = find ${calendar:public}
+// for cal in calendars
+//     print cal.code
+// next

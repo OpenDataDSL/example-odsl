@@ -1,0 +1,7 @@
+import ${script:"#CurveScript"}
+
+function agricultural(input)
+    // Agricultural curve bootstrapped and backward filled
+    boots = bootstrapCurve(input)
+    agricultural = interpolate(boots, "BACKWARD")
+end

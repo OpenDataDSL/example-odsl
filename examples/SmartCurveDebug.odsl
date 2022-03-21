@@ -1,0 +1,11 @@
+eex = ${object:"EEX.EL.DE.B.FUT"}
+sc = SmartCurve("EEX.EL.DE.B.FUT:SETTLE", "shape(bootstrapCurve(BASE))")
+eex.SHAPED = sc
+save ${object:eex}
+
+scdates = ${data:"EEX.EL.DE.B.FUT:MID"}
+
+sc = scdates.smartcurve
+
+scd = sc.build("2021-01-12")
+print scd

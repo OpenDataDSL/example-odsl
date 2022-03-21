@@ -20,8 +20,12 @@ print ccid
 eurusd = ${currency:"#ECB_FX.EURUSD"}
 print eurusd
 
+
 // Get a specific currency data
 eurusd = ${currency:"#ECB_FX.EURUSD","_profile=SPOT"}
+print "Value for 2022-01-12 is "
+print eurusd.get("2022-01-12")
+
 print eurusd
 
 // Fetch all data for all ECB_FX currencies

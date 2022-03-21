@@ -1,0 +1,8 @@
+eex = ${data:"EEX.NG.GPL.GWID.WD.TS:OPEN"}
+
+print eex.values
+daily = scale(eex, "DAILY", "summed")
+print daily.values
+
+gd = scale(eex, "GASDAY", "summed")
+print gd.values

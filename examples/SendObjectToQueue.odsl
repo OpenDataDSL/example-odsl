@@ -33,13 +33,23 @@ loadTypes()
 // save ${process:process}
 
 
-Cat6ACable = object as Cable
-    name = "Cat 6A Ethernet cable"
-    price = 1.85
-    length = 15
-end
+// Cat6ACable = object as Cable
+//     name = "Cat 6A Ethernet cable"
+//     price = 1.85
+//     length = 15
+// end
+
+// // Send to a queue
+// batch = PROCESS.createBatch()
+// batch.add(Cat6ACable)
+// send batch
+
+LOADER_TEST = Object()
+LOADER_TEST.name = "Loader Test"
 
 // Send to a queue
 batch = PROCESS.createBatch()
-batch.add(Cat6ACable)
+batch.service = "TEST"
+batch.name = "TEST"
+batch.add(LOADER_TEST)
 send batch

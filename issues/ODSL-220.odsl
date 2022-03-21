@@ -1,0 +1,7 @@
+total = aggregate sum(AVERAGE) for last(10) from ${object:public} where dataset="AHDB_DR_PR"
+
+total = aggregate sum(AVERAGE) from ${object:public} where dataset="AHDB_DR_PR"
+print total.values
+
+total = aggregate sum(MONTHLY_USAGE) for last(3)  from ${object:private} where dataset="BWSSB_WA_FLOW"
+print total.values

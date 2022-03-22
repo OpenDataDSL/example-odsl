@@ -1,0 +1,49 @@
+// c = ${data:"MS.FO.1PCT.ROT.FOB.BARGES:MID:2022-03-14"}
+// e = ${data:"JARON.HFO.1PCT.ROT.FOB.BARGES:MID:2022-03-14"}
+
+// bso = bootstrapOil(c)
+// print bso
+
+// test = deltaExtend(bso,e)
+// print test
+
+function bootstrapOil(curve)
+    // Get the original months and quarters
+    ms = curve.contracts.filter("Month")
+    qs = curve.contracts.filter("Quarter")
+
+    // Perform a standard bootstrap
+    bootstrapOil = bootstrapCurve(curve)
+
+    // Iterate through the quarters calculating the months
+    last = ms[ms.size-1]
+    for q in qs
+        months = asMonths(q)
+        t1 = months[0].tenor
+        t2 = months[2].tenor
+        if ms.contains(t1)
+            last = bootstrapOil[t2]
+        else
+            v = last.value - (last.value - q.value) / 2
+            bs = bootstrapOil[t1]
+            bs.value = v
+            bs = bootstrapOil[t2]
+            bs.value = (q.value * 2) - v
+            last = bs
+        end
+    next
+end
+
+function deltaExtend(curve, extender)
+    deltaExtend = curve
+    last = curve[curve.size - 1]
+    e1 = extender[last.tenor]
+    e2 = extender[last.next.tenor]
+    while e2 != null
+        e2.value = last.value + (e2.value - e1.value)
+        deltaExtend.add(e2)
+        last = e2
+        e1 = extender[last.tenor]
+        e2 = extender[last.next.tenor]
+    end
+end

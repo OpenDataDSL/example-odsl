@@ -1,0 +1,108 @@
+ondate = CurveDate(Date("2022-03-14"), "#REOMHENG")
+
+curve = Curve(ondate)
+curve.currency = "USD"
+curve.units = "MT"
+
+curve.add(Contract(ondate, "2022M04", 452))
+curve.add(Contract(ondate, "2022M05", 458))
+curve.add(Contract(ondate, "2022M06", 461.75))
+curve.add(Contract(ondate, "2022M07", 465.5))
+curve.add(Contract(ondate, "2022M08", 471.75))
+curve.add(Contract(ondate, "2022M09", 475.5))
+curve.add(Contract(ondate, "2022M10", 478.5))
+curve.add(Contract(ondate, "2022M11", 479.75))
+curve.add(Contract(ondate, "2022M12", 480.5))
+curve.add(Contract(ondate, "2023M01", 481.25))
+curve.add(Contract(ondate, "2023M02", 482.75))
+curve.add(Contract(ondate, "2023M03", 486))
+curve.add(Contract(ondate, "2023M04", 489.24))
+curve.add(Contract(ondate, "2023M05", 489.75))
+curve.add(Contract(ondate, "2023M06", 490.25))
+curve.add(Contract(ondate, "2023M07", 490.75))
+curve.add(Contract(ondate, "2023M08", 491.75))
+curve.add(Contract(ondate, "2023M09", 492.25))
+curve.add(Contract(ondate, "2023M10", 493.25))
+curve.add(Contract(ondate, "2023M11", 494.25))
+curve.add(Contract(ondate, "2023M12", 495))
+curve.add(Contract(ondate, "2024M01", 495.75))
+curve.add(Contract(ondate, "2024M02", 496.25))
+curve.add(Contract(ondate, "2024M03", 497))
+curve.add(Contract(ondate, "2024M04", 497.75))
+curve.add(Contract(ondate, "2024M05", 498.5))
+curve.add(Contract(ondate, "2024M06", 499.25))
+curve.add(Contract(ondate, "2024M07", 500))
+curve.add(Contract(ondate, "2024M08", 500.75))
+curve.add(Contract(ondate, "2024M09", 501.5))
+curve.add(Contract(ondate, "2024M10", 502.25))
+curve.add(Contract(ondate, "2024M11", 503))
+curve.add(Contract(ondate, "2024M12", 503.75))
+curve.add(Contract(ondate, "2025M01", 504.5))
+curve.add(Contract(ondate, "2025M02", 505))
+curve.add(Contract(ondate, "2025M03", 505.5))
+curve.add(Contract(ondate, "2025M04", 506))
+curve.add(Contract(ondate, "2025M05", 506.5))
+curve.add(Contract(ondate, "2025M06", 507))
+curve.add(Contract(ondate, "2025M07", 507.5))
+curve.add(Contract(ondate, "2025M08", 508))
+curve.add(Contract(ondate, "2025M09", 508.5))
+curve.add(Contract(ondate, "2025M10", 509))
+curve.add(Contract(ondate, "2025M11", 509.5))
+curve.add(Contract(ondate, "2025M12", 510))
+curve.add(Contract(ondate, "2026M01", 510.5))
+curve.add(Contract(ondate, "2026M02", 511))
+curve.add(Contract(ondate, "2026M03", 511.5))
+curve.add(Contract(ondate, "2026M04", 512))
+curve.add(Contract(ondate, "2026M05", 512.5))
+curve.add(Contract(ondate, "2026M06", 513))
+curve.add(Contract(ondate, "2026M07", 513.5))
+curve.add(Contract(ondate, "2026M08", 514.25))
+curve.add(Contract(ondate, "2026M09", 515))
+curve.add(Contract(ondate, "2026M10", 515.75))
+curve.add(Contract(ondate, "2026M11", 516.5))
+curve.add(Contract(ondate, "2026M12", 517.25))
+curve.add(Contract(ondate, "2027M01", 518))
+curve.add(Contract(ondate, "2027M02", 518.5))
+curve.add(Contract(ondate, "2027M03", 519))
+curve.add(Contract(ondate, "2027M04", 519.5))
+curve.add(Contract(ondate, "2027M05", 520))
+curve.add(Contract(ondate, "2027M06", 520.5))
+curve.add(Contract(ondate, "2027M07", 521))
+curve.add(Contract(ondate, "2027M08", 521.5))
+curve.add(Contract(ondate, "2027M09", 522))
+
+o = object as #Oil
+    MID = curve
+    dataset = "JARON"
+end
+o.id="JARON.HFO.1PCT.ROT.FOB.BARGES"
+// save ${object:o}
+
+ondate = CurveDate(Date("2022-03-14"), "#REOMHENG")
+
+curve = Curve(ondate)
+curve.currency = "USD"
+curve.units = "MT"
+
+curve.add(Contract(ondate, "2022M04", 451.25))
+curve.add(Contract(ondate, "2022M05", 456))
+curve.add(Contract(ondate, "2022Q02", 461.17))
+curve.add(Contract(ondate, "2022Q03", 477.08))
+curve.add(Contract(ondate, "2022Q04", 481.58))
+curve.add(Contract(ondate, "2023Q01", 488))
+curve.add(Contract(ondate, "2023Q02", 491))
+curve.add(Contract(ondate, "2023Q03", 493.63))
+curve.add(Contract(ondate, "2023Q04", 496.25))
+
+o = object as #Oil
+    MID = curve
+    dataset = "MORGAN_STANLEY"
+end
+o.id="MS.FO.1PCT.ROT.FOB.BARGES"
+// save ${object:o}
+
+o = object as #Oil
+    dataset = "SMART_DATA"
+end
+o.id="SMART_DATA.EXAMPLE"
+save ${object:o}

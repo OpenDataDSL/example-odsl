@@ -1,0 +1,35 @@
+
+//#region Create Type
+#Widget = type
+    name as String()
+    type as String()
+    style as Object()
+    query as String()
+end
+print #Widget
+// save ${type:#Widget}
+//#endregion
+
+//#region Create Object
+#WIDGET_EXEC_HISTORY24 = object as #Widget
+    name = "Execution History - Last 24 Hours"
+    type = "chart-doughnut"
+    style = Object()
+    query = "[{'$match':{'start':{'$gte':'T-P1D'}}},{'$group':{'_id':'$status','count':{'$sum':1}}}]"
+end
+
+#WIDGET_EXEC_HISTORY24.style.colors = Object()
+#WIDGET_EXEC_HISTORY24.style.colors.running = "blue"
+#WIDGET_EXEC_HISTORY24.style.colors.success = "green"
+#WIDGET_EXEC_HISTORY24.style.colors.failed = "red"
+print #WIDGET_EXEC_HISTORY24
+// save ${object:#WIDGET_EXEC_HISTORY24}
+//#endregion
+
+//#region
+print "Hello Region"
+//#endregion
+
+//#region
+print "Test"
+//#endregion

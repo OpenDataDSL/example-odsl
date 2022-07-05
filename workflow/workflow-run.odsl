@@ -1,7 +1,20 @@
 job_input = Object()
-job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-job_input.tx = "ECB_FX"
+job_input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml2"
+job_input.tx = "#ECB_FX"
+job_input.transformer = "#transform_ecb_fx_data"
 job_output = Object()
+wf = "#wf_ecb_fx_data_loader"
 
-${workflow:"private/xml_data_loader"}.run(job_input, job_output)
-print json(job_output.xml_data_loader.transform_data.batch)
+// ${workflow:wf}.run(job_input, job_output)
+// print json(job_output.workflow.act_transform_data.batch)
+
+// Run remotely
+// run ECB_FX with job_input
+
+// // Run locally
+// process = ${process:"ECB_FX"}
+// process.input.url = job_input.url
+// exec = process.run()
+// print json(exec)
+
+run SONIA_FWD_IR_DAILY

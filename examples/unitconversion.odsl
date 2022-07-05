@@ -1,0 +1,11 @@
+e_mt = ${data:"CONV_TEST:C_EUR_MT:2022-05-16",currency=USD}
+print e_mt
+
+e_bbl = ${data:"CONV_TEST:C_EUR_MT:2022-05-16",currency=USD, units=BBL}
+print e_bbl
+
+e_bblc = ${data:"CONV_TEST:C_EUR_MT:2022-05-16",currency=USD, units=BBL, density=1000}
+print e_bblc
+
+e_custom = ${data:"CONV_TEST:C_CUSTOM_FACTOR:L",units=MT}
+print e_custom

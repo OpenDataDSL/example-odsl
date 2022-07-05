@@ -4,12 +4,28 @@
 // euraud.supplier = ref(${object:"#ECB_EUROPA_EU"})
 // save ${object:euraud}
 
-link ${object:"ABCNewcastle"} as address/residents of ${object:"JaneDoe"} 
-link ${object:"ABCLondon"} as address/residents of ${object:"JaneDoe"} 
-jd = ${object:"JaneDoe"}
+// link ${object:"ABCNewcastle"} as address/residents of ${object:"JaneDoe"} 
+// link ${object:"ABCLondon"} as address/residents of ${object:"JaneDoe"} 
+// jd = ${object:"JaneDoe"}
 
-print jd.links.address[0]
-print jd.links.address[0].indexFrom
-print jd.links.address[0].relative.city
-print jd.links.address[1].relative.city
+// print jd.links.address[0]
+// print jd.links.address[0].indexFrom
+// print jd.links.address[0].relative.city
+// print jd.links.address[1].relative.city
+
+r = Object()
+r.supplier = ${object:"#ECB"}
+
+tx = transform xml into #ForeignExchange as fx
+    // Transform ECB daily FX rates to type #ForeignCurrency
+    create with Cube
+    unique id = "ECB_FX_EUR" + fx.currency
+    SPOT = TimeSeries(xml.Cube.Cube.time, "BUSINESS", fx.rate)
+    _links = [Link("supplier", r.supplier)]
+end
+
+XML=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}
+
+result = tx.run(XML)
+print result
 

@@ -1,4 +1,4 @@
-ondate = CurveDate(Date("2022-03-14"), "#REOMHENG")
+ondate = CurveDate(Date("2022-03-15"), "#REOMHENG")
 
 curve = Curve(ondate)
 curve.currency = "USD"
@@ -76,7 +76,7 @@ o = object as #Oil
     dataset = "JARON"
 end
 o.id="JARON.HFO.1PCT.ROT.FOB.BARGES"
-// save ${object:o}
+save ${object:o}
 
 ondate = CurveDate(Date("2022-03-14"), "#REOMHENG")
 

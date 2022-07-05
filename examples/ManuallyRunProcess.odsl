@@ -18,3 +18,7 @@ for date in dates
     ondate.date = date
     print run CONVERSION_TEST with ondate
 next
+
+// Run locally
+proc = ${process:"ECB_FX"}
+proc.run()

@@ -1,3 +1,9 @@
+WC = WeeklyCalendar("Tuesday")
+save ${calendar: WC}
+
+WC = ${calendar:"WC"}
+
+
 cals = find ${calendar}
 print cals.size
 

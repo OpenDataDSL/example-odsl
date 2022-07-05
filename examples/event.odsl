@@ -1,0 +1,126 @@
+//#region
+events = find ${event} where event = "EVENT_TEST:ORDERS" and time > "2022-06-23T09:24:00"
+print events
+
+//#endregion
+
+//#region
+obj = ${object:"EVENT_TEST"}
+print obj
+//#endregion
+
+//#region
+summary = ${event:"EVENT_TEST:ORDERS"}
+print summary
+//#endregion
+
+//#region Update events on objects
+EVENTS = Object()
+
+ev1 = Event("2022-06-23T10:24:21")
+ev1.type = "ASK"
+ev1.price = 12.31
+ev1.volume = 200
+
+ev2 = Event("2022-06-23T10:24:22")
+ev2.type = "BID"
+ev2.price = 12.31
+ev2.volume = 200
+
+ev3 = Event("2022-06-23T10:24:23")
+ev3.price = 12.32
+ev3.volume = 200
+
+EVENTS.orders = [ev1, ev2]
+EVENTS.trades = ev3
+
+print EVENTS
+save ${object:EVENTS}
+
+//#endregion
+
+//#region Read events
+events = find ${event} where event="EVENTS:orders"
+print events
+
+//#endregion
+
+//#region UMM
+HYLEN = Object()
+ev1 = Event("2022-06-30T14:22:12")
+ev1.eventstart = Date("2022-06-28T15:00:00")
+ev1.eventend = Date("2022-07-04T15:00:00")
+ev1.eventtype = "#UMM"
+ev1.id = "EUIMSG-LZ44MIGUX2I353AIWE_004"
+ev1.type = "Planned"
+ev1.reasonCode = "Foreseen maintenance"
+ev1.reasonDesc = "This will affect upstream production due to no bypassing"
+ev1.installedCapacity=160
+ev1.availableCapacity=80
+ev1.unavailableCapacity=80
+ev1.units="MW"
+HYLEN.UMM=ev1
+save ${object:HYLEN}
+
+//#endregion
+
+//#region UMM2
+HYLEN = Object()
+ev1 = Event("2022-07-01T10:11:56")
+ev1.eventstart = Date("2022-07-06T11:00:00")
+ev1.eventend = Date("2022-07-06T13:00:00")
+ev1.eventtype = "#UMM"
+ev1.id = "EUIMSG-OI4RTMNHEGYUNWU4ID_002"
+ev1.type = "Planned"
+ev1.reasonCode = "Foreseen maintenance"
+ev1.reasonDesc = "Generator control"
+ev1.installedCapacity=160
+ev1.availableCapacity=0
+ev1.unavailableCapacity=160
+ev1.units="MW"
+HYLEN.UMM=ev1
+save ${object:HYLEN}
+
+//#endregion
+
+//#region Get UMM
+events = find ${event} where event = "HYLEN:UMM"
+print events
+//#endregion
+
+//#region Comments
+HYLEN = Object()
+ev = Event(TimeStamp())
+ev.id = uid()
+ev.comment="Statkraft Energi A.S. Hydro Water Reservoir"
+HYLEN.COMMENTS = ev
+save ${object:HYLEN}
+//#endregion
+
+//#region
+events = find ${event} where event = "HYLEN:COMMENTS"
+print events
+//#endregion
+
+//#region
+o = ${object:"HYLEN"}
+print o
+//#endregion
+
+//#region Delete an event
+HYLEN = Object()
+ev = Event(TimeStamp())
+ev.id = "test"
+ev.comment="Statkraft Energi A.S. Hydro Water Reservoir"
+HYLEN.COMMENTS = ev
+// save ${object:HYLEN}
+
+events = find ${event} where event = "HYLEN:COMMENTS"
+print events
+
+delete ${event:"HYLEN:COMMENTS:test"}
+
+events = find ${event} where event = "HYLEN:COMMENTS"
+print events
+
+//#endregion

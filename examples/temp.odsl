@@ -1,0 +1,5 @@
+temp = ${object:"EEX.EM.FEUA.FUT"}
+MID = ${data:"EEX.EM.FEUA.FUT:MID"}
+temp.MID = MID
+
+save ${object:temp}

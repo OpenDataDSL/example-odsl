@@ -1,3 +1,15 @@
+#REOH = ExpiryCalendar(IntradayCalendar(1h))
+#REOH.addRule("go to the end of the previous day")
+#ondate = CurveDate(parse("2022-02-06","yyyy-MM-dd"), #REOH)  
+PRICE = Curve(#ondate)
+#contract = Contract(#ondate,"2022D0207-H02", 1.1)
+PRICE.add(#contract)
+PRICE.description="Price"
+print json(PRICE)
+
+
+
+
 #HEEXELFR = HolidayCalendar()
 #HEEXELFR.addRule("Every Saturday")
 #HEEXELFR.addRule("Every Sunday")

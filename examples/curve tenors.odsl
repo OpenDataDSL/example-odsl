@@ -1,0 +1,22 @@
+loadCalendars()
+
+curvedates = ${data:"#BSP.EL.SI.BASE.DA:PRICE"}
+print curvedates.links
+
+//#region
+index = parse("25-10-2020 12:30:00", "dd-MM-yyyy HH:mm:ss","Asia/Calcutta")
+
+PRICE1 = TimeSeries(index, "SPARSE", 1)
+
+
+
+index = parse("25-10-2020 15:30:00", "dd-MM-yyyy HH:mm:ss","Asia/Calcutta")
+
+PRICE2 = TimeSeries(index, "SPARSE", 2)
+
+ts = PRICE1.add(PRICE2)
+
+print json(ts)
+
+
+//#endregion

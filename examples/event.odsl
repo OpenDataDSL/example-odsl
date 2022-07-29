@@ -1,5 +1,5 @@
 //#region
-events = find ${event} where event = "EVENT_TEST:ORDERS" and time > "2022-06-23T09:24:00"
+events = find ${event} where event = "EVENT_TEST:ORDERS" and eventtime > "2022-06-23T09:24:00"
 print events
 
 //#endregion

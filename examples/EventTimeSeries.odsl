@@ -1,0 +1,50 @@
+//#region
+ets = EventTimeSeries("EVENT_TEST:ORDERS", "price")
+ts = ets.build()
+print json(ts)
+//#endregion
+
+//#region with calendar
+ets = EventTimeSeries("EVENT_TEST:ORDERS", "price")
+ets.calendar = Calendar("QUARTERHOURLY")
+ts = ets.build()
+print json(ts)
+//#endregion
+
+//#region with filter
+ets = EventTimeSeries("EVENT_TEST:ORDERS", "price")
+ets.filter = 'side="ASK"'
+ts = ets.build()
+print json(ts)
+//#endregion
+
+//#region with strings
+ets = EventTimeSeries("EVENT_TEST:ORDERS", "side")
+ts = ets.build()
+print json(ts)
+//#endregion
+
+//#region UMM events
+// Event Summary
+summary = ${event:"HYLEN:UMM"}
+print summary
+
+// Events
+events = find ${event} where event="HYLEN:UMM"
+print events
+
+//#endregion
+
+//#region
+// Events
+events = find ${event} where eventtype="#UMM" and type="Planned"
+print events
+
+//#endregion
+
+//#region UMM TimeSeries
+ets = EventTimeSeries("HYLEN:UMM", "unavailableCapacity")
+ets.calendar = Calendar("DAILY")
+ts = ets.build()
+print json(ts)
+//#endregion

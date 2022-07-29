@@ -22,3 +22,16 @@ print typeOf(london)
 london = object as #Location
     name = "London"
 end
+
+//#region
+PRODUCTS = object as #MetadataMapping
+    BARLEY = object as #Metadata
+        code = "BARLEY"
+        name = "Barley"
+        product = "Barley"
+        test="TEST"
+    end
+end
+save ${object:PRODUCTS}
+
+//#endregion

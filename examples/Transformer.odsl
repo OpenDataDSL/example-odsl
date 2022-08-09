@@ -1,4 +1,6 @@
 
+fortest = ["A", "B", "C"]
+
 print "> Creating tx"
 tx = transform xml into #ForeignExchange as fx
     // Transform ECB daily FX rates to type #ForeignCurrency
@@ -20,6 +22,12 @@ tx = transform xml into #ForeignExchange as fx
     else
         currency = currency + "P"
     end
+    EVENTS=[]
+    for #ft in fortest
+        #ev = Event(xml.Cube.Cube.time)
+        #ev.id=#ft
+        EVENTS.add(#ev)
+    next
 end
 
 XML=${xml:"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"}

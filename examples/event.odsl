@@ -70,6 +70,7 @@ ev1 = Event("2022-07-01T10:11:56")
 ev1.eventstart = Date("2022-07-06T11:00:00")
 ev1.eventend = Date("2022-07-06T13:00:00")
 ev1.eventtype = "#UMM"
+ev1.eventtype = "#UMM"
 ev1.id = "EUIMSG-OI4RTMNHEGYUNWU4ID_002"
 ev1.type = "Planned"
 ev1.reasonCode = "Foreseen maintenance"

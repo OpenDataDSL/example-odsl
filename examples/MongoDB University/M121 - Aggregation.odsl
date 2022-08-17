@@ -1,0 +1,511 @@
+//#region Chapter 1 Lecture
+
+// Find all planets
+// db.solarSystem.aggregate([{$match:{type:{$ne:"Star"}}}]).pretty()
+planets = aggregate ${object:"aggregations.solarSystem"}
+    match type != "Star"
+end
+print planets
+
+// Count the planets
+// db.solarSystem.aggregate([{$match:{type:{$ne:"Star"}}},{$count:"planets"}]).pretty()
+countPlanets = aggregate ${object:"aggregations.solarSystem"}
+    match type != "Star"
+    count "planets"
+end
+print countPlanets
+
+//#endregion
+
+//#region Chapter 1 Lab $Match
+// Help MongoDB pick a movie our next movie night! Based on employee polling, we've decided that potential movies must meet the following criteria.
+
+// imdb.rating is at least 7
+// genres does not contain "Crime" or "Horror"
+// rated is either "PG" or "G"
+// languages contains "English" and "Japanese"
+
+// db.movies.aggregate([{$match:{"imdb.rating":{$gte:7},genres:{$nin:["Crime","Horror"]},rated:{$in:["PG","G"]},languages:{$all:["English","Japanese"]}}}]).pretty()
+// 23 documents
+movies = aggregate ${object:"aggregations.movies"}
+    match "imdb.rating" >= 7 and genres nin ["Crime","Horror"] and rated in ["PG","G"] and languages=all("English","Japanese")
+    count "movies"
+end
+print movies
+
+//#endregion
+
+//#region Chapter 1 $project mapping
+// db.solarSystem.aggregate([{$project:{_id:0, name:1, gravity:"$gravity.value"}}])
+t1 = aggregate ${object:"aggregations.solarSystem"}
+    project !_id, name, gravity="$gravity.value"
+end
+print t1
+
+// db.solarSystem.aggregate([{$project:{_id:0, name:1, myWeight:{$multiply:[{$divide:["$gravity.value",9.8]},86]}}}])
+t2 = aggregate ${object:"aggregations.solarSystem"}
+    project !_id, name, myWeight=86*"$gravity.value"/9.8
+end
+print t2
+
+//#endregion
+
+//#region Chapter 1 Lab $project
+// Using the same $match stage from the previous lab, add a $project stage to only display the title and film rating (title and rated fields).
+// db.movies.aggregate([{$match:{"imdb.rating":{$gte:7},genres:{$nin:["Crime","Horror"]},rated:{$in:["PG","G"]},languages:{$all:["English","Japanese"]}}},{$project:{_id:0,title:1,rated:1}}]).pretty()
+movies = aggregate ${object:"aggregations.movies"}
+    match "imdb.rating" >= 7 and genres nin ["Crime","Horror"] and rated in ["PG","G"] and languages=all("English","Japanese")
+    project !_id, title, rated
+end
+print movies
+
+//#endregion
+
+//#region Chapter 1 Lab computing fields
+// Our movies dataset has a lot of different documents, some with more convoluted titles than others. If we'd like to analyze our collection to find movie titles that are composed of only one word, we could fetch all the movies in the dataset and do some processing in a client application, but the Aggregation Framework allows us to do this on the server!
+// Using the Aggregation Framework, find a count of the number of movies that have a title composed of one word. To clarify, "Cinderella" and "3-25" should count, where as "Cast Away" would not.
+// db.movies.aggregate([{$project:{_id:0,words:{$split:["$title"," "]}}},{$match:{words:{$size:1}}}]).itcount()
+// 8066
+movies = aggregate ${object:"aggregations.movies"}
+    project !_id,words=split("$title"," ")
+    match words=size(1)
+end
+print movies.size
+
+//#endregion
+
+//#region Chapter 1 Lab expression with project
+// Let's find how many movies in our movies collection are a "labor of love", where the same person appears in cast, directors, and writers
+// db.movies.aggregate([
+    // {$project:{cast:1,directors:1,writers:{$map:{input:"$writers",as:"writer",in:{$arrayElemAt:[{$split:["$$writer"," ("]},0]}}}}},
+    // {$project:{common:{$setIntersection:["$cast","$directors","$writers"]}}},
+    // {$match:{common:{$elemMatch:{$exists:true}}}}
+    // ])
+// 1596
+movies = aggregate ${object:"aggregations.movies"}
+    project cast,directors,writers=map(input="$writers", as="writer", in=arrayElemAt(split("$$writer", " ("),0))
+    project common=setIntersection("$cast", "$directors", "$writers")
+    match common=elemMatch(exists(true))
+end
+print movies.size
+
+//#endregion
+
+//#region Chapter 2 addFields
+// db.solarSystem.aggregate([{$addFields:{gravity:"$gravity.value",mass:"$mass.value",radius:"$radius.value",sma:"$sma.value"}}])
+
+af1 = aggregate ${object:"aggregations.solarSystem"}
+    addFields gravity="$gravity.value", mass="$mass.value", radius="$radius.value", sma="$sma.value"
+end
+print af1
+
+// db.solarSystem.aggregate([{$project:{_id:0,name:1,gravity:1,mass:1,radius:1,sma:1}},{$addFields:{gravity:"$gravity.value",mass:"$mass.value",radius:"$radius.value",sma:"$sma.value"}}])
+af2 = aggregate ${object:"aggregations.solarSystem"}
+    project !_id,name,gravity,mass,radius,sma
+    addFields gravity="$gravity.value", mass="$mass.value", radius="$radius.value", sma="$sma.value"
+end
+print af2
+
+//#endregion
+
+//#region Chapter 2 geoNear
+// db.nycFacilities.aggregate([{
+// 	$geoNear: {
+// 		near: {
+// 			type: "Point", coordinates:[-73.98769,40.75734]
+// 		},
+// 		distanceField:"distanceFromMongoDB",
+// 		spherical:true,
+// 		query:{type:"Hospital"}
+// 	}
+// }]).pretty()
+
+gn = aggregate ${object:"aggregations.nycFacilities"}
+    geoNear near={type:"Point", coordinates:[-73.98769,40.75734]}, distanceField="distanceFromMongoDB", spherical=true, query={type:"Hospital"}
+end
+print gn
+
+// Another example - more ODSL like
+mongodb = Point([73.98769,40.75734])
+gn = aggregate ${object:"aggregations.nycFacilities"}
+    geoNear near=mongodb, distanceField="distanceFromMongoDB", spherical=true, query=doc(type="Hospital")
+    project name, distanceFromMongoDB
+    sort distanceFromMongoDB asc
+    limit 3
+end
+print gn
+
+//#endregion
+
+//#region Chapter 2 cursor-like stages Sort, skip, limit, count, sample
+// Lab cursor-like stages
+// MongoDB has another movie night scheduled. This time, we polled employees for their favorite actress or actor, and got these results
+// COPY
+
+// favorites = [
+//   "Sandra Bullock",
+//   "Tom Hanks",
+//   "Julia Roberts",
+//   "Kevin Spacey",
+//   "George Clooney"]
+// For movies released in the USA with a tomatoes.viewer.rating greater than or equal to 3, calculate a new field called num_favs that represets how many favorites appear in the cast field of the movie.
+// Sort your results by num_favs, tomatoes.viewer.rating, and title, all in descending order.
+// What is the title of the 25th film in the aggregation result?
+
+
+// db.movies.aggregate([
+// 	{$match:{countries:"USA","tomatoes.viewer.rating":{$gte:3}}},
+// 	{$addFields:{favs:{$setIntersection:["$cast",["Sandra Bullock","Tom Hanks","Julia Roberts","Kevin Spacey","George Clooney"]]}}},
+// 	{$match:{favs:{$ne:null}}},
+// 	{$addFields:{num_favs:{$size:"$favs"}}},
+// 	{$sort:{num_favs:-1,"tomatoes.viewer.rating":-1,title:-1}},
+// 	{$skip:24},
+// 	{$limit:1}
+// ]).pretty()
+
+// The Heat
+
+movies = aggregate ${object:"aggregations.movies"}
+    match countries="USA" and "tomatoes.viewer.rating" >= 3
+    addFields favs=setIntersection("$cast", ["Sandra Bullock","Tom Hanks","Julia Roberts","Kevin Spacey","George Clooney"])
+    match favs != null
+    addFields num_favs=size("$favs")
+    sort num_favs desc, "tomatoes.viewer.rating" desc, title desc
+    skip 24
+    limit 1
+end
+print movies.title
+
+//#endregion
+
+//#region Chapter 2 Lab - Bringing it all together
+// Calculate an average rating for each movie in our collection where English is an available language, the minimum imdb.rating is at least 1, the minimum imdb.votes is at least 1, and it was released in 1990 or after. You'll be required to rescale (or normalize) imdb.votes. The formula to rescale imdb.votes and calculate normalized_rating is included as a handout.
+// What film has the lowest normalized_rating?
+
+// db.movies.aggregate([
+// 	{$match:{languages:"English","imdb.rating":{$gte:1},"imdb.votes":{$gte:1},released:{$gte:ISODate("1990-01-01")}}},
+// 	{$addFields:{scaled_votes:{$add:[1,{$multiply:[9,{$divide:[{$subtract:["$imdb.votes",5]},{$subtract:[1521105,5]}]}]}]}}},
+// 	{$addFields:{normalised_rating:{$avg:["$scaled_votes","$imdb.rating"]}}},
+// 	{$sort:{normalised_rating:1}},
+// 	{$limit:1}
+// ]).pretty()
+
+// The Christmas Tree
+
+a = aggregate ${object:"aggregations.movies"}
+    match languages="English" and "imdb.rating">=1 and "imdb.votes">=1 and released>="1990-01-01"
+    addFields scaled_votes=1+9*(("$imdb.votes"-5)/(1521105-5))
+    addFields normalised_rating=avg("$scaled_votes","$imdb.rating")
+    sort normalised_rating asc
+    limit 1
+end
+print a.title
+
+//#endregion
+
+
+//#region Chapter 3 Grouping
+// db.movies.aggregate([{$group:{_id:"$year"}}])
+
+m = aggregate ${object:"aggregations.movies"}
+    group _id="$year"
+end
+print m
+
+// db.movies.aggregate([{$group:{_id:"$year",num:{$sum:1}}}])
+m = aggregate ${object:"aggregations.movies"}
+    group _id="$year", num=sum(1)
+end
+print m
+
+// db.movies.aggregate([{$group:{_id:"$year",num:{$sum:1}}},{$sort:{num:-1}}])
+m = aggregate ${object:"aggregations.movies"}
+    group _id="$year", num=sum(1)
+    sort num desc
+end
+print m
+
+// db.movies.aggregate([{$group:{_id:{numDirectors:{$cond:[{$isArray: "$directors"},{$size: "$directors"},0]}},numFilms:{$sum:1},averageMetacritic:{$avg:"$metacritic"}}},{$sort:{"_id.numDirectors":-1}}])
+m = aggregate ${object:"aggregations.movies"}
+    group _id=doc(numDirectors=cond(isArray("$directors"),size("$directors"),0)), numFilms=sum(1), averageMetacritic=avg("$metacritic")
+    sort "_id.numDirectors" desc
+end
+print m
+
+// db.movies.findOne({directors:{$size:44}})
+m = find ${object:"aggregations.movies"} where directors=size(44)
+print m
+
+// db.movies.aggregate([{$group:{_id:null,count:{$sum:1}}}])
+m = aggregate ${object:"aggregations.movies"}
+    group _id=null, count=sum(1)
+end
+print m
+
+// db.movies.aggregate([{$match:{metacritic:{$gte:0}}},{$group:{_id:null,ave:{$avg:"$metacritic"}}}])
+m = aggregate ${object:"aggregations.movies"}
+    match metacritic >= 0
+    group _id=null, ave=avg("$metacritic")
+end
+print m
+
+//#endregion
+
+
+//#region Chapter 3 Accumulator expressions with $project
+// db.icecream_data.aggregate([{$project:{_id:0,max_high:{$reduce:{input:"$trends",initialValue:-Infinity,in:{$cond:[{$gt:["$$this.avg_high_tmp","$$value"]},"$$this.avg_high_tmp","$$value"]}}}}}])
+m = aggregate ${object:"aggregations.icecream_data"}
+    project !_id, max_high=reduce(input="$trends",initialValue=-Infinity,in=cond(gt("$$this.avg_high_tmp","$$value"),"$$this.avg_high_tmp","$$value"))
+end
+print m
+
+// db.icecream_data.aggregate([{$project:{_id:0,max_high:{$max:"$trends.avg_high_tmp"}}}])
+m = aggregate ${object:"aggregations.icecream_data"}
+    project !_id, max_high=max("$trends.avg_high_tmp")
+end
+print m
+
+// db.icecream_data.aggregate([{$project:{_id:0,max_low:{$min:"$trends.avg_low_tmp"}}}])
+m = aggregate ${object:"aggregations.icecream_data"}
+    project !_id, max_low=min("$trends.avg_low_tmp")
+end
+print m
+
+// db.icecream_data.aggregate([{$project:{_id:0,max_low:{$min:"$trends.avg_low_tmp"},max_high:{$max:"$trends.avg_high_tmp"},average_cpi:{$avg:"$trends.icecream_cpi"},cpi_deviation:{$stdDevPop:"$trends.icecream_cpi"}}}])
+m = aggregate ${object:"aggregations.icecream_data"}
+    project !_id, max_low=min("$trends.avg_low_tmp"), max_high=max("$trends.avg_high_tmp"), average_cpi=avg("$trends.icecream_cpi"),cpi_deviation=stdDevPop("$trends.icecream_cpi")
+end
+print m
+
+// db.icecream_data.aggregate([{$project:{_id:0,max_low:{$min:"$trends.avg_low_tmp"},max_high:{$max:"$trends.avg_high_tmp"},average_cpi:{$avg:"$trends.icecream_cpi"},cpi_deviation:{$stdDevPop:"$trends.icecream_cpi"},sales:{$sum:"$trends.icecream_sales_in_millions"}}}])
+m = aggregate ${object:"aggregations.icecream_data"}
+    project !_id, max_low=min("$trends.avg_low_tmp"), max_high=max("$trends.avg_high_tmp"), average_cpi=avg("$trends.icecream_cpi"),cpi_deviation=stdDevPop("$trends.icecream_cpi"),sales=sum("$trends.icecream_sales_in_millions")
+end
+print m
+//#endregion
+
+//#region Chapter 3 Lab - $group and accumulators
+
+// For all films that won at least 1 Oscar, calculate the standard deviation, highest, lowest, and average imdb.rating. Use the sample standard deviation expression.
+
+// db.movies.aggregate([{$match:{awards:{$regex:"^Won.+Oscar"}}},{$group:{_id:null,highest_rating:{$max:"$imdb.rating"},lowest_rating:{$min:"$imdb.rating"},average_rating:{$avg:"$imdb.rating"},deviation:{$stdDevSamp:"$imdb.rating"}}}])
+// [
+//   {
+//     _id: null,
+//     highest_rating: 9.2,
+//     lowest_rating: 4.5,
+//     average_rating: 7.527024070021882,
+//     deviation: 0.5988145513344504
+//   }
+// ]
+
+m = aggregate ${object:"aggregations.movies"}
+    match awards=regex("^Won.*Oscar")
+    group _id=null, highest_rating=max("$imdb.rating"),lowest_rating=min("$imdb.rating"),average_rating=avg("$imdb.rating"),deviation=stdDevSamp("$imdb.rating")
+end
+print m
+
+//#endregion
+
+//#region Chapter 3 unwind
+// finding the top rated genres per year from 2010 to 2015...
+// db.movies.aggregate([
+//   {
+//     "$match": {
+//       "imdb.rating": { "$gt": 0 },
+//       "year": { "$gte": 2010, "$lte": 2015 },
+//       "runtime": { "$gte": 90 }
+//     }
+//   },
+//   {
+//     "$unwind": "$genres"
+//   },
+//   {
+//     "$group": {
+//       "_id": {
+//         "year": "$year",
+//         "genre": "$genres"
+//       },
+//       "average_rating": { "$avg": "$imdb.rating" }
+//     }
+//   },
+//   {
+//     "$sort": { "_id.year": -1, "average_rating": -1 }
+//   }
+// ])
+
+m = aggregate ${object:"aggregations.movies"}
+    match "imdb.rating" > 0 and year >= 2010 and year <= 2015 and runtime >= 90
+    unwind "$genres"
+    group _id=doc(year="$year",genre="$genres"), average_rating=avg("$imdb.rating")
+    sort "_id.year" desc, "average_rating" desc
+end
+print m
+
+
+// // unfortunately we got too many results per year back. Rather than perform some
+// // other complex grouping and matching, we just append a simple group and sort
+// // stage, taking advantage of the fact the documents are in the order we want
+// db.movies.aggregate([
+//   {
+//     "$match": {
+//       "imdb.rating": { "$gt": 0 },
+//       "year": { "$gte": 2010, "$lte": 2015 },
+//       "runtime": { "$gte": 90 }
+//     }
+//   },
+//   {
+//     "$unwind": "$genres"
+//   },
+//   {
+//     "$group": {
+//       "_id": {
+//         "year": "$year",
+//         "genre": "$genres"
+//       },
+//       "average_rating": { "$avg": "$imdb.rating" }
+//     }
+//   },
+//   {
+//     "$sort": { "_id.year": -1, "average_rating": -1 }
+//   },
+//   {
+//     "$group": {
+//       "_id": "$_id.year",
+//       "genre": { "$first": "$_id.genre" },
+//       "average_rating": { "$first": "$average_rating" }
+//     }
+//   },
+//   {
+//     "$sort": { "_id": -1 }
+//   }
+// ])
+
+m = aggregate ${object:"aggregations.movies"}
+    match "imdb.rating" > 0 and year >= 2010 and year <= 2015 and runtime >= 90
+    unwind "$genres"
+    group _id=doc(year="$year",genre="$genres"), average_rating=avg("$imdb.rating")
+    sort "_id.year" desc, "average_rating" desc
+    group _id="$_id.year", genre=first("$_id.genre"), average_rating=first("$average_rating")
+    sort _id desc
+end
+print m
+
+//#endregion
+
+//#region Chapter 3 Lab - $unwind
+
+// db.movies.aggregate([{$match:{languages:"English"}},{$project:{cast:1,"imdb.rating":1}},{$unwind:"$cast"},{$group:{_id:"$cast",numFilms:{$sum:1},average:{$avg:"$imdb.rating"}}},{$sort:{numFilms:-1}}])
+
+// { "_id": "John Wayne", "numFilms": 107, "average": 6.4 }
+
+m = aggregate ${object:"aggregations.movies"}
+    match languages="English"
+    project cast, "imdb.rating"
+    unwind "$cast"
+    group _id="$cast",numFilms=sum(1),average=avg("$imdb.rating")
+    sort numFilms desc
+    limit 1
+end
+print m
+
+//#endregion
+
+
+
+
+
+//#region Chapter 3 - $lookup
+// performing a lookup, joining air_alliances with air_airlines and replacing
+// the current airlines information with the new values
+// db.air_alliances
+//   .aggregate([
+//     {
+//       "$lookup": {
+//         "from": "air_airlines",
+//         "localField": "airlines",
+//         "foreignField": "name",
+//         "as": "airlines"
+//       }
+//     }
+//   ])
+//   .pretty()
+
+airline = aggregate ${object:"aggregations.air_alliances"}
+    lookup from "air_airlines" localField "airlines" foreignField "name" as "airlines"
+end
+print airline
+
+//#endregion
+
+//#region Chapter 3 Lab - $lookup
+
+// Which alliance from air_alliances flies the most routes with either a Boeing 747 or an Airbus A380 (abbreviated 747 and 380 in air_routes)?
+
+// db.air_routes.aggregate([
+// 	{$match:{airplane:{$regex:"747|380"}}},
+// 	{$lookup:{from:"air_alliances",localField:"airline.name",foreignField:"airlines",as:"al"}},
+// 	{$match:{al:{$gt:[{$size:"$al"},0]}}},
+// 	{$project:{airplane:1,airline:1,alliance:"$al.name"}},
+// 	{$group:{_id:"$alliance",routes:{$sum:1}}},
+// 	{$sort:{routes:-1}}
+// ])
+
+alliance = aggregate ${object:"aggregations.air_routes"}
+    match airplane=regex("747|380")
+    lookup from "air_alliances" localField "airline.name" foreignField "airlines" as "al"
+    match al=gt($size("$al",0))
+    project airplace, airline, alliance="$al.name"
+    group _id="$alliance", routes=sum(1)
+    sort routes desc
+    limit 1
+end
+print alliance
+
+//#endregion
+
+//#region Chapter 3 $graphLookup
+
+// Lab - $graphLookup
+// Find the list of all possible distinct destinations, with at most one layover, departing from the base airports of airlines from Germany, Spain or Canada that are part of the "OneWorld" alliance. Include both the destination and which airline services that location. As a small hint, you should find 158 destinations.
+
+// db.air_alliances.aggregate([ 
+	// { $match: { name: "OneWorld" } }, 
+	// { $graphLookup: { startWith: "$airlines", from: "air_airlines", connectFromField: "name", connectToField: "name", as: "airlines", maxDepth: 0, restrictSearchWithMatch: { country: { $in: ["Germany", "Spain", "Canada"] } } } }, 
+	// { $graphLookup: { startWith: "$airlines.base", from: "air_routes", connectFromField: "dst_airport", connectToField: "src_airport", as: "connections", maxDepth: 1 } }, 
+	// { $project: { validAirlines: "$airlines.name", "connections.dst_airport": 1, "connections.airline.name": 1 } }, 
+	// { $unwind: "$connections" }, 
+	// { $project: { isValid: { $in: ["$connections.airline.name", "$validAirlines"] }, "connections.dst_airport": 1 } }, 
+	// { $match: { isValid: true } }, 
+	// { $group: { _id: "$connections.dst_airport" } } 
+// ])
+
+destinations=aggregate ${object:"aggregations.air_alliances"}
+    match name="OneWorld"
+    graphLookup from air_airlines startWith "$airlines" connectFromField name connectToField name as airlines maxDepth 0 restrictSearchWithMatch country in ["Germany","Spain","Canada"]
+    graphLookup from air_routes startWith "$airlines.base" connectFromField dst_airport connectToField src_airport as connections maxDepth 1
+    project validAirlines="$airlines.name", "connections.dst_airport","connections.airline.name"
+    unwind "$connections"
+    project isValid=in("$connections.airline.name","$validAirlines"),"connections.dst_airport"
+    match isValid=true
+    group _id="$connections.dst_airport"
+end
+print destinations.size
+
+//#endregion
+
+//#region Example using pure json pipeline
+destinations=aggregate ${object:"aggregations.air_alliances"}
+	{ "$match": { "name": "OneWorld" } }
+	{ "$graphLookup": { "startWith": "$airlines", "from": "air_airlines", "connectFromField": "name", "connectToField": "name", "as": "airlines", "maxDepth": 0, "restrictSearchWithMatch": { "country": { "$in": ["Germany", "Spain", "Canada"] } } } }
+	{ "$graphLookup": { "startWith": "$airlines.base", "from": "air_routes", "connectFromField": "dst_airport", "connectToField": "src_airport", "as": "connections", "maxDepth": 1 } }
+	{ "$project": { "validAirlines": "$airlines.name", "connections.dst_airport": 1, "connections.airline.name": 1 } }
+	{ "$unwind": "$connections" }
+	{ "$project": { "isValid": { "$in": ["$connections.airline.name", "$validAirlines"] }, "connections.dst_airport": 1 } }
+	{ "$match": { "isValid": true } }
+	{ "$group": { "_id": "$connections.dst_airport" } } 
+end
+print destinations.size
+//#endregion
+
+

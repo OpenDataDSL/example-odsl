@@ -63,9 +63,3 @@ assertEquals("38 07 ? * * *", ptest.cron)
 print "Change the time"
 process.cron = "00 12 ? * * *"
 save ${process:process}
-
-print "Completely remove process"
-delete ${process:"ECB_FX_TEST":*}
-processes = find ${process}
-print "Checking there are no processes"
-assertEquals(0, processes.size)

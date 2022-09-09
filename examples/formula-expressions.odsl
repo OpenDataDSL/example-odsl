@@ -3,7 +3,7 @@ formulaExample = type
     BID as curve()
     MID as (ASK + BID)/2
 end
-save ${type:formulaExample}
+// save ${type:formulaExample}
 
 f1=object as formulaExample
     name="Formula1"
@@ -16,4 +16,4 @@ print f1.ASK.contracts
 print f1.BID.contracts
 print f1.MID.contracts
 
-save ${object:f1}
+// save ${object:f1}

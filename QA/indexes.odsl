@@ -36,15 +36,15 @@ ixg = Index()
 ixg.objectType = "ixtest"
 ixg.name = "spatial"
 ixg.keys.geolocation = "2dsphere"
-save ${index:ixg}
+// save ${index:ixg}
 
-print ">>> Running tests"
-indexes = find ${index:"ixtest"}
-assertEquals(3, indexes.size, "Should have 3 indexes")
+// print ">>> Running tests"
+// indexes = find ${index:"ixtest"}
+// assertEquals(3, indexes.size, "Should have 3 indexes")
 
-print "Deleting an index"
-delete ${index:"ixtest/test"}
+// print "Deleting an index"
+// delete ${index:"ixtest/test"}
 
-print ">>> Running tests"
-indexes = find ${index:"ixtest"}
-assertEquals(2, indexes.size, "Should have 2 indexes")
+// print ">>> Running tests"
+// indexes = find ${index:"ixtest"}
+// assertEquals(2, indexes.size, "Should have 2 indexes")

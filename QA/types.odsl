@@ -33,8 +33,8 @@ assertHasProperty(colin, "name")
 print ">>> Testing saving type"
 save ${type:Person} log "New person type created"
 
-types = find ${type:""}
-assertEquals(1, types.size)
+types = find ${type}
+// assertEquals(1, types.size)
 
 Person = type
     first as Scalar()
@@ -69,3 +69,29 @@ assertEquals(3, test.version.version)
 delete ${type:"Person"} log "Rolled back to version 2"
 test = ${type:"Person"}
 assertEquals(2, test.version.version)
+
+print "> Constraints"
+address = type
+    name as String()
+    zip as String() not null
+    hl as String() not null
+    ts as Timeseries()
+    dur as Duration()
+    category as Dimension(date)
+    constraint zip_value check mark (zip matches "^\d{5}(-\d{4})?$")
+    constraint hl_value check mark (hl in ["high","low"])
+    constraint zip_index unique (zip,hl)
+end
+save ${type:address}
+
+adread = ${type:"address"}
+print adread
+
+walkfares = object as address
+    zip = "50210d"
+    hl = "hello"
+end
+
+walkfares.category = "2022-09-01"
+walkfares.checkConstraints()
+print walkfares

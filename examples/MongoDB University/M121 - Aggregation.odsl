@@ -2,14 +2,14 @@
 
 // Find all planets
 // db.solarSystem.aggregate([{$match:{type:{$ne:"Star"}}}]).pretty()
-planets = aggregate ${object:"aggregations.solarSystem"}
+planets = aggregate ${object:"m121:aggregations.solarSystem"}
     match type != "Star"
 end
 print planets
 
 // Count the planets
 // db.solarSystem.aggregate([{$match:{type:{$ne:"Star"}}},{$count:"planets"}]).pretty()
-countPlanets = aggregate ${object:"aggregations.solarSystem"}
+countPlanets = aggregate ${object:"m121:aggregations.solarSystem"}
     match type != "Star"
     count "planets"
 end
@@ -27,7 +27,7 @@ print countPlanets
 
 // db.movies.aggregate([{$match:{"imdb.rating":{$gte:7},genres:{$nin:["Crime","Horror"]},rated:{$in:["PG","G"]},languages:{$all:["English","Japanese"]}}}]).pretty()
 // 23 documents
-movies = aggregate ${object:"aggregations.movies"}
+movies = aggregate ${object:"m121:aggregations.movies"}
     match "imdb.rating" >= 7 and genres nin ["Crime","Horror"] and rated in ["PG","G"] and languages=all("English","Japanese")
     count "movies"
 end
@@ -37,13 +37,13 @@ print movies
 
 //#region Chapter 1 $project mapping
 // db.solarSystem.aggregate([{$project:{_id:0, name:1, gravity:"$gravity.value"}}])
-t1 = aggregate ${object:"aggregations.solarSystem"}
+t1 = aggregate ${object:"m121:aggregations.solarSystem"}
     project !_id, name, gravity="$gravity.value"
 end
 print t1
 
 // db.solarSystem.aggregate([{$project:{_id:0, name:1, myWeight:{$multiply:[{$divide:["$gravity.value",9.8]},86]}}}])
-t2 = aggregate ${object:"aggregations.solarSystem"}
+t2 = aggregate ${object:"m121:aggregations.solarSystem"}
     project !_id, name, myWeight=86*"$gravity.value"/9.8
 end
 print t2
@@ -53,7 +53,7 @@ print t2
 //#region Chapter 1 Lab $project
 // Using the same $match stage from the previous lab, add a $project stage to only display the title and film rating (title and rated fields).
 // db.movies.aggregate([{$match:{"imdb.rating":{$gte:7},genres:{$nin:["Crime","Horror"]},rated:{$in:["PG","G"]},languages:{$all:["English","Japanese"]}}},{$project:{_id:0,title:1,rated:1}}]).pretty()
-movies = aggregate ${object:"aggregations.movies"}
+movies = aggregate ${object:"m121:aggregations.movies"}
     match "imdb.rating" >= 7 and genres nin ["Crime","Horror"] and rated in ["PG","G"] and languages=all("English","Japanese")
     project !_id, title, rated
 end
@@ -66,7 +66,7 @@ print movies
 // Using the Aggregation Framework, find a count of the number of movies that have a title composed of one word. To clarify, "Cinderella" and "3-25" should count, where as "Cast Away" would not.
 // db.movies.aggregate([{$project:{_id:0,words:{$split:["$title"," "]}}},{$match:{words:{$size:1}}}]).itcount()
 // 8066
-movies = aggregate ${object:"aggregations.movies"}
+movies = aggregate ${object:"m121:aggregations.movies"}
     project !_id,words=split("$title"," ")
     match words=size(1)
 end
@@ -82,7 +82,7 @@ print movies.size
     // {$match:{common:{$elemMatch:{$exists:true}}}}
     // ])
 // 1596
-movies = aggregate ${object:"aggregations.movies"}
+movies = aggregate ${object:"m121:aggregations.movies"}
     project cast,directors,writers=map(input="$writers", as="writer", in=arrayElemAt(split("$$writer", " ("),0))
     project common=setIntersection("$cast", "$directors", "$writers")
     match common=elemMatch(exists(true))
@@ -94,13 +94,13 @@ print movies.size
 //#region Chapter 2 addFields
 // db.solarSystem.aggregate([{$addFields:{gravity:"$gravity.value",mass:"$mass.value",radius:"$radius.value",sma:"$sma.value"}}])
 
-af1 = aggregate ${object:"aggregations.solarSystem"}
+af1 = aggregate ${object:"m121:aggregations.solarSystem"}
     addFields gravity="$gravity.value", mass="$mass.value", radius="$radius.value", sma="$sma.value"
 end
 print af1
 
 // db.solarSystem.aggregate([{$project:{_id:0,name:1,gravity:1,mass:1,radius:1,sma:1}},{$addFields:{gravity:"$gravity.value",mass:"$mass.value",radius:"$radius.value",sma:"$sma.value"}}])
-af2 = aggregate ${object:"aggregations.solarSystem"}
+af2 = aggregate ${object:"m121:aggregations.solarSystem"}
     project !_id,name,gravity,mass,radius,sma
     addFields gravity="$gravity.value", mass="$mass.value", radius="$radius.value", sma="$sma.value"
 end
@@ -120,14 +120,14 @@ print af2
 // 	}
 // }]).pretty()
 
-gn = aggregate ${object:"aggregations.nycFacilities"}
+gn = aggregate ${object:"m121:aggregations.nycFacilities"}
     geoNear near={type:"Point", coordinates:[-73.98769,40.75734]}, distanceField="distanceFromMongoDB", spherical=true, query={type:"Hospital"}
 end
 print gn
 
 // Another example - more ODSL like
 mongodb = Point([73.98769,40.75734])
-gn = aggregate ${object:"aggregations.nycFacilities"}
+gn = aggregate ${object:"m121:aggregations.nycFacilities"}
     geoNear near=mongodb, distanceField="distanceFromMongoDB", spherical=true, query=doc(type="Hospital")
     project name, distanceFromMongoDB
     sort distanceFromMongoDB asc
@@ -165,7 +165,7 @@ print gn
 
 // The Heat
 
-movies = aggregate ${object:"aggregations.movies"}
+movies = aggregate ${object:"m121:aggregations.movies"}
     match countries="USA" and "tomatoes.viewer.rating" >= 3
     addFields favs=setIntersection("$cast", ["Sandra Bullock","Tom Hanks","Julia Roberts","Kevin Spacey","George Clooney"])
     match favs != null
@@ -192,7 +192,7 @@ print movies.title
 
 // The Christmas Tree
 
-a = aggregate ${object:"aggregations.movies"}
+a = aggregate ${object:"m121:aggregations.movies"}
     match languages="English" and "imdb.rating">=1 and "imdb.votes">=1 and released>="1990-01-01"
     addFields scaled_votes=1+9*(("$imdb.votes"-5)/(1521105-5))
     addFields normalised_rating=avg("$scaled_votes","$imdb.rating")
@@ -207,43 +207,43 @@ print a.title
 //#region Chapter 3 Grouping
 // db.movies.aggregate([{$group:{_id:"$year"}}])
 
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     group _id="$year"
 end
 print m
 
 // db.movies.aggregate([{$group:{_id:"$year",num:{$sum:1}}}])
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     group _id="$year", num=sum(1)
 end
 print m
 
 // db.movies.aggregate([{$group:{_id:"$year",num:{$sum:1}}},{$sort:{num:-1}}])
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     group _id="$year", num=sum(1)
     sort num desc
 end
 print m
 
 // db.movies.aggregate([{$group:{_id:{numDirectors:{$cond:[{$isArray: "$directors"},{$size: "$directors"},0]}},numFilms:{$sum:1},averageMetacritic:{$avg:"$metacritic"}}},{$sort:{"_id.numDirectors":-1}}])
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     group _id=doc(numDirectors=cond(isArray("$directors"),size("$directors"),0)), numFilms=sum(1), averageMetacritic=avg("$metacritic")
     sort "_id.numDirectors" desc
 end
 print m
 
 // db.movies.findOne({directors:{$size:44}})
-m = find ${object:"aggregations.movies"} where directors=size(44)
+m = find ${object:"m121:aggregations.movies"} where directors=size(44)
 print m
 
 // db.movies.aggregate([{$group:{_id:null,count:{$sum:1}}}])
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     group _id=null, count=sum(1)
 end
 print m
 
 // db.movies.aggregate([{$match:{metacritic:{$gte:0}}},{$group:{_id:null,ave:{$avg:"$metacritic"}}}])
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     match metacritic >= 0
     group _id=null, ave=avg("$metacritic")
 end
@@ -254,31 +254,31 @@ print m
 
 //#region Chapter 3 Accumulator expressions with $project
 // db.icecream_data.aggregate([{$project:{_id:0,max_high:{$reduce:{input:"$trends",initialValue:-Infinity,in:{$cond:[{$gt:["$$this.avg_high_tmp","$$value"]},"$$this.avg_high_tmp","$$value"]}}}}}])
-m = aggregate ${object:"aggregations.icecream_data"}
+m = aggregate ${object:"m121:aggregations.icecream_data"}
     project !_id, max_high=reduce(input="$trends",initialValue=-Infinity,in=cond(gt("$$this.avg_high_tmp","$$value"),"$$this.avg_high_tmp","$$value"))
 end
 print m
 
 // db.icecream_data.aggregate([{$project:{_id:0,max_high:{$max:"$trends.avg_high_tmp"}}}])
-m = aggregate ${object:"aggregations.icecream_data"}
+m = aggregate ${object:"m121:aggregations.icecream_data"}
     project !_id, max_high=max("$trends.avg_high_tmp")
 end
 print m
 
 // db.icecream_data.aggregate([{$project:{_id:0,max_low:{$min:"$trends.avg_low_tmp"}}}])
-m = aggregate ${object:"aggregations.icecream_data"}
+m = aggregate ${object:"m121:aggregations.icecream_data"}
     project !_id, max_low=min("$trends.avg_low_tmp")
 end
 print m
 
 // db.icecream_data.aggregate([{$project:{_id:0,max_low:{$min:"$trends.avg_low_tmp"},max_high:{$max:"$trends.avg_high_tmp"},average_cpi:{$avg:"$trends.icecream_cpi"},cpi_deviation:{$stdDevPop:"$trends.icecream_cpi"}}}])
-m = aggregate ${object:"aggregations.icecream_data"}
+m = aggregate ${object:"m121:aggregations.icecream_data"}
     project !_id, max_low=min("$trends.avg_low_tmp"), max_high=max("$trends.avg_high_tmp"), average_cpi=avg("$trends.icecream_cpi"),cpi_deviation=stdDevPop("$trends.icecream_cpi")
 end
 print m
 
 // db.icecream_data.aggregate([{$project:{_id:0,max_low:{$min:"$trends.avg_low_tmp"},max_high:{$max:"$trends.avg_high_tmp"},average_cpi:{$avg:"$trends.icecream_cpi"},cpi_deviation:{$stdDevPop:"$trends.icecream_cpi"},sales:{$sum:"$trends.icecream_sales_in_millions"}}}])
-m = aggregate ${object:"aggregations.icecream_data"}
+m = aggregate ${object:"m121:aggregations.icecream_data"}
     project !_id, max_low=min("$trends.avg_low_tmp"), max_high=max("$trends.avg_high_tmp"), average_cpi=avg("$trends.icecream_cpi"),cpi_deviation=stdDevPop("$trends.icecream_cpi"),sales=sum("$trends.icecream_sales_in_millions")
 end
 print m
@@ -299,7 +299,7 @@ print m
 //   }
 // ]
 
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     match awards=regex("^Won.*Oscar")
     group _id=null, highest_rating=max("$imdb.rating"),lowest_rating=min("$imdb.rating"),average_rating=avg("$imdb.rating"),deviation=stdDevSamp("$imdb.rating")
 end
@@ -334,7 +334,7 @@ print m
 //   }
 // ])
 
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     match "imdb.rating" > 0 and year >= 2010 and year <= 2015 and runtime >= 90
     unwind "$genres"
     group _id=doc(year="$year",genre="$genres"), average_rating=avg("$imdb.rating")
@@ -381,7 +381,7 @@ print m
 //   }
 // ])
 
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     match "imdb.rating" > 0 and year >= 2010 and year <= 2015 and runtime >= 90
     unwind "$genres"
     group _id=doc(year="$year",genre="$genres"), average_rating=avg("$imdb.rating")
@@ -395,11 +395,17 @@ print m
 
 //#region Chapter 3 Lab - $unwind
 
-// db.movies.aggregate([{$match:{languages:"English"}},{$project:{cast:1,"imdb.rating":1}},{$unwind:"$cast"},{$group:{_id:"$cast",numFilms:{$sum:1},average:{$avg:"$imdb.rating"}}},{$sort:{numFilms:-1}}])
+// db.movies.aggregate([
+//     {$match:{languages:"English"}},
+//     {$project:{cast:1,"imdb.rating":1}},
+//     {$unwind:"$cast"},
+//     {$group:{_id:"$cast",numFilms:{$sum:1},average:{$avg:"$imdb.rating"}}},
+//     {$sort:{numFilms:-1}}
+// ])
 
 // { "_id": "John Wayne", "numFilms": 107, "average": 6.4 }
 
-m = aggregate ${object:"aggregations.movies"}
+m = aggregate ${object:"m121:aggregations.movies"}
     match languages="English"
     project cast, "imdb.rating"
     unwind "$cast"
@@ -431,7 +437,7 @@ print m
 //   ])
 //   .pretty()
 
-airline = aggregate ${object:"aggregations.air_alliances"}
+airline = aggregate ${object:"m121:aggregations.air_alliances"}
     lookup from "air_airlines" localField "airlines" foreignField "name" as "airlines"
 end
 print airline
@@ -451,10 +457,10 @@ print airline
 // 	{$sort:{routes:-1}}
 // ])
 
-alliance = aggregate ${object:"aggregations.air_routes"}
+alliance = aggregate ${object:"m121:aggregations.air_routes"}
     match airplane=regex("747|380")
     lookup from "air_alliances" localField "airline.name" foreignField "airlines" as "al"
-    match al=gt($size("$al",0))
+    match al=gt(size("$al",0))
     project airplace, airline, alliance="$al.name"
     group _id="$alliance", routes=sum(1)
     sort routes desc
@@ -480,7 +486,7 @@ print alliance
 	// { $group: { _id: "$connections.dst_airport" } } 
 // ])
 
-destinations=aggregate ${object:"aggregations.air_alliances"}
+destinations=aggregate ${object:"m121:aggregations.air_alliances"}
     match name="OneWorld"
     graphLookup from air_airlines startWith "$airlines" connectFromField name connectToField name as airlines maxDepth 0 restrictSearchWithMatch country in ["Germany","Spain","Canada"]
     graphLookup from air_routes startWith "$airlines.base" connectFromField dst_airport connectToField src_airport as connections maxDepth 1
@@ -495,7 +501,7 @@ print destinations.size
 //#endregion
 
 //#region Example using pure json pipeline
-destinations=aggregate ${object:"aggregations.air_alliances"}
+destinations=aggregate ${object:"m121:aggregations.air_alliances"}
 	{ "$match": { "name": "OneWorld" } }
 	{ "$graphLookup": { "startWith": "$airlines", "from": "air_airlines", "connectFromField": "name", "connectToField": "name", "as": "airlines", "maxDepth": 0, "restrictSearchWithMatch": { "country": { "$in": ["Germany", "Spain", "Canada"] } } } }
 	{ "$graphLookup": { "startWith": "$airlines.base", "from": "air_routes", "connectFromField": "dst_airport", "connectToField": "src_airport", "as": "connections", "maxDepth": 1 } }
@@ -507,5 +513,598 @@ destinations=aggregate ${object:"aggregations.air_alliances"}
 end
 print destinations.size
 //#endregion
+
+//#region Chapter 4 Single facet query
+// // performing a group followed by a sort to rank occurence
+// db.movies.aggregate([
+//   {
+//     "$group": {
+//       "_id": "$imdb.rating",
+//       "count": { "$sum": 1 }
+//     }
+//   },
+//   {
+//     "$sort": { "count": -1 }
+//   }
+// ])
+
+
+
+// // sortByCount is equivalent to the above. In fact, if you execute this pipeline
+// // with { explain: true } you will see that it is transformed to the above!
+// db.movies.aggregate([
+//   {
+//     "$sortByCount": "$imdb.rating"
+//   }
+// ])
+
+
+
+// # find one company document
+// db.companies.findOne()
+companies = find top 1 ${object:"m101:sample_training.companies"}
+print companies.number_of_employees
+
+// # create text index
+// db.companies.createIndex({"description": "text", "overview": "text"})
+
+// # find companies matching term `networking` using text search
+// db.companies.aggregate([
+//   {"$match": { "$text": {"$search": "network"}  }  }] )
+
+// # $sortByCount single query facet for the previous search
+// db.companies.aggregate([
+//   {"$match": { "$text": {"$search": "network"}  }  },
+//   {"$sortByCount": "$category_code"}] )
+
+// # extend the pipeline for a more elaborate facet
+// db.companies.aggregate([
+//   {"$match": { "$text": {"$search": "network"}  }  } ,
+//   {"$unwind": "$offices"},
+//   {"$match": { "offices.city": {"$ne": ""}  }}   ,
+//   {"$sortByCount": "$offices.city"}] )
+
+//#endregion
+
+//#region Chapter 4 Manual Buckets
+// # create manual buckets using $ bucket
+// db.companies.aggregate( [
+//   { "$match": {"founded_year": {"$gt": 1980}, "number_of_employees": {"$ne": null}}  },
+//   {"$bucket": {
+//      "groupBy": "$number_of_employees",
+//      "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ]}
+// }] )
+
+buckets = aggregate ${object:"m101:sample_training.companies"}
+    match founded_year > 1980 and number_of_employees != null
+    bucket "$number_of_employees" boundaries [ 0, 20, 50, 100, 500, 1000, Infinity ] 
+end
+print buckets
+
+// # reproduce error message for non matching documents
+// db.coll.insert({ x: "a" });
+// db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 50, 100]}}])
+
+// # set `default` option to collect documents that do not match boundaries
+// db.companies.aggregate( [
+//   { "$match": {"founded_year": {"$gt": 1980}}},
+//   { "$bucket": {
+//     "groupBy": "$number_of_employees",
+//     "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+//     "default": "Other" }
+// }] )
+
+buckets = aggregate ${object:"m101:sample_training.companies"}
+    match founded_year > 1980 and number_of_employees != null
+    bucket "$number_of_employees" boundaries [ 0, 20, 50, 100, 500, 1000, Infinity ] default "Other"
+end
+print buckets
+
+// # reproduce error message for inconsitent boundaries datatype
+// db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: ["a", "b", 100]}}])
+
+// # set `output` option for $bucket stage
+// db.companies.aggregate([
+//   { "$match":
+//     {"founded_year": {"$gt": 1980}}
+//   },
+//   { "$bucket": {
+//       "groupBy": "$number_of_employees",
+//       "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+//       "default": "Other",
+//       "output": {
+//         "total": {"$sum":1},
+//         "average": {"$avg": "$number_of_employees" },
+//         "categories": {"$addToSet": "$category_code"}
+//       }
+//     }
+//   }
+// ]
+// )
+
+buckets = aggregate ${object:"m101:sample_training.companies"}
+    match founded_year > 1980 and number_of_employees != null
+    bucket "$number_of_employees" boundaries [ 0, 20, 50, 100, 500, 1000, Infinity ] default "Other" output total=sum(1), average=avg("$number_of_employees"), categories=addToSet("$category_code")
+end
+print buckets
+
+//#endregion
+
+//#region Chapter 4 Automatic Buckets
+// # generate buckets automatically with $bucktAuto stage
+// db.companies.aggregate([
+//   { "$match": {"offices.city": "New York" }},
+//   {"$bucketAuto": {
+//     "groupBy": "$founded_year",
+//     "buckets": 5
+// }}])
+buckets = aggregate ${object:"m101:sample_training.companies"}
+    match founded_year > 1980 and number_of_employees != null
+    bucketAuto "$number_of_employees" buckets 5
+end
+print buckets
+
+// # set `output` option for $bucketAuto
+// db.companies.aggregate([
+//   { "$match": {"offices.city": "New York" }},
+//   {"$bucketAuto": {
+//     "groupBy": "$founded_year",
+//     "buckets": 5,
+//     "output": {
+//         "total": {"$sum":1},
+//         "average": {"$avg": "$number_of_employees" }  }}}
+// ])
+buckets=aggregate ${object:"m101:sample_training.companies"}
+    bucketAuto "$founded_year" buckets 5 output total=sum(1) 
+end
+print buckets
+
+// # default $buckeAuto behaviour
+// for(i=1; i <= 1000; i++) {  db.series.insert( {_id: i}  ) };
+// db.series.aggregate(
+//   {$bucketAuto:
+//     {groupBy: "$_id", buckets: 5 }
+// })
+
+objects=[]
+for i=1 to 1000
+    temp = Object()
+    temp.id = i
+    objects.add(temp)
+next
+save ${object:"m101:online_odsl.temp"/objects}
+
+buckets=aggregate ${object:"m101:online_odsl.temp"}
+    bucketAuto "$_id" buckets 5 
+end
+print buckets
+
+// # generate automatic buckets using granularity numerical series R20
+// db.series.aggregate(
+//   {$bucketAuto:
+//     {groupBy: "$_id", buckets: 5 , granularity: "R20"}
+//   })
+
+buckets=aggregate ${object:"m101:online_odsl.temp"}
+    bucketAuto "$_id" buckets 5 granularity R20 
+end
+print buckets
+
+//#endregion 
+
+//#region Multiple Facets
+// db.companies.aggregate( [
+//     {"$match": { "$text": {"$search": "Databases"} } },
+//     { "$facet": {
+//       "Categories": [{"$sortByCount": "$category_code"}],
+//       "Employees": [
+//         { "$match": {"founded_year": {"$gt": 1980}}},
+//         {"$bucket": {
+//           "groupBy": "$number_of_employees",
+//           "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+//           "default": "Other"
+//         }}],
+//       "Founded": [
+//         { "$match": {"offices.city": "New York" }},
+//         {"$bucketAuto": {
+//           "groupBy": "$founded_year",
+//           "buckets": 5   }
+//         }
+//       ]
+//   }}]).pretty()
+
+c=aggregate ${object:"m101:sample_training.companies"}
+    // match description=regex("Databases") or overview=regex("Databases")
+    // match text("$search"="Databases")
+    match category_code="software"
+    facet Categories
+            sortByCount "$category_code"
+        ,Employees
+            match founded_year > 1980
+            bucket "$number_of_employees" boundaries [ 0, 20, 50, 100, 500, 1000, Infinity] default "other"
+        ,Founded
+            match "offices.city" = "New York"
+            bucketAuto "$founded_year" buckets 5 
+    end
+end
+print c
+
+//#endregion
+
+
+
+//#region 
+
+// Lab facets
+// db.movies.aggregate([ 
+// 	{ $match: { metacritic: { $gte: 0 }, "imdb.rating": { $gte: 0 } } }, 
+// 	{ $project: { _id: 0, metacritic: 1, imdb: 1, title: 1 } }, 
+// 	{ $facet: { 
+// 		top_metacritic: [ 
+//             { $sort: { metacritic: -1, title: 1 } }, 
+//             { $limit: 10 }, 
+//             { $project: { title: 1 } } ], 
+// 		top_imdb: [ 
+//             { $sort: { "imdb.rating": -1, title: 1 } }, 
+//             { $limit: 10 }, 
+//             { $project: { title: 1 } } ] } }, 
+// 	{ $project: { movies_in_both: { $setIntersection: ["$top_metacritic", "$top_imdb"] } } } 
+// ])
+
+movies = aggregate ${object:"m121:aggregations.movies"}
+    match metacritic>=0 and "imdb.rating" >= 0
+    project !_id, metacritic, imdb, title
+    facet top_metacritic 
+            sort metacritic desc, title asc
+            limit 10
+            project title
+        ,top_imdb
+            sort "imdb.rating" desc, title asc
+            limit 10
+            project title
+    end
+    project movies_in_both=setIntersection("$top_metacritic", "$top_imdb")
+end
+print movies
+//#endregion
+
+//#region Chapter 5 redact- remove some parts of a document
+// // creating a variable to refer against
+// var userAccess = "Management"
+// // comparing whether the value/s in the userAccess variable are in the array
+// // referenced by the $acl field path
+// db.employees
+//   .aggregate([
+//     {
+//       "$redact": {
+//         "$cond": [{ "$in": [userAccess, "$acl"] }, "$$DESCEND", "$$PRUNE"]
+//       }
+//     }
+//   ])
+//   .pretty()
+
+userAccess = "Management"
+employees = aggregate ${object:"m121:aggregations.employees"}
+    redact cond(in(userAccess, "$acl"), "$$DESCEND", "$$PRUNE")
+end
+print employees
+//#endregion
+
+// $out - persist to a collection - replacing
+// Db.collection.aggregate([
+// 	… something
+// 	{$out:"new_collection"}
+// ])
+
+// $merge - persist to a collection - merge
+
+// $merge: {
+// 	Into: <target>,
+// 	whenNotMAtched: "insert"|"discard"|"fail",
+// 	Let: {new: "$$ROOT"},
+// 	whenMatched: "merge"|"replace"|"keepExisting"|"fail"|[…]
+// }
+
+// Views - non-materialised views
+
+
+// // this is the command we used to create the bronze_banking view in the database
+// // identical commands were used to create the silver and gold views, the only
+// // change was in the $match stage
+// db.createView("bronze_banking", "customers", [
+//   {
+//     "$match": { "accountType": "bronze" }
+//   },
+//   {
+//     "$project": {
+//       "_id": 0,
+//       "name": {
+//         "$concat": [
+//           { "$cond": [{ "$eq": ["$gender", "female"] }, "Miss", "Mr."] },
+//           " ",
+//           "$name.first",
+//           " ",
+//           "$name.last"
+//         ]
+//       },
+//       "phone": 1,
+//       "email": 1,
+//       "address": 1,
+//       "account_ending": { "$substr": ["$accountNumber", 7, -1] }
+//     }
+//   }
+// ])
+// // getting all collections in a database and seeing their information
+// db.getCollectionInfos()
+// // getting information on views only
+// db.system.views.find()
+
+// Chapter 6
+// Add option for allowDiskUse to aggregation command
+
+
+// // an initial aggregatioin finding all movies where the title begins
+// // with a vowel. Notice the $project stage that will prevent a covered
+// // query!
+// db.movies.aggregate([
+//   {
+//     $match: {
+//       title: /^[aeiou]/i
+//     }
+//   },
+//   {
+//     $project: {
+//       title_size: { $size: { $split: ["$title", " "] } }
+//     }
+//   },
+//   {
+//     $group: {
+//       _id: "$title_size",
+//       count: { $sum: 1 }
+//     }
+//   },
+//   {
+//     $sort: { count: -1 }
+//   }
+// ])
+// // showing the query isn't covered
+// db.movies.aggregate(
+//   [
+//     {
+//       $match: {
+//         title: /^[aeiou]/i
+//       }
+//     },
+//     {
+//       $project: {
+//         title_size: { $size: { $split: ["$title", " "] } }
+//       }
+//     },
+//     {
+//       $group: {
+//         _id: "$title_size",
+//         count: { $sum: 1 }
+//       }
+//     },
+//     {
+//       $sort: { count: -1 }
+//     }
+//   ],
+//   { explain: true }
+// )
+// // this is better, we are projecting away the _id field. But this seems like
+// // a lot of manual work...
+// db.movies.aggregate([
+//   {
+//     $match: {
+//       title: /^[aeiou]/i
+//     }
+//   },
+//   {
+//     $project: {
+//       _id: 0,
+//       title_size: { $size: { $split: ["$title", " "] } }
+//     }
+//   },
+//   {
+//     $group: {
+//       _id: "$title_size",
+//       count: { $sum: 1 }
+//     }
+//   },
+//   {
+//     $sort: { count: -1 }
+//   }
+// ])
+// // verifying that it is a covered query
+// db.movies.aggregate(
+//   [
+//     {
+//       $match: {
+//         title: /^[aeiou]/i
+//       }
+//     },
+//     {
+//       $project: {
+//         _id: 0,
+//         title_size: { $size: { $split: ["$title", " "] } }
+//       }
+//     },
+//     {
+//       $group: {
+//         _id: "$title_size",
+//         count: { $sum: 1 }
+//       }
+//     },
+//     {
+//       $sort: { count: -1 }
+//     }
+//   ],
+//   { explain: true }
+// )
+// // can we... do this? Yes, yes we can.
+// db.movies.aggregate([
+//   {
+//     $match: {
+//       title: /^[aeiou]/i
+//     }
+//   },
+//   {
+//     $group: {
+//       _id: {
+//         $size: { $split: ["$title", " "] }
+//       },
+//       count: { $sum: 1 }
+//     }
+//   },
+//   {
+//     $sort: { count: -1 }
+//   }
+// ])
+// // proof
+// db.movies.aggregate(
+//   [
+//     {
+//       $match: {
+//         title: /^[aeiou]/i
+//       }
+//     },
+//     {
+//       $group: {
+//         _id: {
+//           $size: { $split: ["$title", " "] }
+//         },
+//         count: { $sum: 1 }
+//       }
+//     },
+//     {
+//       $sort: { count: -1 }
+//     }
+//   ],
+//   { explain: true }
+// )
+// // and a very succinct way of expressing what we wanted all along
+// db.movies.aggregate([
+//   {
+//     $match: {
+//       title: /^[aeiou]/i
+//     }
+//   },
+//   {
+//     $sortByCount: {
+//       $size: { $split: ["$title", " "] }
+//     }
+//   }
+// ])
+// // a naive way to get teh number of trades by action. We unwind the trades
+// // array first thing. We get the results we want, but maybe there is a better
+// // way
+// db.stocks.aggregate([
+//   {
+//     $unwind: "$trades"
+//   },
+//   {
+//     $group: {
+//       _id: {
+//         time: "$id",
+//         action: "$trades.action"
+//       },
+//       trades: { $sum: 1 }
+//     }
+//   },
+//   {
+//     $group: {
+//       _id: "$_id.time",
+//       actions: {
+//         $push: {
+//           type: "$_id.action",
+//           count: "$trades"
+//         }
+//       },
+//       total_trades: { $sum: "$trades" }
+//     }
+//   },
+//   {
+//     $sort: { total_trades: -1 }
+//   }
+// ])
+// // working within the arrays is always better if we want to do analysis within
+// // a document. We get the same results in a slighlty easier to work with format
+// // and didn't incur the cost of a $group stage
+// db.stocks.aggregate([
+//   {
+//     $project: {
+//       buy_actions: {
+//         $size: {
+//           $filter: {
+//             input: "$trades",
+//             cond: { $eq: ["$$this.action", "buy"] }
+//           }
+//         }
+//       },
+//       sell_actions: {
+//         $size: {
+//           $filter: {
+//             input: "$trades",
+//             cond: { $eq: ["$$this.action", "sell"] }
+//           }
+//         }
+//       },
+//       total_trades: { $size: "$trades" }
+//     }
+//   },
+//   {
+//     $sort: { total_trades: -1 }
+//   }
+// ])
+// // remember, expression composition is powerful. Be creative, and things
+// // that can be done inline. Notice that there is no intermediary stage to
+// // filter the trades array first, it's just done as part of the argument to
+// // the reduce expression.
+// db.stocks.aggregate([
+//   {
+//     $project: {
+//       _id: 0,
+//       mdb_only: {
+//         $reduce: {
+//           input: {
+//             $filter: {
+//               input: "$trades",
+//               cond: { $eq: ["$$this.ticker", "MDB"] }
+//             }
+//           },
+//           initialValue: {
+//             buy: { total_count: 0, total_value: 0 },
+//             sell: { total_count: 0, total_value: 0 }
+//           },
+//           in: {
+//             $cond: [
+//               { $eq: ["$$this.action", "buy"] },
+//               {
+//                 buy: {
+//                   total_count: { $add: ["$$value.buy.total_count", 1] },
+//                   total_value: {
+//                     $add: ["$$value.buy.total_value", "$$this.price"]
+//                   }
+//                 },
+//                 sell: "$$value.sell"
+//               },
+//               {
+//                 sell: {
+//                   total_count: { $add: ["$$value.sell.total_count", 1] },
+//                   total_value: {
+//                     $add: ["$$value.sell.total_value", "$$this.price"]
+//                   }
+//                 },
+//                 buy: "$$value.buy"
+//               }
+//             ]
+//           }
+//         }
+//       }
+//     }
+//   }
+// ])
+
 
 

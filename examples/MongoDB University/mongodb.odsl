@@ -1,0 +1,91 @@
+//#region 
+companies = type
+    category_code as Dimension()
+    founded_year as Dimension(number) bucket buckets 5
+    offices.city as Dimension()
+end
+companies.id = "m101:sample_training.companies"
+save ${type:companies}
+//#endregion
+
+//#region 
+c = find top 1 ${object:"m101:sample_training.companies"}
+print c
+//#endregion
+
+//#region 
+c = find top 1 ${object:"m101:sample_training.companies"} project name,category_code
+print c
+//#endregion
+
+//#region 
+cc = find unique category_code from ${object:"m101:sample_training.companies"}
+print cc
+//#endregion
+
+//#region 
+c = find ${object:"m101:sample_training.companies"} where category_code="advertising" order by name asc project name
+print c
+//#endregion
+
+//#region 
+shipwrecks = type
+    chart as Dimension()
+    depth as Dimension(number) bucket boundaries [-10, 0, 1, 5, 10, 100, 1000]
+    feature_type as Dimension()
+    watlev as Dimension()
+end
+shipwrecks.id = "m101:sample_geospatial.shipwrecks"
+save ${type:shipwrecks}
+//#endregion
+
+//#region 
+f=find top 10 ${object:"m101:sample_geospatial.shipwrecks"} 
+print f
+//#endregion
+
+//#region 
+zips = type
+    city as Dimension()
+    state as Dimension()
+end
+zips.id = "m101:sample_training.zips"
+save ${type:zips}
+//#endregion
+
+//#region 
+f=find top 10 ${object:"m101:sample_training.zips"} 
+print f
+//#endregion
+
+//#region 
+trips = type
+    usertype as Dimension()
+end
+trips.id = "m101:sample_training.trips"
+save ${type:trips}
+//#endregion
+
+//#region 
+f=find top 10 ${object:"m101:sample_training.trips"} 
+print f
+//#endregion
+
+//#region 
+movies = type
+    cast as Dimension()
+    countries as Dimension()
+    genres as Dimension()
+    imdb.rating as Dimension(number)
+    tomatoes.viewer.rating as Dimension(number)
+    rated as Dimension()
+    year as Dimension(number) bucket buckets 10
+end
+movies.id = "m121:aggregations.movies"
+save ${type:movies}
+//#endregion
+
+//#region 
+f=find top 1 ${object:"m121:aggregations.movies"} 
+print f
+//#endregion

@@ -1,0 +1,102 @@
+//#region 
+d=find top 1 ${object:"m101:sample_mflix.movies"}
+print d
+
+//#endregion
+
+
+//#region Buckets
+buckets = aggregate ${object:"m101:sample_training.companies"}
+    match founded_year > 1980 and number_of_employees != null
+    bucket "$number_of_employees" boundaries [ 0, 20, 50, 100, 500, 1000, Infinity ]
+end
+print buckets
+//#endregion
+
+//#region Bucket Auto
+b = aggregate ${object:"m101:sample_training.companies"}
+    match founded_year > 1980 and number_of_employees != null
+    bucketAuto "$number_of_employees" buckets 6
+end
+print b
+//#endregion
+
+//#region fx currencies
+test = aggregate ${object:"public"}
+    match _type="#ForeignExchange"
+    sortByCount "$currency"
+end
+print test
+//#endregion
+
+//#region geo
+gn = aggregate ${object:"m121:aggregations.nycFacilities"}
+    geoNear near={type:"Point", coordinates:[-73.98769,40.75734]}, distanceField="distanceFromMongoDB", spherical=true, query={type:"Hospital"}
+    project name
+    limit 3
+end
+print gn
+//#endregion
+
+//#region audit
+audit = aggregate ${audit:"public"}
+    match action="create"
+    sortByCount "$user"
+end
+print audit
+//#endregion
+
+//#region movies facet
+a = aggregate ${object:"m121:aggregations.movies"}
+    facet categorizedByTags
+        unwind "$tags"
+        sortByCount "$tags"
+    ,categorizedByPrice
+        match price=exists(1)
+        bucket "$price" boundaries [0,150,200,300,400]
+    end
+end
+print a
+//#endregion
+
+//#region 
+agg=aggregate ${object:"m101:sample_mflix.movies"}
+    project title, cast
+    limit 10
+end
+print agg
+//#endregion
+
+//#region 
+list_view=aggregate ${object:"public"} 
+    match commodity != null and source != null and location != null
+    facet commodity
+            sortByCount "$commodity"
+        ,source 
+            sortByCount "$source"
+        ,location
+            sortByCount "$location"
+    end
+end
+print list_view
+//#endregion
+
+//#region view
+buckets=aggregate ${object:"m101:online_odsl.temp"} save
+    bucketAuto "$_id" buckets 5 granularity R20
+end
+print buckets
+
+//#endregion
+
+//#region 
+buckets = find ${object:"m101:online_odsl.buckets"}
+print buckets
+//#endregion
+
+//#region 
+buckets = aggregate ${object:"m121:aggregations.movies"}
+    bucket "$year" boundaries [0,1980,1990,2000,2010,2020] default Other
+end
+print buckets
+//#endregion

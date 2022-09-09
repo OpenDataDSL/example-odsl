@@ -37,20 +37,20 @@ p = Polygon()
 p.add(road1)
 print json(p)
 
-items = find ${object:"TestGeometry"} where location within Sphere([ 51.72961, 0.47612 ], 20 / 3963.2)
+items = find ${object} where location within Sphere([ 51.72961, 0.47612 ], 20 / 3963.2)
 assertEquals(1, items.size)
 
-items = find ${object:"TestGeometry"} where location within bm20
+items = find ${object} where location within bm20
 assertEquals(1, items.size)
 
-items = find ${object:"TestGeometry"} where location within Polygon([[ 50, -1 ], [52, -1], [52, 1], [50, 1]])
+items = find ${object} where location within Polygon([[ 50, -1 ], [52, -1], [52, 1], [50, 1]])
 assertEquals(2, items.size)
 
 london = Polygon([[51.5386, -0.4956],[51.6445, -0.0753],[51.5205, 0.1753],[51.3479, -0.1163],[51.5386, -0.4956]])
-items = find ${object:"TestGeometry"} where location within london
+items = find ${object} where location within london
 assertEquals(1, items.size)
 
-items = find ${object:"TestGeometry"} where location intersects london
+items = find ${object} where location intersects london
 assertEquals(1, items.size)
 
 road1 = MultiPoint([[-73.96943, 40.78519],[-73.96943, 41.78519]])
@@ -83,7 +83,7 @@ poly1.add(MultiPoint([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]]))
 poly2 = Polygon([[ 50, -1 ], [52, -1], [52, 1], [50, 1], [ 50, -1 ]])
 poly3 = Polygon([mp1, mp2])
 
-print json(polygon)
+print json(london)
 
 mp = MultiPolygon()
 mp.add(poly1)
@@ -93,10 +93,10 @@ mp2 = MultiPolygon([poly1, poly2])
 
 gc = GeometryCollection()
 gc.add(road1)
-gc.add(polygon)
+gc.add(london)
 gc.add(mp)
 
 print json(gc)
 
-coll = GeometryCollection([road1, polygon, mp])
+coll = GeometryCollection([road1, london, mp])
 print json(coll)

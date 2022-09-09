@@ -37,32 +37,33 @@ c2.add(Contract(ondate, "2021M12", 0.15))
 
 print "Testing Curve Operations"
 c3 = c1 + c2
-assertEquals(4, c3.size())
+assertEquals(12.6, c3["2021M01"].value)
 c4 = c1 + 2
-assertEquals(8, c4.size())
+assertEquals(14.5, c4["2021M01"].value)
 c5 = c2 + 2
-assertEquals(12, c5.size())
+assertEquals(2.1, c5["2021M01"].value)
 
 print "Testing curve Functions"
 c6 = bootstrapCurve(c1)
-print json(c6)
+print c6.contracts
+// print json(c6)
 assertEquals(12.5, c6.contracts.M01.value)
 assertEquals(12.75, c6.contracts.M02.value)
 assertEquals(13.0, c6.contracts.M03.value)
 assertEquals(13.5, c6.contracts.M04.value)
-assertEquals(13.33, c6.contracts.M05.value)
-assertEquals(13.33, c6.contracts.M06.value)
+assertEquals(13.13, c6.contracts.M05.value)
+assertEquals(13.13, c6.contracts.M06.value)
 assertEquals(13.75, c6.contracts.M07.value)
 assertEquals(13.75, c6.contracts.M08.value)
 assertEquals(13.75, c6.contracts.M09.value)
-assertEquals(13.35, c6.contracts.M10.value)
-assertEquals(13.35, c6.contracts.M11.value)
-assertEquals(13.35, c6.contracts.M12.value)
+assertEquals(14.25, c6.contracts.M10.value)
+assertEquals(14.25, c6.contracts.M11.value)
+assertEquals(14.25, c6.contracts.M12.value)
 print c6.created
 
-assertEquals(12, c6.size())
+assertEquals(24, c6.size())
 c7 = c6 + c2
-assertEquals(12, c7.size())
+assertEquals(24, c7.size())
 
 print "Testing short tenors"
 

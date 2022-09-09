@@ -1,3 +1,7 @@
+print "**************************************************************"
+print "********************** Queue Test ****************************"
+print "**************************************************************"
+
 use test
 
 delete ${queue:"myqueue"}
@@ -7,6 +11,6 @@ myqueue = object as #QUEUE
     queue = "myqueue"
     handler = "loader"
     timeout = "PT3M"
-    retention = "P20Y"
+    retention = "P20D"
 end
-save ${queue:myqueue} "Created new queue"
+save ${queue:myqueue} log "Created new queue"

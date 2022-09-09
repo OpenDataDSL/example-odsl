@@ -33,3 +33,19 @@ print "Hello Region"
 //#region
 print "Test"
 //#endregion
+
+//#region 
+companies = type
+    category_code as Dimension()
+    founded_year as Dimension()
+    offices.city as Dimension()
+end
+companies.id = "m101:sample_training.companies"
+save ${type:companies}
+//#endregion
+
+//#region 
+if endsWith("test.csv", ".csv")
+    print "works"
+end
+//#endregion

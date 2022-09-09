@@ -21,15 +21,18 @@ ev1 = Event("2022-06-23T10:24:21")
 ev1.type = "ASK"
 ev1.price = 12.31
 ev1.volume = 200
+ev1.status.set("OBSERVED")
 
 ev2 = Event("2022-06-23T10:24:22")
 ev2.type = "BID"
 ev2.price = 12.31
 ev2.volume = 200
+ev2.status.set("OBSERVED")
 
 ev3 = Event("2022-06-23T10:24:23")
 ev3.price = 12.32
 ev3.volume = 200
+ev3.status.set("OBSERVED")
 
 EVENTS.orders = [ev1, ev2]
 EVENTS.trades = ev3

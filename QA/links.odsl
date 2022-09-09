@@ -21,6 +21,7 @@ cat5a.add("type", `${type:"Cable"}`)
 
 link ${object:"Cat5ACable"} as parent/child of ${object:"Cat6Cable"}
 
+cat5a = ${object:"Cat5ACable"}
 cat6 = ${object:"Cat6Cable"}
 
 cat6.links.add("test1", ${object:"Cat5ACable"})

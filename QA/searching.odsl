@@ -48,10 +48,7 @@ print records.size
 
 sr = find ${audit} where service == "subscriptionrecord"
 
-records = find ${audit} where 
-    timestamp > ${date:"today"} 
-    and timestamp < ${date:"tomorrow"}
-end
+records = find ${audit} where timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
 print records.size
 
 // Calendars

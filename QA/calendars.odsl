@@ -10,15 +10,15 @@ ondate = CurveDate(Date("2020-05-10"), eombus)
 
 tenor = Contract(ondate, "2020M06", 10)
 assertEquals("M01", tenor.relative)
-assertEquals("2020-06-01T00:00:00", tenor.start)
-assertEquals("2020-06-30T00:00:00", tenor.end)
-assertEquals("2020-05-31T00:00:00", tenor.expiry)
+assertEquals("2020-06-01", tenor.start)
+assertEquals("2020-06-30", tenor.end)
+assertEquals("2020-05-31", tenor.expiry)
 tenor = Contract(ondate, "M01", 10)
 assertEquals("2020M06", tenor.absolute)
  
 loadCalendars()
 calendars = find ${calendar}
-eng = ${calendar:"#ENG"}
+eng = ${calendar:"#HENG"}
 
 assertTrue(eng, "Calendar shouldn't be null")
 assertTrue(eng.name, "Calendar name shouldn't be null")
@@ -104,7 +104,7 @@ indexes = peak.getDates(hs, he)
 assertEquals(26, indexes.size())
 
 // Test Expiry Calendars
-expiry = ExpiryCalendar(${calendar:"#ENG"})
+expiry = ExpiryCalendar(${calendar:"#HENG"})
 expiry.id = "ExampleExpiry"
 expiry.addRule("go back 1 day using calendar before 2021-01-01")
 expiry.addRule("go back 2 days using calendar after 2021-01-01")
@@ -131,14 +131,14 @@ print dbexp.id
 rgasoil = ExpiryCalendar(BusinessCalendar())
 rgasoil.addRule("go to the 14th of the current month then align forwards then go back 2 days using calendar")
 ondate = CurveDate(Date("2020-02-10"), rgasoil)
-assertEquals("2021-02-11T00:00:00", ondate.getExpiry("2021M02"))
-assertEquals("2021-03-11T00:00:00", ondate.getExpiry("2021M03"))
-assertEquals("2021-04-12T00:00:00", ondate.getExpiry("2021M04"))
-assertEquals("2021-05-12T00:00:00", ondate.getExpiry("2021M05"))
-assertEquals("2021-06-10T00:00:00", ondate.getExpiry("2021M06"))
-assertEquals("2021-07-12T00:00:00", ondate.getExpiry("2021M07"))
-assertEquals("2021-08-12T00:00:00", ondate.getExpiry("2021M08"))
-assertEquals("2021-09-10T00:00:00", ondate.getExpiry("2021M09"))
+assertEquals("2021-02-11", ondate.getExpiry("2021M02"))
+assertEquals("2021-03-11", ondate.getExpiry("2021M03"))
+assertEquals("2021-04-12", ondate.getExpiry("2021M04"))
+assertEquals("2021-05-12", ondate.getExpiry("2021M05"))
+assertEquals("2021-06-10", ondate.getExpiry("2021M06"))
+assertEquals("2021-07-12", ondate.getExpiry("2021M07"))
+assertEquals("2021-08-12", ondate.getExpiry("2021M08"))
+assertEquals("2021-09-10", ondate.getExpiry("2021M09"))
 
 print "**************************************************************"
 print "*********************** Calendar Test Complete ***************"

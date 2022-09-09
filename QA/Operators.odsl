@@ -1,0 +1,19 @@
+print "**************************************************************"
+print "*********************** Operator Test ************************"
+print "**************************************************************"
+
+use test
+
+hl = ["high","low"]
+
+print "> in"
+assertTrue("high" in hl)
+assertTrue("low" in hl)
+assertFalse("hello" in hl)
+
+print "> matches"
+assertTrue("90210" matches "^\d{5}(-\d{4})?$")
+assertTrue("90210-1045" matches "^\d{5}(-\d{4})?$")
+assertFalse("90210-ZIP" matches "^\d{5}(-\d{4})?$")
+
+

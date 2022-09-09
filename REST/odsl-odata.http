@@ -1,0 +1,196 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id=b908c3b9-6c83-424d-9817-d537b184fa81&
+client_secret=0e.W4j3LF0w-I4ou0s4Z.gV7V1gA._qi4z&
+scope=https://odsl-api.azurewebsites.net/.default
+
+### Service info
+GET https://odsl-api.azurewebsites.net
+Content-Type: application/json; odata.metadata=full
+# Authorization: Bearer {{token}}
+
+### Get Service info
+GET http://localhost:8081/odata/public
+Content-Type: application/json; odata.metadata=full
+# Authorization: Bearer {{token}}
+
+### Get Private Service info
+GET http://localhost:8081/odata/private
+Content-Type: application/json; odata.metadata=full
+Authorization: Bearer {{token}}
+
+### Refresh/Reload the cache
+GET http://localhost:8081/odata/public/$refresh
+Authorization: Bearer {{token}}
+
+### Get Metadata
+GET http://localhost:8081/odata/public/$metadata
+Content-Type: application/json; odata.metadata=full
+Authorization: Bearer {{token}}
+
+### Get DataSets
+GET http://localhost:8081/odata/public/DataSet
+Authorization: Bearer {{token}}
+Accept: application/json;odata.metadata=full
+
+### Get a specific dataset
+GET http://localhost:8081/odata/public/DataSet('%23ECB_FX')
+Authorization: Bearer {{token}}
+Accept: application/json;odata.metadata=full
+
+### Get Companies
+GET http://localhost:8081/odata/public/Company
+Authorization: Bearer {{token}}
+
+### Get ECB
+GET http://localhost:8081/odata/public/Company('%23ECB_EUROPA_EU')
+Authorization: Bearer {{token}}
+
+### Get ECB name
+GET http://localhost:8081/odata/public/Company('%23ECB_EUROPA_EU')/name
+Authorization: Bearer {{token}}
+
+### Get Public Settings
+GET http://localhost:8081/odata/public/SETTING
+Authorization: Bearer {{token}}
+
+### Get Private Settings
+GET http://localhost:8081/odata/private/SETTING
+Authorization: Bearer {{token}}
+
+### Get a public setting
+GET http://localhost:8081/odata/public/SETTING('%23TEST')
+Authorization: Bearer {{token}}
+
+### Get a private setting
+GET http://localhost:8081/odata/private/SETTING('TEST1')
+Authorization: Bearer {{token}}
+
+### Create a setting
+POST http://localhost:8081/odata/private/SETTING
+Content-Type: application/json; odata.metadata=minimal
+Authorization: Bearer {{token}}
+
+{
+  "_id":"ODATA_TEST",
+  "name":"OData"
+}
+
+### Query options
+GET http://localhost:8081/odata/public/ForeignExchange
+    ?$count=true
+    &$skip=30
+    &$top=10
+    &$select=base,currency
+    &$orderby=currency desc
+Authorization: Bearer {{token}}
+
+### Filtering
+GET http://localhost:8081/odata/public/ForeignExchange
+    ?$count=true
+    &$filter=currency eq 'GBP'
+Authorization: Bearer {{token}}
+
+### FX
+GET http://localhost:8081/odata/public/ForeignExchange('%23ECB_FX.EURGBP')
+Authorization: Bearer {{token}}
+
+### Expand timeseries
+GET http://localhost:8081/odata/public/ForeignExchange('%23ECB_FX.EURGBP')
+  ?$expand=SPOT
+Authorization: Bearer {{token}}
+
+### Navigation to timeseries
+GET http://localhost:8081/odata/public/ForeignExchange('%23ECB_FX.EURGBP')/SPOT
+Authorization: Bearer {{token}}
+
+### read timeseries
+GET http://localhost:8081/odata/public/TimeSeries('%23ECB_FX.EURAUD:SPOT')
+Authorization: Bearer {{token}}
+
+### read timeseries
+GET http://localhost:8081/odata/public/TimeSeries
+  ?$top=1
+Authorization: Bearer {{token}}
+
+
+### read timeseries
+GET http://localhost:8081/odata/public/TimeSeries('%23ENTSO.EL.A73.A16.B04.49W000000000013A.10YNL_L.PT60M:VOL')
+Authorization: Bearer {{token}}
+
+### List Curves
+GET http://localhost:8081/odata/public/Curve
+Authorization: Bearer {{token}}
+
+### Read Curve
+GET http://localhost:8081/odata/public/Curve('%23CLALIT.AMF.AVGAUC.WP:CURVE:2021-03-05')
+Authorization: Bearer {{token}}
+
+### Read metadatamapping as open type
+GET http://localhost:8081/odata/public/MetadataMapping('%23ENTSO_METADATA')
+Authorization: Bearer {{token}}
+
+### Read metadatamapping as open type with coordinates
+GET http://localhost:8081/odata/public/MetadataMapping('%23BWSSB_METADATA')
+Authorization: Bearer {{token}}
+
+### Read Calendars
+GET http://localhost:8081/odata/public/Calendar
+Authorization: Bearer {{token}}
+
+### Read a Calendar
+GET http://localhost:8081/odata/public/Calendar('%23HTAR')
+Authorization: Bearer {{token}}
+
+### Call the GetDates function
+GET http://localhost:8081/odata/public/Calendar('%23HTAR')/ODSL.GetDates(start=2021-01-01,end=2021-01-31)
+Authorization: Bearer {{token}}
+
+### Read Agriculture
+GET http://localhost:8081/odata/public/Agriculture
+Authorization: Bearer {{token}}
+
+### Read Agriculture
+GET http://localhost:8081/odata/public/Agriculture('%23EUROSTAT.AT.SPR.02130000.A')
+Authorization: Bearer {{token}}
+
+### Read ForwardCurve
+GET http://localhost:8081/odata/public/ForwardCurve
+Authorization: Bearer {{token}}
+
+### Read a ForwardCurve
+GET http://localhost:8081/odata/public/ForwardCurve('%23CLALIT.AMF.AVGAUC.WP')
+Authorization: Bearer {{token}}
+
+### Read a ForwardCurve expand the curve
+GET http://localhost:8081/odata/public/ForwardCurve('%23CLALIT.AMF.AVGAUC.WP')
+  ?$expand=CURVE
+Authorization: Bearer {{token}}
+
+### Read the curve dates from a ForwardCurve
+GET http://localhost:8081/odata/public/ForwardCurve('%23CLALIT.AMF.AVGAUC.WP')/CURVE
+Authorization: Bearer {{token}}
+
+### Read a curve from a ForwardCurve
+GET http://localhost:8081/odata/public/ForwardCurve('%23CLALIT.AMF.AVGAUC.WP')/CURVE('2021-03-02')
+Authorization: Bearer {{token}}

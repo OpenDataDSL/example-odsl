@@ -1,0 +1,53 @@
+@token={{auth.response.body.access_token}}
+@odsltoken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJlbnZpcm9ubWVudCI6InByb2R1Y3Rpb24iLCJyb2xlcyI6W10sImlzcyI6Ik9wZW5EYXRhRFNMIiwiZXhwIjoxNjExNzc1ODA5LCJpYXQiOjE2MTE3NzU1MDksInRpZCI6ImVmMzRkYzM3LTlkNTUtNDNjNC05OWFkLWEzNWYzYzk2ZjhmNCJ9.V-pXNKpgkmmMv0CA7aUqJ08ZzEXAOhzI1khOS-E_5FM
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process
+Authorization: Bearer {{token}}
+
+### List processes from another tenant - only works if you are admin
+GET {{url}}/process/v1?tid=9fbf6424-eafa-4bdc-bd40-6008c3fdb934
+Authorization: Bearer {{token}}
+x-odsl-auth: {{odsltoken}}
+
+### Get a process from another tenant - only works if you are admin
+GET {{url}}/process/v1/AZURE_TEST
+Authorization: Bearer {{token}}
+x-odsl-auth: {{odsltoken}}
+
+### Update a process for another tenant - only works if you are admin
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+x-odsl-auth: {{odsltoken}}
+
+{
+    "_type": "VarProcess",
+    "service": "ETL",
+    "name": "AZURE_TEST",
+    "description": "Azure Test Process test",
+    "enabled": true,
+    "workflow": "#wf_xml_data_loader",
+    "cron": "00 15 ? * * *",
+    "input": {
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+        "tx": "#ECB_FX"
+    }
+}
+
+
+### Alternative impersonation using version as tid
+# Used for event grid events
+GET {{url}}/workflow/9fbf6424-eafa-4bdc-bd40-6008c3fdb934/private/wf_xml_data_loader
+Authorization: Bearer {{token}}

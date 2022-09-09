@@ -1,0 +1,201 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/calendar
+Authorization: Bearer {{token}}
+
+### List all public calendars
+GET {{url}}/calendar/v1/public
+Authorization: Bearer {{token}}
+
+### Holidays
+https://odsl-dev.azurewebsites.net/api/calendar/v1/public/%23ENG
+  ?_function=holidays
+  &year=2022
+Authorization: Bearer {{token}}
+
+
+### List all public calendars without calendar
+GET {{url}}/calendar/v1/public
+  ?_project=_id,name
+Authorization: Bearer {{token}}
+
+### List all public calendar names
+GET {{url}}/calendar/v1/public?_distinct=_id
+Authorization: Bearer {{token}}
+
+### List all private calendars
+GET {{url}}/calendar/v1/private
+Authorization: Bearer {{token}}
+
+### List all private calendar names
+GET {{url}}/calendar/v1/private?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a public calendar
+GET {{url}}/calendar/v1/public/%23HENG
+Authorization: Bearer {{token}}
+
+### Update a public calendar
+POST {{url}}/calendar/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "#TEST",
+    "_type": "VarCalendar",
+    "calendar": {
+      "_type": "IntradayCalendar",
+      "_id": "#TEST",
+      "_name": "Half-hourly calendar on weekends only",
+      "period": 1800000,
+      "holidayCalendarCode": "#WEEKEND"
+    }
+}
+
+### Change a public calendar
+POST {{url}}/calendar/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "#TEST",
+    "_type": "VarCalendar",
+    "calendar": {
+      "_type": "IntradayCalendar",
+      "_id": "#TEST",
+      "_name": "Half-hourly calendar",
+      "period": 1800000
+    }
+}
+
+### Try to save a calendar with the _id of a standard calendar
+POST {{url}}/calendar/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "WEEKLY",
+    "_type": "VarCalendar",
+    "calendar": {
+      "_type": "WeeklyCalendar",
+      "_id": "WEEKLY",
+      "_name": "Weekly Calendar"
+    }
+}
+
+### Save a holiday calendar
+POST {{url}}/calendar/v1
+Authorization: Bearer {{token}}
+
+{"_id":"#HENG","_type":"VarCalendar","calendar":
+  {"rule":"HolidayCalendar","rules":
+    [
+      {"day":"SATURDAY","rule":"Every","code":"Every Saturday","name":"Every Saturday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"day":"SUNDAY","rule":"Every","code":"Every Sunday","name":"Every Sunday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"month":1,"dom":1,"tomonth":1,"todom":1,"rule":"Actual","code":"1st of January named 'New Year' on Saturday shift 2 day on Sunday shift 1 day","name":"New Year","options":{"shiftOnSaturday":2,"shiftOnSunday":1,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"rule":"GoodFriday","code":"Good Friday","name":"Good Friday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"rule":"EasterMonday","code":"Easter Monday","name":"Easter Monday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"ordinal":1,"day":"MONDAY","month":5,"rule":"Ordinal","code":"First Monday in May named 'Early Bank Holiday'","name":"Early Bank Holiday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"day":"MONDAY","month":5,"rule":"Last","code":"Last Monday in May named 'Spring Bank Holiday'","name":"Spring Bank Holiday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"day":"MONDAY","month":8,"rule":"Last","code":"Last Monday in August named 'Summer Bank Holiday'","name":"Summer Bank Holiday","options":{"shiftOnSaturday":0,"shiftOnSunday":0,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"month":12,"dom":25,"tomonth":12,"todom":25,"rule":"Actual","code":"25th of December named 'Christmas Day' on saturday shift 2 day on sunday shift 1 day","name":"Christmas Day","options":{"shiftOnSaturday":2,"shiftOnSunday":1,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}},
+      {"month":12,"dom":26,"tomonth":12,"todom":26,"rule":"Actual","code":"26th of December named 'Boxing Day' on saturday shift 2 day on sunday shift 2 day","name":"Boxing Day","options":{"shiftOnSaturday":2,"shiftOnSunday":2,"shiftOnMonday":0,"shiftOnTuesday":0,"shiftOnWednesday":0,"shiftOnThursday":0,"shiftOnFriday":0,"validFromYear":0,"validToYear":9999,"repeats":1,"repeatStartYear":0}}
+    ]
+    ,"_type":"HolidayCalendar","_id":"#HENG"
+  }
+}
+
+### Save a holiday calendar only using rules
+POST {{url}}/calendar/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id":"HENG",  
+  "_type":"HolidayCalendar",
+  "name":"England and Wales Holiday Calendar",
+  "rules": [
+    "Every Saturday",
+    "Every Sunday",
+    "1st of January named 'New Year' on Saturday shift 2 day on Sunday shift 1 day",
+    "Good Friday",
+    "Easter Monday",
+    "First Monday in May named 'Early Bank Holiday'",
+    "Last Monday in May named 'Spring Bank Holiday'",
+    "Last Monday in August named 'Summer Bank Holiday'",
+    "25th of December named 'Christmas Day' on saturday shift 2 day on sunday shift 1 day",
+    "26th of December named 'Boxing Day' on saturday shift 2 day on sunday shift 2 day"
+  ]
+}
+
+### Get holidays
+GET {{url}}/calendar/v1/private/HENG?function=holidays
+Authorization: Bearer {{token}}
+
+### Get a public calendar
+GET {{url}}/calendar/v1/public/%23TEST
+Authorization: Bearer {{token}}
+
+### Get holidays for a public calendar
+GET {{url}}/calendar/v1/public/%23HENG?function=holidays
+Authorization: Bearer {{token}}
+
+### Get holidays for a public calendar
+GET {{url}}/calendar/v1/public/%23HENG?function=holidays&year=2022&excludeEvery=true
+Authorization: Bearer {{token}}
+
+### Get index for a public calendar
+GET {{url}}/calendar/v1/public/%23TEST?function=indexes
+Authorization: Bearer {{token}}
+
+### Get a list of versions of public calendar
+GET {{url}}/calendar/v1/public/%23TEST/*
+Authorization: Bearer {{token}}
+
+### Get a version of public calendar
+GET {{url}}/calendar/v1/public/%23TEST/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a public calendar
+PUT {{url}}/calendar/v1/public/%23TEST/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of public calendar
+GET {{url}}/calendar/v1/public/%23TEST/PROD
+Authorization: Bearer {{token}}
+
+### Delete a version of public calendar
+DELETE {{url}}/calendar/v1/public/%23TEST
+Authorization: Bearer {{token}}
+
+### Fully delete a public calendar
+DELETE {{url}}/calendar/v1/public/%23TEST/*
+Authorization: Bearer {{token}}
+
+### List all public expiry calendar names
+GET {{url}}/expiry/v1/public?_distinct=_id
+Authorization: Bearer {{token}}
+
+### List all private expiry calendar names
+GET {{url}}/expiry/v1/private?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a public expiry calendar
+GET {{url}}/expiry/v1/public/%23RMATBA
+Authorization: Bearer {{token}}
+
+### Get calendars from both public and private
+GET {{url}}/calendar/v1/all
+  ?_id=%23TEST
+  &_id=HENG
+  &_project=_id,calendar._name
+Authorization: Bearer {{token}}

@@ -1,0 +1,40 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process-exec
+Authorization: Bearer {{token}}
+
+### Send process run request
+POST {{url}}/process-exec/v1?_reason=test
+Authorization: Bearer {{token}}
+
+{"name": "ECB_FX"}
+
+
+### Send process run request
+POST {{url}}/process-exec/v1?_reason=test
+Authorization: Bearer {{token}}
+
+{"name": "GDT_CURVE_BUTTER"}
+
+### Test
+GET https://func-odsl.azurewebsites.net/api/process/v1/ECB_FX
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2MTE2NzczMTcsIm5iZiI6MTYxMTY3NzMxNywiZXhwIjoxNjExNjgxMjE3LCJhaW8iOiJBU1FBMi84U0FBQUFZazB3MkRQd3NRZjdWMEZmbjB2eC9NVWFsNEROTkNYYml6T3hrcUhpR0VvPSIsImF6cCI6IjM5YzZjY2NkLWQ2ZWEtNGFjMS1iNTY0LThlNGQxZTI4ZDc1ZCIsImF6cGFjciI6IjEiLCJvaWQiOiJhZmVlYTE2Yi04ZjdjLTQ3MzQtOTkwMy03MjVlODJkN2ZmMmMiLCJyaCI6IjAuQUFBQU45dzA3MVdkeEVPWnJhTmZQSmI0OU0zTXhqbnExc0ZLdFdTT1RSNG8xMTFnQUFBLiIsInJvbGVzIjpbIk9EU0wuYWRtaW4iXSwic3ViIjoiYWZlZWExNmItOGY3Yy00NzM0LTk5MDMtNzI1ZTgyZDdmZjJjIiwidGlkIjoiZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0IiwidXRpIjoiOEdseXdnZGJtRXlFRmJHVFg3YzFBQSIsInZlciI6IjIuMCJ9.H3pj8cd-mp593Lh4Q0sKKQmIW5WGvfXi7Q3AP3llxRj8rkXUrWhVhZdeskNcsWeTIDIapTNR9BWahmeK1mR16ybLTRBHAXPUY17B1R64rLNgzn8JKpUBj6SSqn18jYbqzo6KXOxnAbFnTJsYkKwVxh09CUrsYjuABYXtmWwo21yeBZFtkKv2y6Uzi2Pod4lyjqeeXNyJymr9j98x4b_SwW3k4UjD7LSJ6Pnp5W4uWFg58rqucp05KDPmwhX-k1ua3jKpqhHhiSHoPr6Bb6Guycmxmre0_mZXkSK-A5SMOnplfhUy0pdaF87bXw_m1v8PZAPMhjQFxNR7R0MTeapdEw
+x-odsl-auth: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJlbnZpcm9ubWVudCI6InByb2R1Y3Rpb24iLCJyb2xlcyI6W10sImlzcyI6Ik9wZW5EYXRhRFNMIiwiZXhwIjoxNjExNjc4NTYxLCJpYXQiOjE2MTE2NzgyNjEsInRpZCI6ImVmMzRkYzM3LTlkNTUtNDNjNC05OWFkLWEzNWYzYzk2ZjhmNCJ9.5XFiH-b21SHKW6OF_lEXVcvrFbRThIcDTlBA-tdKTPk
+
+
+### List all process executions for a process
+GET {{url}}/process-exec/v1?_filter=%7B%22name%22%3A%22ECB_FX%22%7D
+Authorization: Bearer {{token}}

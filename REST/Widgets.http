@@ -1,0 +1,44 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+
+### Execution History 24 hours
+GET {{url}}/process-exec/v1
+    ?_aggregate=[{'$match':{'start':{'$gte':'T-1D'}}},{'$group':{'_id':'$status','count':{'$sum':1}}}]
+Authorization: Bearer {{token}}
+
+### Execution History 12 hours
+GET {{url}}/process-exec/v1
+    ?_aggregate=[{'$match':{'start':{'$gte':'T-12h'}}},{'$group':{'_id':'$status','count':{'$sum':1}}}]
+Authorization: Bearer {{token}}
+
+### Execution History 1 month
+GET {{url}}/process-exec/v1
+    ?_aggregate=[{'$match':{'start':{'$gte':'T-1M'}}},{'$group':{'_id':'$status','count':{'$sum':1}}}]
+Authorization: Bearer {{token}}
+
+### Data Explorer
+GET {{url}}/data/v1/public
+    ?_aggregate=[{"$group":{"_id":"$_type","count":{"$sum":1}}}]
+Authorization: Bearer {{token}}
+
+### Object Explorer
+GET {{url}}/object/v1
+    ?_aggregate=[{"$group":{"_id":"$_type","count":{"$sum":1}}}]
+Authorization: Bearer {{token}}
+
+### Events
+GET {{url}}/event/v1
+    ?_aggregate=[{'$match':{'time':{'$gte':'T-10D'}}},{'$group':{'_id':'$eventtype','count':{'$sum':1}}}]
+Authorization: Bearer {{token}}

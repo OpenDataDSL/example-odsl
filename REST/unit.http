@@ -1,0 +1,25 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/unit
+Authorization: Bearer {{token}}
+
+### List all units
+GET {{url}}/unit/v1
+Authorization: Bearer {{token}}
+
+### Get a specific unit
+GET {{url}}/unit/v1/g
+Authorization: Bearer {{token}}

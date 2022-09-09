@@ -1,0 +1,65 @@
+@token = Y29saW4uaGFydGxleUB3YWxrZmFyZXMuY29tOnlpam5mcmdUejVFNEsybmMzdTJjRTA1Nw==
+@site = https://opendatadsl.atlassian.net/
+
+### Get an issue
+GET {{site}}/rest/api/2/issue/CUST-1
+Authorization: Basic {{token}}
+
+### Create an issue
+POST {{site}}/rest/api/2/issue
+Authorization: Basic {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "update": {},
+    "fields": {
+        "project": {
+            "id": "10002"
+        },
+        "summary":"REST Portal bug - different tid",
+        "issuetype": {
+            "id": "10004"
+        },
+        "components":[
+            {
+                "id": "10027"
+            }
+        ],
+        "description": "REST Portal bug description",
+        "customfield_10032": "tid2",
+        "customfield_10033": "uid"
+    }
+}
+
+
+### Update an issue
+PUT {{site}}/rest/api/2/issue/CUST-4
+Authorization: Basic {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "update": {},
+    "fields": {
+        "description": "Updated description"
+    }
+}
+
+### Comment on an issue
+POST {{site}}/rest/api/2/issue/CUST-4/comment
+Authorization: Basic {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "body": "This is a comment"
+}
+
+
+
+### Find issues for tid
+GET {{site}}/rest/api/2/search
+    ?jql=project = "CUST" and tid ~ "tid" ORDER BY created DESC
+    &fields=summary,description,created,status
+Authorization: Basic {{token}}

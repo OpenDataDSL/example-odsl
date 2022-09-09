@@ -1,0 +1,113 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/audit
+Authorization: Bearer {{token}}
+
+### List all public audit records
+GET {{url}}/audit/v1/public
+  ?_project={"ref":false, "change":false}
+  &_sort={"timestamp":-1}
+Authorization: Bearer {{token}}
+
+### Search audit records
+GET {{url}}/audit/v1/public
+  ?_search=bnm_asia
+  # &_project={"change":1}
+  &_limit=20
+  # &_skip=20
+Authorization: Bearer {{token}}
+
+### Search audit records
+GET {{url}}/audit/v1/public
+  ?_aggregate=[{"$search":{"text":{"query":"update entsoe","path":["id", "service", "action", "description", "user"], "fuzzy": {}}}}, {"$limit": 20}, {"$project": {"id": 1,"timestamp": 1,"description": 1}}]
+Authorization: Bearer {{token}}
+
+
+### List all public audit records services
+GET {{url}}/audit/v1/public?_distinct=service
+Authorization: Bearer {{token}}
+
+### Get a specific audit record
+GET {{url}}/audit/v1/public/5fa3dc5fbb5c300007a232d5
+Authorization: Bearer {{token}}
+
+### Find some audit records
+GET {{url}}/audit/v1/public?_filter=%7B%22service%22%3A%22action%22%7D
+Authorization: Bearer {{token}}
+
+### List all private audit records
+GET {{url}}/audit/v1/private
+Authorization: Bearer {{token}}
+
+### List all private audit records services
+GET {{url}}/audit/v1/private?_distinct=service
+Authorization: Bearer {{token}}
+
+### Get a specific audit record
+GET {{url}}/audit/v1/private/5fa51a320b29ff000710b00f
+Authorization: Bearer {{token}}
+
+### Find some audit records
+GET {{url}}/audit/v1/private?_filter=%7B%22service%22%3A%22type%22%7D
+Authorization: Bearer {{token}}
+
+### Error 404 - Update shouldn't work
+POST {{url}}/audit/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "#TEST",
+  "_type": "VarAudit"
+}
+
+
+### Basic Filter
+GET {{url}}/audit/v1/public?service=calendar&id=%23TEST
+Authorization: Bearer {{token}}
+
+### Basic Filter with projection
+GET {{url}}/audit/v1/public
+  ?service=calendar
+  &id=%23TEST
+  &_project={"_id":0,"timestamp":1,"description":1}
+Authorization: Bearer {{token}}
+
+### Complex filter using dates
+GET {{url}}/audit/v1/public
+  ?_filter={"$and":[{"timestamp":{"$gte":"2021-10-21T00:40:00.001Z"}},{"timestamp":{"$lte":"2021-10-21T00:41:00.001Z"}}]}
+Authorization: Bearer {{token}}
+
+### Simple range filter using dates
+GET {{url}}/audit/v1/private
+  ?timestamp=range(2021-09-15,2021-10-21)
+Authorization: Bearer {{token}}
+
+### Since a date
+GET {{url}}/audit/v1/private
+  ?timestamp=gte(2022-02-16T16:30:00)
+Authorization: Bearer {{token}}
+
+### Search with simple range filter using dates
+GET {{url}}/audit/v1/private
+  ?_search=process
+  &timestamp=range(2021-09-15,2021-10-21)
+  &id=EEX_AGRI_WHEYPOWDER_WEEKLY_INDEX
+Authorization: Bearer {{token}}
+
+### Search audit records
+GET {{url}}/audit/v1/private
+  ?_search=mandatory
+Authorization: Bearer {{token}}

@@ -1,0 +1,39 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process-exec
+Authorization: Bearer {{token}}
+
+### List all process executions
+GET {{url}}/process-exec/v1
+    ?_filter={"name":"ECB_FX"}
+    &_project={"start":1,"status":1}
+    &_limit=10
+Authorization: Bearer {{token}}
+
+### Get a process execution
+GET {{url}}/process-exec/v1/019ba40c-6212-44f4-86db-2139b4b03f33
+    ?_project={"start":1,"status":1}
+Authorization: Bearer {{token}}
+
+### Get a calendar
+GET {{url}}/calendar/v1/private/rgasoil/21
+    ?_project={"calendar.rules":0}
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/data/v1/public/%23BNM_FX_AEDMYR_1200:SPOT
+    ?_project={"_id":1,"_type":1}
+Authorization: Bearer {{token}}

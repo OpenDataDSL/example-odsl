@@ -1,0 +1,94 @@
+#@jurl=http://localhost:7071/api
+@jurl = https://process-runner.azurewebsites.net/api
+#@jurl = https://api.opendatadsl.com/process
+//@token={{auth.response.body.access_token}}
+
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNWZkNzBiNzYtYzczYi00YWE0LWI4NzEtN2RkOTkwMjQ3NGRjL3YyLjAiLCJpYXQiOjE2MzU0MTgyNTgsIm5iZiI6MTYzNTQxODI1OCwiZXhwIjoxNjM1NDIzMzA4LCJhaW8iOiJBVFFBeS84VEFBQUEwc2ZmY0pma0lXYkdMMzRlWTUyYUNpUXhxTW5Zd3RHd1l0YnJOVGlSVllZSWdkNGZ5VVJzUURpaEQ5REhwRlZjIiwiYXpwIjoiZDM3NDJmNWYtM2Q0ZC00NTY1LWE4MGEtZWJkZWZhYWI4ZDA4IiwiYXpwYWNyIjoiMCIsIm5hbWUiOiJEZW1vIFVzZXIiLCJvaWQiOiI1NTQ2MzgxZi00M2NjLTRmYjAtYThmNC0yMThlZjk1YmEzODMiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJkZW1vQG9kc2wub25saW5lIiwicmgiOiIwLkFTOEFkZ3ZYWHp2SHBFcTRjWDNaa0NSMDNGOHZkTk5OUFdWRnFBcnIzdnFyalFndkFJQS4iLCJyb2xlcyI6WyJPRFNMLmRldmVsb3BlciIsIk9EU0wuc3Vic2NyaXB0aW9uIl0sInNjcCI6ImFwaV91c2VyIiwic3ViIjoidlpPZmhNWXNhMjNKYmlvRWJSZEhNWlNjNE84MDNiX19PVlV6ZmdwcGkzQSIsInRpZCI6IjVmZDcwYjc2LWM3M2ItNGFhNC1iODcxLTdkZDk5MDI0NzRkYyIsInV0aSI6InhDZE9GSHdPeWtLbXV2N1ktWVExQUEiLCJ2ZXIiOiIyLjAifQ.fb-pEuE17YO2IdE8XRCCjTf10ncYijPufB-8Y7cl8ellToVsbLgP9IMYR8cOWaRWskZPF621i9mueAY8ihdnA7OCbS9uYdMXZccfufxfzPwVAVYFca8w-ZnM61huZD9hjkppu7I0r92OOEpyDw2ml-o5UT0bxBv2mmO1HSSTn4DT7Qjb_coqBz83jhLOjZFrgWsn67n_rxP52xZsnVOSmb-omqmbmlLhi_0Ag3niL6h2YPIvXEzxrafS6ioNVVNKPJVZ_vtEm3mi80jCGwokBkyAdA-jxBj-1J6Ys-XaBefORbQruOjHLHd92ytt5yK_qpGgmj72CCnNOMcAe84kBg
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Gateway
+GET {{url}}/service/action
+Authorization: Bearer {{token}}
+
+### Info
+GET {{jurl}}/curve-build
+Authorization: Bearer {{token}}
+
+### Test build
+POST {{jurl}}/curve-build
+Authorization: Bearer {{token}}
+
+{"name":"PREMIUM","ondate":"2021-10-19","configuration":{"_id":"TUTORIAL_ODSL_CURVE","_type":"#CurveConfig","_version":1,"_User":"anja@odsl.online","_timestamp":"2021-10-28T09:33:21.001Z","_oid":"TUTORIAL_ODSL_CURVE","_links":{},"_tag":[],"name":"Tutorial ODSL Curve","category":"TUTORIAL","buildScript":"curvetutorial","country":"Italy","region":"Europe","description":"A curve created for the ODSL Curve Tutorial","expiryCalendar":"#REOMB","subcategory":"Curve Building","inputs":[{"_type":"#CurveConfigInput","key":"PRIMARY","id":"${data:\u0022#CLALIT.BUTTER_82.AVGAUC.WP:CURVE\u0022}","required":true,"_links":{}}],"outputs":[{"_type":"#CurveConfigOutput","name":"PREMIUM","code":"PRIMARY + 0.2","_links":{}}]}}
+
+### Get input data
+GET {{url}}/data/v1/public/%23CLALIT.BUTTER_82.AVGAUC.WP:CURVE:2021-10-19
+Authorization: Bearer {{token}}
+
+
+### Build a curve
+POST {{jurl}}/curve-build
+Authorization: Bearer {{token}}
+
+{
+    "name": "PREMIUM",
+    "environment": "production",
+    "ondate": "2021-05-18",
+    "configuration": {
+        "_id" : "TUTORIAL_ODSL_CURVE",
+        "_type" : "#CurveConfig",
+        "_links" : {},
+        "buildScript" : "curvetutorial",
+        "category" : "TUTORIAL",
+        "country" : "Italy",
+        "description" : "A curve created for the ODSL Curve Tutorial",
+        "expiryCalendar" : "#REOMB",
+        "inputs" : [ 
+            {
+                "_type" : "#CurveConfigInput",
+                "_links" : {},
+                "id" : "${data:\"#CLALIT.BUTTER_82.AVGAUC.WP:CURVE\"}",
+                "key" : "PRIMARY",
+                "required" : true
+            }
+        ],
+        "name" : "Tutorial ODSL Curve",
+        "outputs" : [ 
+            {
+                "_type" : "#CurveConfigOutput",
+                "_links" : {},
+                "code" : "addPercentage(PRIMARY, factor)",
+                "currency" : "USD",
+                "factor" : 5,
+                "name" : "PREMIUM",
+                "units" : "MT"
+            }, 
+            {
+                "_type" : "#CurveConfigOutput",
+                "_links" : {},
+                "code" : "extendCurve(PREMIUM, 3)",
+                "currency" : "USD",
+                "name" : "EXTENDED",
+                "units" : "MT"
+            }, 
+            {
+                "_type" : "#CurveConfigOutput",
+                "_links" : {},
+                "code" : "PREMIUM",
+                "currency" : "EUR",
+                "name" : "EUR_MT",
+                "units" : "MT"
+            }
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/currency
+Authorization: Bearer {{token}}
+
+### Get provider codes for public data
+GET {{url}}/currency/v1/public?_distinct=source
+Authorization: Bearer {{token}}
+
+### Get base codes for provider
+GET {{url}}/currency/v1/public?source=ECB&_distinct=base
+Authorization: Bearer {{token}}
+
+### Get ccy codes for provider
+GET {{url}}/currency/v1/public?source=ECB&base=EUR&_distinct=currency
+Authorization: Bearer {{token}}
+
+### Get ids for provider
+GET {{url}}/currency/v1/public?source=ECB&base=EUR&_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get ccy pair for provider
+GET {{url}}/currency/v1/public/%23ECB_FX.EURUSD
+Authorization: Bearer {{token}}
+
+### Get ccy SPOT data
+GET {{url}}/currency/v1/public/%23ECB_FX.EURUSD?_profile=SPOT
+Authorization: Bearer {{token}}
+
+### Get ccy data for provider
+GET {{url}}/currency/v1/public?source=ECB&base=EUR&currency=GBP&_profile=SPOT
+Authorization: Bearer {{token}}
+

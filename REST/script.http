@@ -1,0 +1,47 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/script
+Authorization: Bearer {{token}}
+
+### List all public scripts
+GET {{url}}/script/v1/public
+Authorization: Bearer {{token}}
+
+### List all public script names
+GET {{url}}/script/v1/public?_distinct=_id
+Authorization: Bearer {{token}}
+
+### List all private scripts
+GET {{url}}/script/v1/private
+Authorization: Bearer {{token}}
+
+### List all private script names
+GET {{url}}/script/v1/private?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a public script
+GET {{url}}/script/v1/public/%23StandardValidations
+Authorization: Bearer {{token}}
+
+### Update a script
+POST {{url}}/script/v1/public/%23Validations
+Authorization: Bearer {{token}}
+
+{
+   "_id": "#StandardValidations",
+  "_type": "VarScript",
+  "script": "LyoqDQogKiBTdGFuZGFyZCBWYWxpZGF0aW9ucw0KICogQGNhdGVnb3J5IFZhbGlkYXRpb25zDQogKi8NCg0KYSA9IE9iamVjdCgpDQphLnRlc3QgPSAiSGVsbG8gV29ybGQiDQoNCnByaW50IGENCg=="
+}

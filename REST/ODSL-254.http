@@ -1,0 +1,47 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get a time-series range using between(d,d)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT
+    ?_range=between(T-5D,T-1D)
+    &_project=_type,calendar,start,data
+Authorization: Bearer {{token}}
+
+### Get a time-series range using last(n)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT
+    ?_range=last(3)
+    &_project=_type,calendar,start,data
+Authorization: Bearer {{token}}
+
+### Get a time-series range using from(d)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT
+    ?_range=from(T-5D)
+    &_project=_type,calendar,start,data
+Authorization: Bearer {{token}}
+
+### Get a curve
+GET {{url}}/data/v1/private/HUDEX.NG.HU.FUT.CURVE:SETTLE:L
+Authorization: Bearer {{token}}
+
+### Get a curve
+GET {{url}}/data/v1/private/HUDEX.NG.HU.FUT.CURVE:SETTLE:L-1
+Authorization: Bearer {{token}}
+
+### Get a smart curve
+GET {{url}}/data/v1/private/HUDEX.NG.HU.FUT.CURVE:BOOTSTRAPPED:L
+Authorization: Bearer {{token}}
+
+### Get a curve using before date syntax
+GET {{url}}/data/v1/private/HUDEX.NG.HU.FUT.CURVE:BOOTSTRAPPED:-2022-05-18
+Authorization: Bearer {{token}}

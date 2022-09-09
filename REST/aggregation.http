@@ -1,0 +1,57 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process-exec
+Authorization: Bearer {{token}}
+
+### Distinct users in audit
+GET {{url}}/audit/v1/private
+    ?_distinct=user
+    &timestamp=range(2021-05-01,2021-05-31)
+Authorization: Bearer {{token}}
+
+### Aggregate statuses
+GET {{url}}/process-exec/v1    
+    ?_aggregate=[{"$group":{"_id":"$status","count":{"$sum":1}}}]
+Authorization: Bearer {{token}}
+
+### Aggregate statuses between dates
+GET {{url}}/process-exec/v1
+    ?_aggregate=[{"$match":{"$and":[{"start":{"$gte":"2021-02-17T00:00:00.000Z"}},{"start":{"$lte":"2021-02-17T23:59:59.000Z"}}]}},{"$group":{"_id":"$status","count":{"$sum":1}}}]
+Authorization: Bearer {{token}}
+
+### Aggregate statuses between dates
+GET {{url}}/process-exec/v1
+    ?_aggregate=[{"$match":{"$and":[{"start":{"$gte":"2021-02-22T09:00:00"}},{"start":{"$lte":"2021-02-23T09:25:22"}}]}},{"$group":{"_id":"$status","count":{"$sum":1}}}]
+Authorization: Bearer {{token}}
+
+### Aggregate statuses for dates for a specific process
+GET {{url}}/process-exec/v1
+    ?_aggregate=[{"$match":{"$and":[{"name":"ECB_FX"},{"start":{"$gte":"2021-02-01T00:00:00"}},{"start":{"$lte":"2021-02-28T23:59:59"}}]}},{"$project":{"start":1,"status":1}}]
+Authorization: Bearer {{token}}
+
+
+### Aggregate statuses
+GET https://odsl-temp.azurewebsites.net/api/process-exec/v1?_aggregate=%5b{%22%24match%22%3a{%22%24and%22%3a%5b{%22start%22%3a{%22%24gte%22%3a%222022-03-08T11%3a00%3a00.001Z%22}}%2c{%22start%22%3a{%22%24lte%22%3a%222022-03-09T11%3a09%3a29.001Z%22}}%5d}}%2c{%22%24group%22%3a{%22_id%22%3a%22%24status%22%2c%22count%22%3a{%22%24sum%22%3a1}}}%5d&_limit=-1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2NDY4MjM4NDQsIm5iZiI6MTY0NjgyMzg0NCwiZXhwIjoxNjQ2ODI3ODMxLCJhaW8iOiJBVlFBcS84VEFBQUExWklIbkVUMVVWNG1jK1VLSEhiZzFMV1Z4emdtcXpiWHRyUXhPWitCeGRSdHI0em1RUXZFQzZLOVdENVRqcVc5QzhwVVNPSitvQXlBYis3S1F3RFhkWU5Ja0RoNG9SWUNFWHhQVGFnc2dKVT0iLCJhenAiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJhenBhY3IiOiIwIiwiZW1haWwiOiJjb2xpbi5oYXJ0bGV5QG9wZW5kYXRhZHNsLmNvbSIsIm5hbWUiOiJDb2xpbiBIYXJ0bGV5Iiwib2lkIjoiMmU1ZGNhNTctYWQ2Yy00ZWJjLTgwYzAtNmQxOTBkMzJlN2EzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY29saW4uaGFydGxleUBvcGVuZGF0YWRzbC5jb20iLCJyaCI6IjAuQVdBQU45dzA3MVdkeEVPWnJhTmZQSmI0OUY4dmROTk5QV1ZGcUFycjN2cXJqUWhnQU9nLiIsInJvbGVzIjpbIk9EU0wuYWRtaW4iXSwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIGFwaV91c2VyIiwic3ViIjoiZGhBOGRSOFExT21GU29JZWtaM29wLUZfWmZKOUxMc25pSTBjdUNkdV9pWSIsInRpZCI6ImVmMzRkYzM3LTlkNTUtNDNjNC05OWFkLWEzNWYzYzk2ZjhmNCIsInV0aSI6Im9md3BtQjAxUzA2dTZ0RmJBREF4QUEiLCJ2ZXIiOiIyLjAifQ.edVByR_vSeZmkIRWkNeQ0SfqDHBgCAhEfo_CMTCZzZq-mdQb3-RELnP94KY3iNdd-JuqWhFsk9oIr0pgGsthxK-Dyb1VBT79_0pbqZSpccCQYxyRmoz8_n_CHDTABeDzt04K9mcP5OJyALR0NeJ_cXzwpqtjrPz8ZBde7iCemKnkPLLNt7R0uwRGskvA5VS2BpAZtAxHbZqqjMiJjRAB6oUketpOMEFanObGviELeN97MQYmxsiq6SRNv78v286G726AMs7kkKYyBinj9UxhOsoD5AeeIb_9DNNfgYIxLziLyLj4mclDTGUh86N-4m1S8jI-BX91xy0O10Rlk_1w5w
+x-odsl-app: portal
+
+### 500
+GET https://odsl-temp.azurewebsites.net/api/object/v1/public?_project={%22_id%22%3atrue%2c%22_type%22%3atrue%2c%22_access%22%3atrue%2c%22_access%22%3atrue%2c%22_oid%22%3atrue%2c%22_version%22%3atrue%2c%22_tag%22%3atrue%2c%22_user%22%3atrue%2c%22name%22%3atrue}&_sort={%22_id%22%3a1}&_limit=100&_skip=0
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2NDY4MjM4NDQsIm5iZiI6MTY0NjgyMzg0NCwiZXhwIjoxNjQ2ODI3ODMxLCJhaW8iOiJBVlFBcS84VEFBQUExWklIbkVUMVVWNG1jK1VLSEhiZzFMV1Z4emdtcXpiWHRyUXhPWitCeGRSdHI0em1RUXZFQzZLOVdENVRqcVc5QzhwVVNPSitvQXlBYis3S1F3RFhkWU5Ja0RoNG9SWUNFWHhQVGFnc2dKVT0iLCJhenAiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJhenBhY3IiOiIwIiwiZW1haWwiOiJjb2xpbi5oYXJ0bGV5QG9wZW5kYXRhZHNsLmNvbSIsIm5hbWUiOiJDb2xpbiBIYXJ0bGV5Iiwib2lkIjoiMmU1ZGNhNTctYWQ2Yy00ZWJjLTgwYzAtNmQxOTBkMzJlN2EzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY29saW4uaGFydGxleUBvcGVuZGF0YWRzbC5jb20iLCJyaCI6IjAuQVdBQU45dzA3MVdkeEVPWnJhTmZQSmI0OUY4dmROTk5QV1ZGcUFycjN2cXJqUWhnQU9nLiIsInJvbGVzIjpbIk9EU0wuYWRtaW4iXSwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIGFwaV91c2VyIiwic3ViIjoiZGhBOGRSOFExT21GU29JZWtaM29wLUZfWmZKOUxMc25pSTBjdUNkdV9pWSIsInRpZCI6ImVmMzRkYzM3LTlkNTUtNDNjNC05OWFkLWEzNWYzYzk2ZjhmNCIsInV0aSI6Im9md3BtQjAxUzA2dTZ0RmJBREF4QUEiLCJ2ZXIiOiIyLjAifQ.edVByR_vSeZmkIRWkNeQ0SfqDHBgCAhEfo_CMTCZzZq-mdQb3-RELnP94KY3iNdd-JuqWhFsk9oIr0pgGsthxK-Dyb1VBT79_0pbqZSpccCQYxyRmoz8_n_CHDTABeDzt04K9mcP5OJyALR0NeJ_cXzwpqtjrPz8ZBde7iCemKnkPLLNt7R0uwRGskvA5VS2BpAZtAxHbZqqjMiJjRAB6oUketpOMEFanObGviELeN97MQYmxsiq6SRNv78v286G726AMs7kkKYyBinj9UxhOsoD5AeeIb_9DNNfgYIxLziLyLj4mclDTGUh86N-4m1S8jI-BX91xy0O10Rlk_1w5w
+
+### null
+GET http://localhost:7071/api/object/v1/aggregations.movies?_limit=10&_skip=0&_aggregate=%5B%7B%22%24group%22%3A%7B%22_id%22%3Anull%2C%22count%22%3A%7B%22%24sum%22%3A1%7D%7D%7D%5D
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNWZkNzBiNzYtYzczYi00YWE0LWI4NzEtN2RkOTkwMjQ3NGRjL3YyLjAiLCJpYXQiOjE2NjA3MzU3MjksIm5iZiI6MTY2MDczNTcyOSwiZXhwIjoxNjYwNzQwMjc2LCJhaW8iOiJBVFFBeS84VEFBQUFnS0duSWllcDVmMDRGNnFYb1hCdUVxbTg5eWZkbWtJU3pQSDdZNWFOTk0waVhKNTE0Z2dDRTV6ZTlwcTRMc3BVIiwiYXpwIjoiZDM3NDJmNWYtM2Q0ZC00NTY1LWE4MGEtZWJkZWZhYWI4ZDA4IiwiYXpwYWNyIjoiMCIsIm5hbWUiOiJEZW1vIFVzZXIiLCJvaWQiOiI1NTQ2MzgxZi00M2NjLTRmYjAtYThmNC0yMThlZjk1YmEzODMiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJkZW1vQG9kc2wub25saW5lIiwicmgiOiIwLkFTOEFkZ3ZYWHp2SHBFcTRjWDNaa0NSMDNGOHZkTk5OUFdWRnFBcnIzdnFyalFndkFJQS4iLCJyb2xlcyI6WyJPRFNMLmRldmVsb3BlciIsIk9EU0wub2JqZWN0IiwiT0RTTC5jYWxlbmRhciIsIk9EU0wuc3Vic2NyaXB0aW9uIiwiT0RTTC5hbmFseXN0Il0sInNjcCI6ImFwaV91c2VyIiwic3ViIjoidlpPZmhNWXNhMjNKYmlvRWJSZEhNWlNjNE84MDNiX19PVlV6ZmdwcGkzQSIsInRpZCI6IjVmZDcwYjc2LWM3M2ItNGFhNC1iODcxLTdkZDk5MDI0NzRkYyIsInV0aSI6IlpfTnl0OS1QN0VDOS1HMzZTX2RLQUEiLCJ2ZXIiOiIyLjAifQ.gkn_HzqkjJ5QwL1_LPlmbv-17c3ECQEsBI1D4LYud55GLKvG7UpsrhkC4yh-iEJhGtBZAdvBTKLroL_4Mgv5qUIQ9jO2JpBhH3_pMkQ3ZJinUqsrQ2883lEFPieXiMPIFDmg6NuAG3Q7w81jLiEwxcNOGuhVKrYP24BkR-xIW-swYcHszHFOrGasFwZDaAVMX5ahjRokPqKmkshYSUfMp8qg_hhdqW5XLr8_qrCE25DLJIpei2tlvTFeM5xQMQJm_e5RBRpbWtVjbQSjbBe85AeyPW93kksFrX_GrxJf8t78wca5cHH-uLluzLbzsrtupyq4JAATCLURfLKgh3pAfw

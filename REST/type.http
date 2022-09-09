@@ -1,0 +1,134 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/type
+Authorization: Bearer {{token}}
+
+### List all public types
+GET {{url}}/type/v1/public
+Authorization: Bearer {{token}}
+
+### List all public type names
+GET {{url}}/type/v1/public?_distinct=_name
+Authorization: Bearer {{token}}
+
+### List all private types
+GET {{url}}/type/v1/private
+Authorization: Bearer {{token}}
+
+### List all private type names
+GET {{url}}/type/v1/private?_distinct=_name
+Authorization: Bearer {{token}}
+
+### List all custom types
+GET {{url}}/type/v1/m101:sample_training.companies
+Authorization: Bearer {{token}}
+
+### Get a public type
+GET {{url}}/type/v1/public/%23MarketData
+Authorization: Bearer {{token}}
+
+### Get a private type
+GET {{url}}/type/v1/private/Switch
+Authorization: Bearer {{token}}
+
+### Update a private type
+POST {{url}}/type/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "Test",
+  "_type": "Type",
+  "_name": "Test",
+  "_versioned": false,
+  "name": {
+    "name": "name",
+    "type": "String",
+    "_ptype": "Property"
+  }
+}
+
+### Update a private object
+POST {{url}}/object/v1?_reason=Test
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TestType",
+  "_type": "Test",
+  "name": "TEST",
+  "value": 1234.5
+}
+
+### Change a private type
+POST {{url}}/type/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "Test",
+  "_type": "Type",
+  "_name": "Test",
+  "_versioned": true,
+  "name": {
+    "name": "name",
+    "type": "String",
+    "_ptype": "Property"
+  },"type": {
+    "name": "type",
+    "type": "String",
+    "_ptype": "Property"
+  }
+}
+
+### Get a list of versions of private type
+GET {{url}}/type/v1/private/Test/*
+Authorization: Bearer {{token}}
+
+### Get a version of type
+GET {{url}}/type/v1/private/Test/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a type
+PUT {{url}}/type/v1/private/Test/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of a type
+GET {{url}}/type/v1/private/Test/PROD
+Authorization: Bearer {{token}}
+
+### Test 404 error
+GET {{url}}/type/v1/private/test1
+Authorization: Bearer {{token}}
+
+### Test 400 error - missing _id
+POST {{url}}/type/v1
+Authorization: Bearer {{token}}
+
+{
+  "_type": "Type",
+  "_name": "Test",
+  "_versioned": true
+}
+
+### Delete a version of a type
+DELETE {{url}}/type/v1/private/Test
+Authorization: Bearer {{token}}
+
+### Fully delete a type
+DELETE {{url}}/type/v1/private/Test/*
+Authorization: Bearer {{token}}
+
+### issue
+{{url}}/type/v1/m101%3asample_training.companies?_project=%7b%22_script%22%3afalse%2c%22_tag%22%3afalse%7d
+Authorization: Bearer {{token}}

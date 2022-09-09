@@ -1,0 +1,33 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Calendar Info
+http://localhost:7072/api/calendar/v1
+Authorization: Bearer {{token}}
+
+### Calendar List
+http://localhost:7072/api/calendar/v1/public
+Authorization: Bearer {{token}}
+
+### Get Calendar
+http://localhost:7072/api/calendar/v1/public/%23HENG
+Authorization: Bearer {{token}}
+
+### Get Holidays
+http://localhost:7072/api/calendar/v1/public/%23HENG/holidays?year=2021&year=2022
+Authorization: Bearer {{token}}
+
+### Hols
+GET https://odsl-runner-dev.azurewebsites.net/api/calendar/v1/private/ENG/holidays?year=2022
+Authorization: Bearer {{token}}

@@ -1,0 +1,47 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/object
+Authorization: Bearer {{token}}
+
+### Get a list of private objects
+GET {{url}}/object/v1/private
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a private object
+GET {{url}}/object/v1/private/ECB_FX.EURGBP
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a list of private objects using distinct
+GET {{url}}/object/v1/private?_distinct=currency
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a list of private objects using a filter
+GET {{url}}/object/v1/private?_filter=%7B%22tags%22%3A%22FX%22%7D
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a list of private data
+GET {{url}}/data/v1/private
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a private data item
+GET {{url}}/data/v1/private/ECB_FX.EURGBP:SPOT
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54

@@ -1,0 +1,60 @@
+# @url=http://localhost:7071/api
+@url=https://odsl-runner-test.azurewebsites.net/api
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### New dev connection
+POST https://dev-odsl-runner.azurewebsites.net/api/odsl
+Authorization: Bearer {{token}}
+
+names = ["Colin", "Ram"]
+for name in names
+    name.value = "Hello " + name.value
+next
+return names
+
+### Run simple script
+POST {{url}}/odsl
+Authorization: Bearer {{token}}
+
+HUSA = HolidayCalendar()
+HUSA.addRule("Every Saturday")
+HUSA.addRule("Every Sunday")
+HUSA.addRule("4th of July named 'Independence Day' on Saturday shift -1 days and on Sunday shift 1 day")
+assertFalse(HUSA.includes(Date("2021-07-05")))
+
+names = ["Colin", "Ram"]
+for name in names
+    name.value = "Hello " + name.value
+next
+return names
+
+### Run script using services
+POST {{url}}/odsl
+Authorization: Bearer {{token}}
+
+cals = find ${calendar:public}
+return cals
+
+### Run process script
+POST {{url}}/odsl
+Authorization: Bearer {{token}}
+
+process = ${process:"ECB_FX"}
+return process.run()
+
+### Run supplied script name
+GET {{url}}/odsl?name=dates.odsl
+Authorization: Bearer {{token}}
+

@@ -1,0 +1,108 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/extractor
+Authorization: Bearer {{token}}
+
+### List all public extractors
+GET {{url}}/extractor/v1/public
+Authorization: Bearer {{token}}
+
+### List all public extractor names
+GET {{url}}/extractor/v1/public?_distinct=_id
+Authorization: Bearer {{token}}
+
+### List all private extractors
+GET {{url}}/extractor/v1/private
+Authorization: Bearer {{token}}
+
+### List all private extractor names
+GET {{url}}/extractor/v1/private?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a private extractor
+GET {{url}}/extractor/v1/private/test
+Authorization: Bearer {{token}}
+
+### Update a private extractor
+POST {{url}}/extractor/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id" : "test",
+    "_type" : "VarExtractor",
+    "script" : "I1JTQV9GWF9FWFRSID0gZXh0cmFjdCB1cmwgaW50byBvYmplY3QgYXMgaHRtbA0KICAgICAgICBwYXJhbSAicnYxJGN0bDA0JGN0bDAzJHR4dFZhbHVlIiB3aXRoIHVybC5lbmRkYXRlDQogICAgICAgIHBhcmFtICJydjEkY3RsMDQkY3RsMDUkdHh0VmFsdWUiIHdpdGggdXJsLnN0YXJ0ZGF0ZQ0KICAgICAgICBwYXJhbSAiU2NyaXB0TWFuYWdlcjEiIHdpdGggICJTY3JpcHRNYW5hZ2VyMXxydjEkY3RsMTAkUmVzZXJ2ZWRfQXN5bmNMb2FkVGFyZ2V0Ig0KICAgICAgICBwYXJhbSAicnYxJGN0bDAzJGN0bDAwIiB3aXRoICIiDQogICAgICAgIHBhcmFtICJydjEkY3RsMDMkY3RsMDEiIHdpdGggIiINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwxMSIgd2l0aCAibHRyIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDEyIiB3aXRoICJxdWlya3MiDQogICAgICAgIHBhcmFtICJydjEkQXN5bmNXYWl0JEhpZGRlbkNhbmNlbEZpZWxkIiB3aXRoICJGYWxzZSINCiAgICAgICAgcGFyYW0gInJ2MSRUb2dnbGVQYXJhbSRzdG9yZSIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJFRvZ2dsZVBhcmFtJGNvbGxhcHNlIiB3aXRoICJmYWxzZSINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwwNiRjdGwwMCRDdXJyZW50UGFnZSIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDA5JENsaWVudENsaWNrZWRJZCIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDA4JGNvbGxhcHNlIiB3aXRoICJmYWxzZSINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwxMCRTY3JvbGxQb3NpdGlvbiIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDEwJFJlcG9ydENvbnRyb2wkY3RsMDIiIHdpdGggIiINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwxMCRSZXBvcnRDb250cm9sJGN0bDAzIiB3aXRoICIiDQogICAgICAgIHBhcmFtICJydjEkY3RsMTAkVmlzaWJpbGl0eVN0YXRlJGN0bDAwIiB3aXRoICJOb25lIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDEwJFJlcG9ydENvbnRyb2wkY3RsMDQiIHdpdGggIjEwMCINCiAgICAgICAgcGFyYW0gIl9fRVZFTlRUQVJHRVQiIHdpdGggInJ2MSRjdGwxMCRSZXNlcnZlZF9Bc3luY0xvYWRUYXJnZXQiDQogICAgICAgIHBhcmFtICJfX0VWRU5UQVJHVU1FTlQiIHdpdGggaHRtbC5ib2R5LmZvcm0uZGl2WzBdLmlucHV0WzFdLnZhbHVlDQogICAgICAgIHBhcmFtICJfX1ZJRVdTVEFURSIgd2l0aCBodG1sLmJvZHkuZm9ybS5kaXZbMF0uaW5wdXRbMl0udmFsdWUNCiAgICAgICAgcGFyYW0gIl9fVklFV1NUQVRFR0VORVJBVE9SIiB3aXRoIGh0bWwuYm9keS5mb3JtLmRpdlsxXS5pbnB1dFswXS52YWx1ZQ0KICAgICAgICBwYXJhbSAiX19FVkVOVFZBTElEQVRJT04iIHdpdGggaHRtbC5ib2R5LmZvcm0uZGl2WzFdLmlucHV0WzFdLnZhbHVlDQogICAgICAgIHBhcmFtICJfX0FTWU5DUE9TVCIgd2l0aCAgInRydWUiDQogICAgICAgIHNlbGVjdCAidGFibGU6bnRoLWNoaWxkKDEpID4gdHIgPiB0ZCA+IHRhYmxlID4gdHIgPiB0ZCA+IHRhYmxlID4gdHIgPiB0ZCA+IHRhYmxlID4gdHI6bnRoLWNoaWxkKDYpID4gdGQ6bnRoLWNoaWxkKDMpID4gdGFibGUiDQogICAgZW5kDQo=",
+    "extractor" : {
+        "id" : "html",
+        "output" : "TEST",
+        "createIds" : [],
+        "clearProperties" : []
+    }
+}
+
+
+### Change the private extractor
+POST {{url}}/extractor/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id" : "test",
+    "_type" : "VarExtractor",
+    "script" : "I1JTQV9GWF9FWFRSID0gZXh0cmFjdCB1cmwgaW50byBvYmplY3QgYXMgaHRtbA0KICAgICAgICBwYXJhbSAicnYxJGN0bDA0JGN0bDAzJHR4dFZhbHVlIiB3aXRoIHVybC5lbmRkYXRlDQogICAgICAgIHBhcmFtICJydjEkY3RsMDQkY3RsMDUkdHh0VmFsdWUiIHdpdGggdXJsLnN0YXJ0ZGF0ZQ0KICAgICAgICBwYXJhbSAiU2NyaXB0TWFuYWdlcjEiIHdpdGggICJTY3JpcHRNYW5hZ2VyMXxydjEkY3RsMTAkUmVzZXJ2ZWRfQXN5bmNMb2FkVGFyZ2V0Ig0KICAgICAgICBwYXJhbSAicnYxJGN0bDAzJGN0bDAwIiB3aXRoICIiDQogICAgICAgIHBhcmFtICJydjEkY3RsMDMkY3RsMDEiIHdpdGggIiINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwxMSIgd2l0aCAibHRyIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDEyIiB3aXRoICJxdWlya3MiDQogICAgICAgIHBhcmFtICJydjEkQXN5bmNXYWl0JEhpZGRlbkNhbmNlbEZpZWxkIiB3aXRoICJGYWxzZSINCiAgICAgICAgcGFyYW0gInJ2MSRUb2dnbGVQYXJhbSRzdG9yZSIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJFRvZ2dsZVBhcmFtJGNvbGxhcHNlIiB3aXRoICJmYWxzZSINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwwNiRjdGwwMCRDdXJyZW50UGFnZSIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDA5JENsaWVudENsaWNrZWRJZCIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDA4JGNvbGxhcHNlIiB3aXRoICJmYWxzZSINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwxMCRTY3JvbGxQb3NpdGlvbiIgd2l0aCAiIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDEwJFJlcG9ydENvbnRyb2wkY3RsMDIiIHdpdGggIiINCiAgICAgICAgcGFyYW0gInJ2MSRjdGwxMCRSZXBvcnRDb250cm9sJGN0bDAzIiB3aXRoICIiDQogICAgICAgIHBhcmFtICJydjEkY3RsMTAkVmlzaWJpbGl0eVN0YXRlJGN0bDAwIiB3aXRoICJOb25lIg0KICAgICAgICBwYXJhbSAicnYxJGN0bDEwJFJlcG9ydENvbnRyb2wkY3RsMDQiIHdpdGggIjEwMCINCiAgICAgICAgcGFyYW0gIl9fRVZFTlRUQVJHRVQiIHdpdGggInJ2MSRjdGwxMCRSZXNlcnZlZF9Bc3luY0xvYWRUYXJnZXQiDQogICAgICAgIHBhcmFtICJfX0VWRU5UQVJHVU1FTlQiIHdpdGggaHRtbC5ib2R5LmZvcm0uZGl2WzBdLmlucHV0WzFdLnZhbHVlDQogICAgICAgIHBhcmFtICJfX1ZJRVdTVEFURSIgd2l0aCBodG1sLmJvZHkuZm9ybS5kaXZbMF0uaW5wdXRbMl0udmFsdWUNCiAgICAgICAgcGFyYW0gIl9fVklFV1NUQVRFR0VORVJBVE9SIiB3aXRoIGh0bWwuYm9keS5mb3JtLmRpdlsxXS5pbnB1dFswXS52YWx1ZQ0KICAgICAgICBwYXJhbSAiX19FVkVOVFZBTElEQVRJT04iIHdpdGggaHRtbC5ib2R5LmZvcm0uZGl2WzFdLmlucHV0WzFdLnZhbHVlDQogICAgICAgIHBhcmFtICJfX0FTWU5DUE9TVCIgd2l0aCAgInRydWUiDQogICAgICAgIHNlbGVjdCAidGFibGU6bnRoLWNoaWxkKDEpID4gdHIgPiB0ZCA+IHRhYmxlID4gdHIgPiB0ZCA+IHRhYmxlID4gdHIgPiB0ZCA+IHRhYmxlID4gdHI6bnRoLWNoaWxkKDYpID4gdGQ6bnRoLWNoaWxkKDMpID4gdGFibGUiDQogICAgZW5kDQo=",
+    "extractor" : {
+        "id" : "html2",
+        "output" : "TEST",
+        "createIds" : [],
+        "clearProperties" : []
+    }
+}
+
+### Get a list of versions of private extractor
+GET {{url}}/extractor/v1/private/test/*
+Authorization: Bearer {{token}}
+
+### Get a version of private extractor
+GET {{url}}/extractor/v1/private/test/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a private extractor
+PUT {{url}}/extractor/v1/private/test/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of extractor
+GET {{url}}/extractor/v1/private/test/PROD
+Authorization: Bearer {{token}}
+
+### Test 404 error
+GET {{url}}/extractor/v1/private/test1
+Authorization: Bearer {{token}}
+
+### Test 400 error - missing _id
+POST {{url}}/extractor/v1
+Authorization: Bearer {{token}}
+
+{
+  "_type": "VarExtractor",
+  "category": "test",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K"
+}
+
+### Delete a version of extractor
+DELETE {{url}}/extractor/v1/private/test
+Authorization: Bearer {{token}}
+
+### Fully delete a extractor
+DELETE {{url}}/extractor/v1/private/test/*
+Authorization: Bearer {{token}}

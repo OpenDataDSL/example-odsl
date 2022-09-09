@@ -1,0 +1,43 @@
+@token={{auth.response.body.access_token}}
+
+@lurl=http://localhost:7072/api
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get a TS
+GET {{url}}/data/v1/all/%23CLALIT.AMF.AVGAUC.AWP:AVG
+Authorization: Bearer {{token}}
+
+### Get a virtual TS
+GET {{url}}/data/v1/private/CORN_TEST_TYPE:SCALER
+    ?expression=BASE*10
+    &_range=last(2)
+Authorization: Bearer {{token}}
+
+### Get a virtual TS - convert currency
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.AWP:AVG
+    ?expression=BASE
+    &currency=EUR
+Authorization: Bearer {{token}}
+
+### Get a virtual TS - timescaled
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.AWP:AVG
+    ?expression=BASE*OTHER
+    &OTHER=CORN_TEST_TYPE:SCALER
+Authorization: Bearer {{token}}
+
+### Get a virtual TS - timescaled
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.AWP:AVG
+    ?expression=OTHER*BASE
+    &OTHER=CORN_TEST_TYPE:SCALER
+Authorization: Bearer {{token}}

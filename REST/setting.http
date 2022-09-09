@@ -1,0 +1,49 @@
+@url = http://localhost:7071/api
+#@url = https://func-odsl-dev-js.azurewebsites.net/api
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2MTEwNDc1NzYsIm5iZiI6MTYxMTA0NzU3NiwiZXhwIjoxNjExMDUxNDc2LCJhaW8iOiJBVlFBcS84U0FBQUFtK3hnbSt1aE1naVJUUUc4ZzJJSjlZSGxOM2tRT1BwUTg0NjUxVDlNZE1UK1Y4YlZPMGZ0Yjg4SDA0WEtFdXVVcWk2WjUrbDZUREVIYXdDZXMrRmllbnNOUHJKNHAyQW1kUTVGTGtSTHh1ST0iLCJhenAiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJhenBhY3IiOiIwIiwibmFtZSI6IkNvbGluIEhhcnRsZXkiLCJvaWQiOiIyZTVkY2E1Ny1hZDZjLTRlYmMtODBjMC02ZDE5MGQzMmU3YTMiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJjb2xpbi5oYXJ0bGV5QG9wZW5kYXRhZHNsLmNvbSIsInJoIjoiMC5BQUFBTjl3MDcxV2R4RU9acmFOZlBKYjQ5Rjh2ZE5OTlBXVkZxQXJyM3ZxcmpRaGdBT2cuIiwicm9sZXMiOlsiT0RTTC5hZG1pbiJdLCJzY3AiOiJhcGlfdXNlciIsInN1YiI6ImRoQThkUjhRMU9tRlNvSWVrWjNvcC1GX1pmSjlMTHNuaUkwY3VDZHVfaVkiLCJ0aWQiOiJlZjM0ZGMzNy05ZDU1LTQzYzQtOTlhZC1hMzVmM2M5NmY4ZjQiLCJ1dGkiOiJYQWEzZkt6VVAwNnZyQjlodUhSN0FBIiwidmVyIjoiMi4wIn0.UmYb6-cOEImB-tjqhFOsZdfQ7Xzb45Fy7VmSt0ZIqulNkv39JWpTUyIl0HdABvLo-9JY8HK9JOpuxHNDbbOxCZvl2nOGQApOtS0_JYxIrWN3CzcjKuYjpsAsT2Nco6w_1uvy4k1dMgOi8bVy5ppLte3oMrdxthrgsB3NHMLfJQV4PEyMER8y-JTs2ODFGkU1EVtn64ynwxmIOwKwTYe2Hr26rvVfhmFwmYlAzN0h7ss3IWPqJowSVWAhyrqrwuU-zwSRaMrdQjJRNlP5ZJSL2S18LHYB7hKLRyrARuNmx5RK6VfdGx4T4bfJlx1JWI2Kpa8-K_Xmy3Y7usFWpWMQ0A
+
+### Get build info
+GET {{url}}/setting
+
+### Get all settings
+GET {{url}}/setting/v1
+Authorization: Bearer {{token}}
+
+### Get a setting
+GET {{url}}/setting/v1/vscode
+Authorization: Bearer {{token}}
+
+### Update a setting
+POST {{url}}/setting/v1
+Authorization: Bearer {{token}}
+
+{
+  "type": "vscode",
+  "settings": {"name": "test"}
+}
+
+### Change a setting
+POST {{url}}/setting/v1
+Authorization: Bearer {{token}}
+
+{
+  "type": "vscode",
+  "settings": {"name": "test2"}
+}
+
+### Test 404 error
+GET {{url}}/setting/v1/test1
+Authorization: Bearer {{token}}
+
+### Test 400 error - missing type
+POST {{url}}/setting/v1
+Authorization: Bearer {{token}}
+
+{
+  "settings": {"name": "test2"}
+}
+
+### Delete a setting
+DELETE {{url}}/setting/v1/vscode
+Authorization: Bearer {{token}}
+

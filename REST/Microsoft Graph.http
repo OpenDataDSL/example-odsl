@@ -1,0 +1,23 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=https://graph.microsoft.com/.default
+
+### Get my groups
+GET https://graph.microsoft.com/v1.0/users/colin.hartley@opendatadsl.com/memberOf?$select=displayName
+Authorization: {{token}}
+
+### Get demo users groups
+GET https://graph.microsoft.com/v1.0/users/demo@walkfares.onmicrosoft.com/memberOf?$select=displayName
+Authorization: {{token}}
+
+

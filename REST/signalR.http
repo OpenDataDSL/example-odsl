@@ -1,0 +1,51 @@
+@token={{auth.response.body.access_token}}
+
+@srtoken={{srauth.response.body.accessToken}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Negotiate
+# @name srauth
+POST {{url}}/negotiate
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{}
+
+### Send Message
+POST https://dev-odsl.service.signalr.net/api/v1/hubs/process
+Content-Type: application/json
+Authorization: {{srtoken}}
+
+{
+    "target": "executionMessage",
+    "arguments": [
+        "hello"
+    ]
+}
+
+### Send Message
+POST {{url}}/rt/send/rs/TEST
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Hello World"
+}
+
+### Send DUD Message
+POST {{url}}/rt/rs/send/TEST
+Accept: application/json
+Authorization: Bearer {{token}}
+
+"Hello World"

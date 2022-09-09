@@ -1,0 +1,185 @@
+@token={{auth.response.body.access_token}}
+##@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNWZkNzBiNzYtYzczYi00YWE0LWI4NzEtN2RkOTkwMjQ3NGRjL3YyLjAiLCJpYXQiOjE2MzQ1Njg2MTcsIm5iZiI6MTYzNDU2ODYxNywiZXhwIjoxNjM0NTcyNTE3LCJhaW8iOiJFMlpnWVBqZitPS2dmYTFlWnVwRmY1OTA1Wnl3dHFkclQwM00rMnpZeE5FcEdIMi90UTBBIiwiYXpwIjoiMWQ5Y2NiMjktMGE4My00Y2YxLWI3MWQtN2Y4M2U1NTVkMWZiIiwiYXpwYWNyIjoiMSIsIm9pZCI6IjQzYjUwZTdkLTFjMjEtNDYxYi04OTM5LTU0NDFkNjE3MGU0OCIsInJoIjoiMC5BUzhBZGd2WFh6dkhwRXE0Y1gzWmtDUjAzQ25MbkIyREN2Rk10eDFfZy1WVjBmc3ZBQUEuIiwic3ViIjoiNDNiNTBlN2QtMWMyMS00NjFiLTg5MzktNTQ0MWQ2MTcwZTQ4IiwidGlkIjoiNWZkNzBiNzYtYzczYi00YWE0LWI4NzEtN2RkOTkwMjQ3NGRjIiwidXRpIjoibnFHbUpkaHkya2V0RG00akVEQl9BQSIsInZlciI6IjIuMCJ9.UlTod4gAxdUghvkqAoxKHT5inqDsfkdAV-ygxvJn1mfnaAxhRrru9HoDHY06lM8xpM1xGImgj0psK8c_xgTQvr_aRSeFC9WrTZuYYWFf6CQQoRo9_lpO1PScLKsuFReVOCFgDYl_ND3YueVoZgBeILuxwLrHY3ADszUNWTqraNxO8OC_fi6Nhy2m5axDRcMeaUTqydSndb-CMjMO3bZnCbHDkuyQTMyjh_0xH7dNFaNHxxzAcc1i0Xj20sAN8Z3v8i5WIDP_7dA4D85HDWOGd3-Jb5kreLuhqxPSllGKrf9h0xsKTew0Sukw8xztZtrwmshvh9DPCApB0GG4ICyjgQ
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/action
+Authorization: Bearer {{token}}
+
+### List all public actions
+GET {{url}}/action/v1/public
+Authorization: Bearer {{token}}
+
+### List some public actions
+GET {{url}}/action/v1/public
+  ?_limit=2
+  &_skip=1
+Authorization: Bearer {{token}}
+
+### List all public action names
+GET {{url}}/action/v1/public?_distinct=_id
+Authorization: Bearer {{token}}
+
+### List all private actions
+GET {{url}}/action/v1/private
+Authorization: Bearer {{token}}
+
+### List all private action names
+GET {{url}}/action/v1/private?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a public action
+GET {{url}}/action/v1/public/%23eval_expr
+Authorization: Bearer {{token}}
+
+### Get a public action with projection
+GET {{url}}/action/v1/public/%23eval_expr
+  ?_project={"category":1}
+Authorization: Bearer {{token}}
+
+### Get a public action with projection
+GET {{url}}/action/v1/public/%23eval_expr
+  ?_project=category
+  &_project=inputs
+Authorization: Bearer {{token}}
+
+### Update a public action
+POST {{url}}/action/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "#TEST",
+  "_type": "VarAction",
+  "category": "general",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+### Change a public action
+POST {{url}}/action/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "#TEST",
+  "_type": "VarAction",
+  "category": "test",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+### Get a public action
+GET {{url}}/action/v1/public/%23TEST
+Authorization: Bearer {{token}}
+
+### Get a list of versions of public action
+GET {{url}}/action/v1/public/%23TEST/*
+Authorization: Bearer {{token}}
+
+### Get a version of public action
+GET {{url}}/action/v1/public/%23TEST/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a public action
+PUT {{url}}/action/v1/public/%23TEST/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of public action
+GET {{url}}/action/v1/public/%23TEST/PROD
+Authorization: Bearer {{token}}
+
+### Test 404 error
+GET {{url}}/action/v1/public/%23test1
+Authorization: Bearer {{token}}
+
+### Test 400 error - missing _id
+POST {{url}}/action/v1
+Authorization: Bearer {{token}}
+
+{
+  "_type": "VarAction",
+  "category": "test",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K"
+}
+
+### Delete a version of public action
+DELETE {{url}}/action/v1/public/%23TEST
+Authorization: Bearer {{token}}
+
+### Fully delete a public action
+DELETE {{url}}/action/v1/public/%23TEST/*
+Authorization: Bearer {{token}}
+
+### Update a private action
+POST {{url}}/action/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "VarAction",
+  "category": "general",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+### Change a private action
+POST {{url}}/action/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "VarAction",
+  "category": "test",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+### Get a private action
+GET {{url}}/action/v1/private/TEST
+Authorization: Bearer {{token}}
+
+### Get a list of versions of private action
+GET {{url}}/action/v1/private/TEST/*
+Authorization: Bearer {{token}}
+
+### Get a version of private action
+GET {{url}}/action/v1/private/TEST/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a private action
+PUT {{url}}/action/v1/private/TEST/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of private action
+GET {{url}}/action/v1/private/TEST/PROD
+Authorization: Bearer {{token}}
+
+### UnTag a version of a private action
+DELETE {{url}}/action/v1/private/TEST/PROD
+Authorization: Bearer {{token}}
+
+### Delete a version of private action
+DELETE {{url}}/action/v1/private/TEST
+Authorization: Bearer {{token}}
+
+### Fully delete a private action
+DELETE {{url}}/action/v1/private/TEST/*
+Authorization: Bearer {{token}}
+

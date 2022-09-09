@@ -1,0 +1,63 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/metric
+Authorization: Bearer {{token}}
+
+### List metrics
+GET {{url}}/metric/v1
+Authorization: Bearer {{token}}
+
+### List metrics from a date and sorted by date
+GET {{url}}/metric/v1
+    ?timestamp=gte(2021-10-01)
+    &_sort={"timestamp":1}
+Authorization: Bearer {{token}}
+
+### List process metrics from a date as a timeseries
+GET {{url}}/metric/v1
+    ?timestamp=gte(2021-10-01)
+    &type=process
+    &_project=timestamp,value
+    &_sort={"timestamp":1}
+Authorization: Bearer {{token}}
+
+### List process metrics from a date as a timeseries aggregated daily
+GET {{url}}/metric/v1
+    ?_aggregate=[{"$match":{"$and":[{"timestamp":{"$gte":"2022-05-23T00:00:00.001Z"}},{"timestamp":{"$lte":"2022-05-30T15:36:10.001Z"}}]}},{"$project":{"type":1,"value":1,"date":{"$dateToString":{"format":"%Y-%m-%d","date":"$timestamp"}}}},{"$group":{"_id":["$type","$date"],"value":{"$sum":"$value"},"count":{"$sum":1}}},{"$sort":{"_id":1}}]
+Authorization: Bearer {{token}}
+
+### List metrics distinct by type
+GET {{url}}/metric/v1?_distinct=type
+Authorization: Bearer {{token}}
+
+### Aggregate metrics
+GET {{url}}/metric/v1
+    ?_aggregate=[{"$match":{"timestamp":{"$gte":"2021-10-01T00:00:00"}}},{"$group":{"_id":"$type","value":{"$sum":"$value"},"count":{"$sum":1}}}]
+Authorization: Bearer {{token}}
+
+### Aggregate metrics
+GET {{url}}/metric/v1
+    ?_aggregate=[{"$match":{"$and":[{"timestamp":{"$gte":"2021-07-01T00:00:00"}},{"timestamp":{"$lt":"2021-08-01T00:00:00"}}]}},{"$group":{"_id":{"type":"$type","environment":"$environment"},"value":{"$sum":"$value"},"count":{"$sum":1}}},{"$sort":{"_id.environment":1}}]
+Authorization: Bearer {{token}}
+
+### Filter Subscription metrics
+GET {{url}}/metric/v1
+    ?type=storage
+Authorization: Bearer {{token}}
+
+### Get a specific metric
+GET {{url}}/metric/v1/001f87a5-2927-4efc-96cd-e2ab2f20b088
+Authorization: Bearer {{token}}

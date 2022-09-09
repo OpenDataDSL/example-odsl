@@ -1,0 +1,21 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/subscriptionitem
+Authorization: Bearer {{token}}
+
+### Issue
+{{url}}/object/v1/public?_aggregate=%5b%7b%22%24group%22%3a%7b%22_id%22%3a%22%24_type%22%2c%22count%22%3a%7b%22%24sum%22%3a1%7d%7d%7d%5d&_limit=-1
+Authorization: Bearer {{token}}

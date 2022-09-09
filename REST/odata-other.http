@@ -1,0 +1,11 @@
+### Sample 1
+GET https://rocket1.vectorsoft.de/api/DataStore/52e328db-603d
+
+### Sample 1 meta
+GET https://rocket1.vectorsoft.de/api/DataStore/52e328db-603d/$metadata
+
+### T1
+GET https://services.odata.org/TripPinRESTierService/People('keithpinckney')
+
+### T1 expand
+GET https://services.odata.org/TripPinRESTierService/People('keithpinckney')?$expand=Trips

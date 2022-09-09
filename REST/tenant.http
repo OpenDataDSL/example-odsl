@@ -1,0 +1,74 @@
+@token={{auth.response.body.access_token}}
+@odsltoken = eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2Mjc5Nzc1NzQsIm5iZiI6MTYyNzk3NzU3NCwiZXhwIjoxNjI3OTgxNDc0LCJhaW8iOiJBVlFBcS84VEFBQUFLbytiWjk0cUUzdVpacDRmd21pRklGdVJtT3VFYW44cFZFK3pnSDh1eC9aUHI0ajUxbFFyeUtFNTh3UllRejFXelZwNUkrRFd5T3ZGemlTeEY1V3dDZjB0ejFLY2RhK1U0Mlo0QnhURzk1dz0iLCJhenAiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJhenBhY3IiOiIwIiwiZW1haWwiOiJjb2xpbi5oYXJ0bGV5QG9wZW5kYXRhZHNsLmNvbSIsIm5hbWUiOiJDb2xpbiBIYXJ0bGV5Iiwib2lkIjoiMmU1ZGNhNTctYWQ2Yy00ZWJjLTgwYzAtNmQxOTBkMzJlN2EzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY29saW4uaGFydGxleUBvcGVuZGF0YWRzbC5jb20iLCJyaCI6IjAuQVdBQU45dzA3MVdkeEVPWnJhTmZQSmI0OUY4dmROTk5QV1ZGcUFycjN2cXJqUWhnQU9nLiIsInJvbGVzIjpbIk9EU0wuYWRtaW4iXSwic2NwIjoiYXBpX3VzZXIiLCJzdWIiOiJkaEE4ZFI4UTFPbUZTb0lla1ozb3AtRl9aZko5TExzbmlJMGN1Q2R1X2lZIiwidGlkIjoiZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0IiwidXRpIjoiV0tLVXQ4RERoVUtubjVLUlZObENBUSIsInZlciI6IjIuMCJ9.bW4yO1f4nyHKhG3I-XkaqCD4n7Dcn-RgWpaxjaWpaffqLU6m5i-G_o__qoO8CSX9YhfdO6LueALL--lQbSqNY3a8GsdyCG0nbsrv7OZGXijcIQtCRcOd8mCzWl1SsZ7GN1jbxei3gL1OluWj6Iy788dIGacmlts9sqI14J4xXqDeeddGIWl48V_RTKjR8AG5N00ETX8cVnVM9vMPdPYRz027uuE2EGsJvt7lHPycimkPPwaL-Bg1r_hld2v_g3g-3e3TiIgscbmA-Mp78ZwG7T4s3FM4xJRoL4Yci-Lest3SzXePsmJsYXStosF9P_qLri4bbQ_Swv7sVxdkch0JEA
+
+#@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2NDQ4NDc5NzIsIm5iZiI6MTY0NDg0Nzk3MiwiZXhwIjoxNjQ0ODUzMzMxLCJhaW8iOiJBVlFBcS84VEFBQUFjS2Y3aVpzeFAvZ1R1aWxLeVlSNUloWVBxNlZYSm1seVpiSDR5UmluR2d2S0FDOWRzR2JTN1Zsc0JMaGVBUDg0WFZSUjlWSEdqV3lQVDA4b0ExZFFoeFZSd3JFdE15L0VCa1ZkTkZxVFpxYz0iLCJhenAiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJhenBhY3IiOiIwIiwiZW1haWwiOiJjb2xpbi5oYXJ0bGV5QG9wZW5kYXRhZHNsLmNvbSIsIm5hbWUiOiJDb2xpbiBIYXJ0bGV5Iiwib2lkIjoiMmU1ZGNhNTctYWQ2Yy00ZWJjLTgwYzAtNmQxOTBkMzJlN2EzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY29saW4uaGFydGxleUBvcGVuZGF0YWRzbC5jb20iLCJyaCI6IjAuQVdBQU45dzA3MVdkeEVPWnJhTmZQSmI0OUY4dmROTk5QV1ZGcUFycjN2cXJqUWhnQU9nLiIsInJvbGVzIjpbIk9EU0wuYWRtaW4iXSwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIGFwaV91c2VyIiwic3ViIjoiZGhBOGRSOFExT21GU29JZWtaM29wLUZfWmZKOUxMc25pSTBjdUNkdV9pWSIsInRpZCI6ImVmMzRkYzM3LTlkNTUtNDNjNC05OWFkLWEzNWYzYzk2ZjhmNCIsInV0aSI6IkZCSVVyRGJka2ttNVQ1eGk4NWFpQUEiLCJ2ZXIiOiIyLjAifQ.SxLrN2ka7aGuJThpd5MaJlsw2LgPEp3RpQBRmmtK9zhlTrcTVDO2U-kWvP5NPxmenNiVrGPgZq-tFwRtZoaLaQBtpd7GbjV_x_-WRnuioPlfJLskXt9ANYssqumDTQ4pU5P603RpA-ItLlmpYPbunL6YywmTn5QODXFvw6U10AbLLhDbpoHmC9FlRbWXAdryK9kdvMpIJDI7Q6iEOBuAK13OJ_qnUWhLVdBY6cSsi_G_4KGCY8CxBnl6rcAnfuaKOU3sM7UPz99sF7eqtpd55ztVFGKqdvfYnb3NJ0LjqSt_b_nqXUuaLA_osJj94i_eegpp12P9FQvdAaIVX_SVGw
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/tenant
+Authorization: Bearer {{token}}
+
+### View our tenant
+GET {{url}}/tenant/v1
+Authorization: Bearer {{token}}
+
+### Get index
+POST {{url}}/negotiate
+Authorization: Bearer {{token}}
+
+### View a client tenant
+GET {{url}}/tenant/v1
+Authorization: Bearer {{token}}
+x-odsl-auth: {{odsltoken}}
+
+### Update our tenant
+POST {{url}}/tenant/v1
+Authorization: Bearer {{token}}
+
+{
+  "name": "Walkfares Ltd"
+}
+
+### Update company info template
+POST {{url}}/tenant/v1
+Authorization: Bearer {{token}}
+
+{
+  "properties": {
+    "name": "",
+    "address1": "",
+    "address2": "",
+    "city": "",
+    "postcode": "",
+    "email": "",
+    "phone": "",
+    "accountContact": ""
+  }
+}
+
+### Update company
+POST {{url}}/tenant/v1
+Authorization: Bearer {{token}}
+
+{
+  "properties": {
+    "name": "OpenDataDSL",
+    "address1": "aa1",
+    "address2": "aa2",
+    "city": "city",
+    "country": "country",
+    "postcode": "5",
+    "image": null
+  }
+}

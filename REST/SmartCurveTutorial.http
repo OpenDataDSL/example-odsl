@@ -1,0 +1,315 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Create a basic Smart Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST",
+    "_type":"#Object",
+    "category": "TUTORIAL",
+    "CLOSE":
+    {
+        "_id":"CLOSE",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'#MATBAROFEX.ROS.CORN.FUT:CLOSE'}",
+        "expression":"interpolate(BASE, 'BACKWARD')"                
+    }    
+}
+
+### Create a typed Smart Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "category": "TUTORIAL",
+    "CLOSE":
+    {
+        "_id":"CLOSE",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'#MATBAROFEX.ROS.CORN.FUT:CLOSE'}",
+        "expression":"interpolate(BASE, 'BACKWARD')"                
+    }    
+}
+
+### Add a PREMIUM Smart Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "category": "TUTORIAL",
+    "CLOSE":
+    {
+        "_id":"CLOSE",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'#MATBAROFEX.ROS.CORN.FUT:CLOSE'}",
+        "expression":"interpolate(BASE, 'BACKWARD')"                
+    },
+    "PREMIUM":
+    {
+        "_id":"PREMIUM",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'CORN_TEST_TYPE:CLOSE'}",
+        "expression":"BASE*1.15"                
+    }
+}
+
+### Get a list of ondates for a curve formula like the portal
+GET {{url}}/data/v1/private/CORN_TEST_TYPE:PREMIUM?_project={"data":false,"properties":false}
+Authorization: Bearer {{token}}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all?_id=CORN_TEST_TYPE%3aPREMIUM%3a2022-01-12
+Authorization: Bearer {{token}}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all/CORN_TEST_TYPE%3aPREMIUM%3a2022-01-12
+Authorization: Bearer {{token}}
+
+### Get a base curve directly
+GET {{url}}/data/v1/all/%23MATBAROFEX.ROS.CORN.FUT:CLOSE%3a2022-01-12
+Authorization: Bearer {{token}}
+
+### Add a MID Smart Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "MID":
+    {
+        "_id":"PREMIUM",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'#MATBAROFEX.ROS.CORN.FUT:MIN'}",
+        "expression":"BASE*1.15",
+        "properties": {
+            "MAX":"${data:'#MATBAROFEX.ROS.CORN.FUT:MAX'}"
+        }
+    }
+}
+
+### Add a Scaled Smart Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "SCALED":
+    {
+        "_id":"SCALED",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'CORN_TEST_TYPE:CLOSE'}",
+        "expression":"BASE*factor",
+        "properties": {
+            "factor":0.8
+        }
+    }
+}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all?_id=CORN_TEST_TYPE%3aTSSCALED%3a2022-01-12
+Authorization: Bearer {{token}}
+
+### Get the timeseries
+GET {{url}}/data/v1/all?_id=CORN_TEST_TYPE%3aSCALER
+Authorization: Bearer {{token}}
+
+### Add a TimeSeries Scaled Smart Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "TSSCALED":
+    {
+        "_id":"TSSCALED",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'CORN_TEST_TYPE:CLOSE'}",
+        "expression":"BASE*SCALER",
+        "properties": {
+            "SCALER":"${data:'CORN_TEST_TYPE:SCALER'}"
+        }
+    },
+    "SCALER":
+    {
+        "_id":"SCALER",
+        "_type":"VarTimeSeries",
+        "start":"2022-01-01",
+        "calendar":"MONTHLY",
+        "data":[
+            {"time":"2022-01-01", "value":0.82},
+            {"time":"2022-02-01", "value":0.85},
+            {"time":"2022-03-01", "value":0.86},
+            {"time":"2022-04-01", "value":0.88},
+            {"time":"2022-05-01", "value":0.9},
+            {"time":"2022-06-01", "value":0.91}
+        ]
+    }
+}
+
+### Converions
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "category": "TUTORIAL",
+    "EUR_MT":
+    {
+        "_id":"EUR_MT",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'CORN_TEST_TYPE:CLOSE'}",
+        "expression":"BASE",
+        "currency":"EUR",
+        "units":"MT"                
+    }    
+}
+
+### Unit Converions
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "category": "TUTORIAL",
+    "USD_BU":
+    {
+        "_id":"USD_BU",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'CORN_TEST_TYPE:CLOSE'}",
+        "expression":"BASE",
+        "currency":"USD",
+        "units":"BU",
+        "properties": {
+            "density":721
+        }                
+    }    
+}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all?_id=CORN_TEST_TYPE%3aSCALED%3a2022-01-12
+Authorization: Bearer {{token}}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all?_id=CORN_TEST_TYPE%3aUSD_BU%3a2022-01-12
+Authorization: Bearer {{token}}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all?_id=EEX.EL.DE.B.FUT%3aMID%3a2021-01-12
+Authorization: Bearer {{token}}
+
+### Get help
+GET http://localhost:7071/api/smart-curve/v1/help/SmartCurveCustomScript
+Authorization: Bearer {{token}}
+
+### Get a curve formula directly
+GET {{url}}/data/v1/all?_id=CURVEBASE%3aSM1%3a2022-02-26
+Authorization: Bearer {{token}}
+x-odsl-environment: QA
+
+### Update a base curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: QA
+
+{
+    "_id": "CURVEBASE",
+    "_type": "#Object",
+    "CURVE": {
+        "_id": "CURVE",
+        "_type": "VarCurve",
+        "ondate": {
+            "curveDate": "2022-02-27",
+            "expiryCalendar": "EOMBUSINESS"
+        },
+        "contracts": [
+            {
+                "tenor": "M01",
+                "value": 1.5,
+                 "ondate": {
+                    "curveDate": "2022-02-27",
+                    "expiryCalendar": "EOMBUSINESS"
+                },
+                "properties": {}
+            }
+        ]
+    }
+}
+
+### Get a curve formula
+GET {{url}}/data/v1/all?_id=EURONEXT.AG.FR.CORN_EMA.FUT:INTERPOLATED%3a2022-04-21
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/data/v1/all/DME.CR.ME.ODO.FUT%3aSETTLE%3a2022-05-06?expression=BASE*1.05&script=%23CurveScript
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/data/v1/private?_filter=%7b%22_type%22%3a%7b%22%24in%22%3a%5b%22VarCurveDates%22%2c%22VarSmartCurve%22%5d%7d%7d&_project=%7b%22data%22%3afalse%2c%22properties%22%3afalse%2c%22contracts%22%3afalse%2c%22ondate%22%3afalse%2c%22_tag%22%3afalse%7d&_sort=%7b%22_id%22%3a1%7d&_limit=100&_skip=0
+Authorization: Bearer {{token}}
+
+###
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+	"_id": "DME.CR.ME.ODO.FUT",
+	"_type": "#Oil",
+	"TEST": {
+		"_id": "TEST",
+		"_type": "VarSmartCurve",
+		"baseCurve": "${data:\"TEST:CLOSE\"}",
+		"expression": "BASE*1.1",
+		"script": "#CurveScript"
+	}
+}
+
+### Update a curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "TEST",
+    "_type": "#Object",
+    "CLOSE": {
+        "_id": "CLOSE",
+        "_type": "VarCurve",
+        "ondate": {
+            "curveDate": "2022-05-10",
+            "expiryCalendar": "#REOD"
+        },
+        "properties":{"timezone":"BST"},
+        "contracts": [
+            {
+                "tenor": "M01",
+                "value": 1.54,
+                 "ondate": {
+                    "curveDate": "2022-05-10",
+                    "expiryCalendar": "#REOD"
+                },
+                "properties": {}
+            }
+        ]
+    }
+}

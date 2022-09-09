@@ -1,0 +1,34 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/data
+Authorization: Bearer {{token}}
+
+### Get Curve Dates
+GET {{url}}/data/v1/public/%23DCE.AG.CN.A.NO1_SOYBEAN.FUT:OI
+Authorization: Bearer {{token}}
+
+### Get Curve
+GET {{url}}/data/v1/public/%23DCE.AG.CN.A.NO1_SOYBEAN.FUT:OI:2021-11-30
+Authorization: Bearer {{token}}
+
+### Get Curve TimeSeries
+GET {{url}}/data/v1/all
+    ?_id=%23DCE.AG.CN.A.NO1_SOYBEAN.FUT:OI:M01,%23DCE.AG.CN.A.NO1_SOYBEAN.FUT:OI:M02
+Authorization: Bearer {{token}}
+
+### List curve tenors
+GET {{url}}/data/v1/public/%23DCE.AG.CN.A.NO1_SOYBEAN.FUT:SETTLE?listTenors
+Authorization: Bearer {{token}}

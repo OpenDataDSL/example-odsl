@@ -1,0 +1,43 @@
+@token={{auth.response.body.access_token}}
+@odsltoken = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJlbnZpcm9ubWVudCI6InByb2R1Y3Rpb24iLCJyb2xlcyI6W10sImlzcyI6Ik9wZW5EYXRhRFNMIiwiZXhwIjoxNjExMzM0ODg1LCJpYXQiOjE2MTEzMzQ1ODUsInRpZCI6IjlmYmY2NDI0LWVhZmEtNGJkYy1iZDQwLTYwMDhjM2ZkYjkzNCJ9.8P1HS7pptBHZSGAVsuWS1e67XvIJt8bIzHGxKBZK6_8
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/user
+Authorization: Bearer {{token}}
+
+### List users
+GET {{url}}/user/v1
+Authorization: Bearer {{token}}
+
+### Get our user
+GET {{url}}/user/v1/me
+Authorization: Bearer {{token}}
+
+### Get another user
+GET {{url}}/user/v1/sunil.ramesh@opendatadsl.com
+Authorization: Bearer {{token}}
+
+### Update our user
+POST {{url}}/user/v1
+Authorization: Bearer {{token}}
+
+{
+  "properties": {
+    "firstname": "Colin",
+    "lastname": "Hartley",
+    "nickname": "Ziggy",
+    "newsletter": true
+  }
+}

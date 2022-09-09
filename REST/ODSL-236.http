@@ -1,0 +1,42 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Add a TimeSeries
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"ODSL_236",
+    "_type":"#Object",
+    "TEST":
+    {
+        "_id":"TEST",
+        "_type":"VarTimeSeries",
+        "start":"2022-01-01",
+        "calendar":"MONTHLY",
+        "data":[
+            {"time":"2022-01-01", "value":0.82},
+            {"time":"2022-02-01", "value":0.85},
+            {"time":"2022-03-01"},
+            {"time":"2022-04-01", "value":0.88},
+            {"time":"2022-05-01", "value":0.9},
+            {"time":"2022-06-01", "value":0.91}
+        ]
+    }
+}
+
+### Get a TimeSeries
+GET {{url}}/data/v1/private/ODSL_236:TEST
+Authorization: Bearer {{token}}
+

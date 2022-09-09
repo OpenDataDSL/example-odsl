@@ -1,0 +1,26 @@
+@token={{sendgrid_token}}
+
+### Get templates
+GET https://api.sendgrid.com/v3/templates
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get count of contacts
+GET https://api.sendgrid.com/v3/marketing/contacts/count
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Add/Update a contact
+PUT https://api.sendgrid.com/v3/marketing/contacts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "contacts": [
+    {
+      "email": "colin.hartley@opendatadsl.com",
+      "first_name": "Colin",
+      "last_name": "Hartley"
+    }
+  ]
+}

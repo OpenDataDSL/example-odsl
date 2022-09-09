@@ -1,0 +1,78 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process-exec
+Authorization: Bearer {{token}}
+
+### List all process executions
+GET {{url}}/process-exec/v1
+Authorization: Bearer {{token}}
+
+### List all process execution triggers
+GET {{url}}/process-exec/v1?_distinct=trigger
+Authorization: Bearer {{token}}
+
+### List all process executions for a process
+GET {{url}}/process-exec/v1?name=ECB_FX
+Authorization: Bearer {{token}}
+
+
+### Execute a process
+POST {{url}}/process-exec/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "CLALIT_DAIRY_AVG_PRICE"
+}
+
+
+### Docs
+GET {{url}}/process-exec/v1
+  ?status=failed
+  &start=range(2022-03-31,2022-04-02)
+Authorization: Bearer {{token}}
+
+### Portal
+GET {{url}}/process-exec/v1?_filter=%7b%22%24and%22%3a%5b%7b%22start%22%3a%7b%22%24gte%22%3a%222022-03-31T10%3a00%3a00.001Z%22%7d%7d%2c%7b%22start%22%3a%7b%22%24lte%22%3a%222022-04-01T10%3a08%3a41.001Z%22%7d%7d%5d%7d&_project=%7b%22phases%22%3afalse%2c%22data%22%3afalse%7d&_sort=%7b%22start%22%3a-1%7d&_limit=-1
+Authorization: Bearer {{token}}
+
+### Portal 2
+GET {{url}}/process-exec/v1
+  ?_filter={"$and":[{"start":{"$gte":"2022-05-26T14:00:00.001Z"}},{"start":{"$lte":"2022-05-27T14:18:48.001Z"}}]}
+Authorization: Bearer {{token}}
+
+### Data
+GET {{url}}/data/v1/public?_filter=%7b%22_id%22%3a%7b%22%24eq%22%3a%22%23RBI_FX_EURINR%3aSPOT%22%7d%7d&_project=%7b%22data%22%3afalse%2c%22contracts%22%3afalse%2c%22ondate%22%3afalse%2c%22_tag%22%3afalse%7d
+Authorization: Bearer {{token}}
+
+### Data
+GET {{url}}/data/v1/all?_id=BWSSB.WA.FLOW.DMA.MAG8000_197705H356.15M%3aDAILY_USAGE
+Authorization: Bearer {{token}}
+
+### test
+GET {{url}}/process-exec/v1
+  ?_aggregate=[{"$match":{"$and":[{"start":{"$gte":"2022-04-20T09:00:00.001Z"}},{"start":{"$lte":"2022-04-21T09:25:23.001Z"}}]}},{"$group":{"_id":"$status","count":{"$sum":1}}}]
+  &_limit=-1
+Authorization: Bearer {{token}}
+
+### T
+GET {{url}}/data/v1/all/%23DCE.AG.CN.A.NO1_SOYBEAN.FUT%3aCHG%3a2022-04-20
+  ?expression=BASE*1.1
+  &script=%23CurveScript
+Authorization: Bearer {{token}}
+
+###TT
+https://odsl-dev.azurewebsites.net/api/unit/v1
+Authorization: Bearer {{token}}

@@ -1,0 +1,288 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/event
+Authorization: Bearer {{token}}
+
+### Update a mixture of events
+POST {{url}}/object
+Authorization: Bearer {{token}}
+
+{
+  "_id": "EVENT_TEST",
+  "_type": "#Object",
+  "_links": {},
+  "ORDERS": [
+    {
+      "_type": "VarEvent",
+      "_id": "ORDER1",
+      "eventtime": "2022-06-23T10:24:21",
+      "eventtype":"#ORDER",
+      "price": 12.31,
+      "volume": 200.0,
+      "side": "ASK",
+      "sequence": "2022M07"
+    },
+    {
+      "_type": "VarEvent",
+      "_id": "ORDER2",
+      "eventtime": "2022-06-23T10:34:22",
+      "eventtype":"#ORDER",
+      "price": 12.31,
+      "volume": 200.0,
+      "side": "BID",
+      "sequence": "2022M07"
+    }
+  ],
+  "TRADES": {
+    "_type": "VarEvent",
+    "_id": "TRADE1",
+    "eventtime": "2022-06-23T10:24:23",
+    "eventtype":"#TRADE",
+    "price": 12.31,
+    "volume": 200.0,
+    "sequence": "2022M07"
+  }
+}
+
+### Add events
+POST {{url}}/object
+Authorization: Bearer {{token}}
+
+{
+  "_id": "EVENT_TEST",
+  "_type": "#Object",
+  "_links": {},
+  "ORDERS": {
+    "_type": "VarEvent",
+    "_id": "ORDER3",
+    "eventtime": "2022-06-23T10:23:23",
+    "eventtype":"#ORDER",
+    "price": 12.33,
+    "type": "ASK",
+    "volume": 20.0
+  }, "TRADES": [{
+    "_type": "VarEvent",
+    "_id": "TRADE2",
+    "eventtime": "2022-06-23T10:44:23",
+    "eventtype":"#TRADE",
+    "price": 12.33,
+    "volume": 20.0,
+    "sequence": "2022M07"
+  },{
+    "_type": "VarEvent",
+    "_id": "TRADE3",
+    "eventtime": "2022-06-23T10:45:23",
+    "eventtype":"#TRADE",
+    "price": 12.43,
+    "volume": 20.0,
+    "sequence": "2022M08"
+  }]
+}
+
+### Get some events
+GET {{url}}/event/v1/private
+  ?event=EVENTS:orders
+  &_sort=eventtime
+Authorization: Bearer {{token}}
+
+### Get some events
+GET {{url}}/event/v1/private
+  ?event=EVENT_TEST:TRADES
+  &_sort=eventtime
+Authorization: Bearer {{token}}
+
+### Get some events
+GET {{url}}/event/v1/private
+  ?_sort=eventtime
+Authorization: Bearer {{token}}
+
+### Get some events
+GET {{url}}/event/v1/private
+  ?event=EVENT_TEST:ORDERS
+  &_sort=eventtime
+Authorization: Bearer {{token}}
+
+### Get some events
+GET {{url}}/event/v1/private
+  ?eventtype=%23ORDER
+  &_sort=eventtime
+Authorization: Bearer {{token}}
+
+### Get some events with projection
+GET {{url}}/event/v1/private
+  ?event=EVENT_TEST:ORDERS
+  &_sort=eventtime
+  &_project=eventtime,price
+Authorization: Bearer {{token}}
+
+### Get an event summary
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS
+Authorization: Bearer {{token}}
+
+### Get an event
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS:ORDER1
+Authorization: Bearer {{token}}
+
+### Get a list of versions of an event
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS:ORDER1/*
+Authorization: Bearer {{token}}
+
+### Get a version of an event
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS:ORDER1/1
+Authorization: Bearer {{token}}
+
+### Tag a version of an event
+PUT {{url}}/event/v1/private/EVENT_TEST:ORDERS:ORDER1/3/TEST
+Authorization: Bearer {{token}}
+
+### Get a tagged version of an event
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS:ORDER1/TEST
+Authorization: Bearer {{token}}
+
+### Get a timeseries
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS
+  ?_function=timeseries
+  &_tsprop=price
+Authorization: Bearer {{token}}
+
+### Get a timeseries
+GET {{url}}/event/v1/private/EVENTS:orders
+  ?_function=timeseries
+  &_tsprop=price
+Authorization: Bearer {{token}}
+
+### Create an event timeseries
+POST {{url}}/object
+Authorization: Bearer {{token}}
+
+{
+  "_id": "EVENT_TEST",
+  "_type": "#Object",
+  "_links": {},
+  "ASK_TS": {
+    "_id": "ASK_TS",
+    "_type": "VarEventTimeSeries",
+    "event": "EVENT_TEST:ORDERS",
+    "property": "price",
+    "filter": "{'side': 'ASK'}"
+  }
+}
+
+### Get the event timeseries
+GET {{url}}/data/v1/private/EVENT_TEST:ASK_TS
+Authorization: Bearer {{token}}
+
+
+### Get a dynamic timeseries
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS
+  ?_function=timeseries
+  &_tsprop=price
+Authorization: Bearer {{token}}
+
+### Get a timeseries with a calendar
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS
+  ?_function=timeseries
+  &_tsprop=price
+  &_calendar=QUARTERHOURLY
+Authorization: Bearer {{token}}
+
+### Get a timeseries with filtering
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS
+  ?_function=timeseries
+  &_tsprop=price
+  &side=ASK
+Authorization: Bearer {{token}}
+
+### Get a timeseries
+GET {{url}}/event/v1/private/EVENT_TEST:TRADES
+  ?_function=timeseries
+  &_tsprop=price
+Authorization: Bearer {{token}}
+
+### Get a string timeseries
+GET {{url}}/event/v1/private/EVENT_TEST:ORDERS
+  ?_function=timeseries
+  &_tsprop=side
+Authorization: Bearer {{token}}
+
+### Get the event object
+GET {{url}}/object/v1/private/EVENT_TEST
+Authorization: Bearer {{token}}
+
+### Get a timeseries with a calendar
+GET {{url}}/event/v1/private/HYLEN:UMM
+  ?_function=timeseries
+  &_tsprop=unavailableCapacity
+  &_calendar=QUARTERHOURLY
+Authorization: Bearer {{token}}
+
+### Get a timeseries with a calendar
+GET {{url}}/event/v1/private/HYLEN:UMM
+  ?_function=timeseries
+  &_tsprop=unavailableCapacity
+  &_calendar=HOURLY
+Authorization: Bearer {{token}}
+
+### Get a timeseries with a calendar
+GET {{url}}/event/v1/private/HYLEN:UMM
+  ?_function=timeseries
+  &_tsprop=unavailableCapacity
+  &_calendar=DAILY
+Authorization: Bearer {{token}}
+
+### Create an event timeseries with a calendar
+POST {{url}}/object
+Authorization: Bearer {{token}}
+
+{
+  "_id": "HYLEN",
+  "_type": "#Object",
+  "_links": {},
+  "UMM_QH": {
+    "_id": "UMM_QH",
+    "_type": "VarEventTimeSeries",
+    "event": "HYLEN:UMM",
+    "property": "unavailableCapacity",
+    "calendar": "QUARTERHOURLY"
+  }
+}
+
+### Get an event timeseries
+GET {{url}}/data/v1/private/HYLEN:UMM_QH
+Authorization: Bearer {{token}}
+
+### Get a curve
+GET {{url}}/event/v1/private/EVENT_TEST:TRADES:2022-06-23
+  ?_function=curve
+  &_vprop=price
+  &_tprop=sequence
+  &_calendar=%23REOMHENG
+Authorization: Bearer {{token}}
+
+### Get the event timeseries
+GET {{url}}/event/v1/public/%23ENTSO.EL.OUTAGES.DE.10Y1001A1001A82H:UMM
+  ?_function=timeseries
+  &_tsprop=quantity
+  # &_calendar=HOURLY
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/data/v1/all/%23CLALIT.BUTTER_82.AVGAUC.WP%3aCURVE%3a2022-08-16
+Authorization: Bearer {{token}}
+
+###
+https://odsl-dev.azurewebsites.net/api/data/v1/all?_id=NCDEX.AG.IN.BAJRA.FUT%3aCLOSE%3aM01&_range=from(2022-08-14T12%3a31%3a01)
+Authorization: Bearer {{token}}

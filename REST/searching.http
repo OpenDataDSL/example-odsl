@@ -1,0 +1,136 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Search for objects
+GET {{url}}/object/v1/public
+  ?_search=europe
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Search for objects with project JSON
+GET {{url}}/object/v1/public
+  ?_search=europe
+  &_project={"location":1}
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Search for objects with project list
+GET {{url}}/object/v1/public
+  ?_search=europe
+  &_project=location,category,name,description
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Search for objects with a filter
+GET {{url}}/object/v1/public
+  ?_search=test
+  &location=United States
+  &_project=_type,location
+Authorization: Bearer {{token}}
+
+### Search for objects of a certain type
+GET {{url}}/object/v1/public
+  ?_search=test
+  &%23type=%23MarketData
+  &_project=_type,location
+Authorization: Bearer {{token}}
+
+### Search for objects with a filter
+GET {{url}}/object/v1/public
+  ?_search=poultry
+  &location=Belgium
+  &_project=location
+Authorization: Bearer {{token}}
+
+### Filter using geolocation
+GET {{url}}/object/v1/public
+  ?geolocation=within(Sphere([-1.6, 53.7], 0.15))
+  &_project=name  
+Authorization: Bearer {{token}}
+
+### Filter using geolocation
+GET {{url}}/object/v1/public
+  ?geolocation=within(Sphere([-5, 40], 0.25))
+  &_project=name
+Authorization: Bearer {{token}}
+
+### Filter using geolocation
+GET {{url}}/object/v1/public
+  ?geolocation=within(Sphere([-2.6, 49.45], 0.007))
+  &_project=name
+Authorization: Bearer {{token}}
+
+
+### Filter using within a country
+GET {{url}}/object/v1/public
+  ?geolocation=within(Belgium)
+  &_project=name
+Authorization: Bearer {{token}}
+
+### Autocomplete
+GET {{url}}/object/v1/public
+  ?_searchinfo=europe
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Search audit records
+GET {{url}}/audit/v1/public
+  ?_search=ECB
+  &_limit=20
+  # &_skip=20
+  &_project=timestamp,user,id
+Authorization: Bearer {{token}}
+
+### Search for failed audit records
+GET {{url}}/audit/v1/public
+  ?timestamp=range(2021-05-17T20:00:00,2021-05-17T20:07:00)
+  &_project={"_id":0,"id":1}
+  &_limit=-1
+Authorization: Bearer {{token}}
+
+### Search for processes
+GET {{url}}/process/v1
+  ?_search=etl for
+Authorization: Bearer {{token}}
+
+### Search for processes wih projection
+GET {{url}}/process/v1
+  ?_search=etl for
+  &_project={"service":1,"name":1,"description":1}
+Authorization: Bearer {{token}}
+
+### Search for processes wih projection and filter
+GET {{url}}/process/v1
+  ?_search=etl for
+  &_project={"service":1,"name":1,"description":1}
+  &_filter={"workflow":"%23wf_xls_data_loader"}
+Authorization: Bearer {{token}}
+
+### Search for processes wih projection and paging
+GET {{url}}/process/v1
+  ?_search=etl for
+  &_project={"service":1,"name":1,"description":1}
+  &_limit=5
+  &_skip=0
+Authorization: Bearer {{token}}
+
+### Search for processes wih projection and paging
+GET {{url}}/process/v1
+  ?_search=etl for
+  &_project={"service":1,"name":1,"description":1}
+  &_limit=5
+  &_skip=5
+Authorization: Bearer {{token}}
+
+

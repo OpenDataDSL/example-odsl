@@ -1,0 +1,68 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Single search term
+GET {{url}}/object/v1/public
+  ?_search=europe
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Multiple search terms
+GET {{url}}/object/v1/public
+  ?_search=europe potato
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### OR search terms
+GET {{url}}/object/v1/public
+  ?_search=europe | potato
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### NOT search terms
+GET {{url}}/object/v1/public
+  ?_search=europe potato -germany
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### GROUP search terms
+GET {{url}}/object/v1/public
+  ?_search=(europe | usa) potato
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### TAGS search terms
+GET {{url}}/object/v1/public
+  ?_search=%23europe %23spot
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Field search terms
+GET {{url}}/object/v1/public
+  ?_search=location:belgium market:spot
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Test Objects
+GET {{url}}/object/v1/public
+  ?_search=potato price location:belgium
+  &_limit=20
+Authorization: Bearer {{token}}
+
+### Test Data
+GET {{url}}/data/v1/public
+  ?_search=potato price location:belgium
+  &_limit=20
+Authorization: Bearer {{token}}
+

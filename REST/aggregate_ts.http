@@ -1,0 +1,49 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Find data
+GET {{url}}/object/v1/public
+    ?_profile=AVERAGE
+    &_range=last(10)
+    &_filter={"$and":[{"dataset":"AHDB_DR_PR"},{},{}]}
+Authorization: Bearer {{token}}
+
+### Aggregate data
+GET {{url}}/object/v1/public
+    ?_aggregatets=sum
+    &_profile=AVERAGE
+    &_range=last(10)
+    &_filter={"$and":[{"dataset":"AHDB_DR_PR"},{},{}]}
+Authorization: Bearer {{token}}
+
+### Find smart data
+GET {{url}}/object/v1/private
+    ?_profile=MONTHLY_USAGE
+    &_filter={"$and":[{"dataset":"BWSSB_WA_FLOW"},{},{}]}
+Authorization: Bearer {{token}}
+
+### Find smart curves
+GET {{url}}/object/v1/private
+    ?_profile=CLOSE
+    &_ondate=2022-02-03
+    &_filter={"$and":[{"category":"TUTORIAL"},{},{}]}
+Authorization: Bearer {{token}}
+
+### Find smart curves
+GET {{url}}/data/v1/private/CORN_TEST_TYPE:CLOSE
+Authorization: Bearer {{token}}
+
+### TEMP
+GET {{url}}/object/v1/public?_project={%22_id%22%3atrue%2c%22_type%22%3atrue%2c%22_access%22%3atrue%2c%22_access%22%3atrue%2c%22_oid%22%3atrue%2c%22_version%22%3atrue%2c%22_tag%22%3atrue%2c%22_user%22%3atrue%2c%22name%22%3atrue}&_sort={%22_id%22%3a1}&_limit=100&_skip=0
+Authorization: Bearer {{token}}

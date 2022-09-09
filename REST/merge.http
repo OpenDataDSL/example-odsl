@@ -1,0 +1,77 @@
+@token={{auth.response.body.access_token}}
+@usertoken={{auth2.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Log into AAD AS NON-ADMIN USER
+# @name auth2
+
+@client_appid=61bfc625-5cb3-462e-b2fd-1bffd24e18ed
+@client_tenantid=9fbf6424-eafa-4bdc-bd40-6008c3fdb934
+@client_secret=g4-2Y45l69w0wRl5~fEMo6w6.bQEupDpx-
+
+GET /{{client_tenantid}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{client_appid}}&
+client_secret={{client_secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/object
+Authorization: Bearer {{usertoken}}
+
+### Update a public object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "#TEST",
+  "_type": "#SETTING",
+  "name": "TEST",
+  "description": "Test Setting",
+  "tags": ["public"],
+  "alias": "TESTING",
+  "value": 1234
+}
+
+### Update a private public object
+POST {{url}}/object/v1
+Authorization: Bearer {{usertoken}}
+
+{
+  "_id": "#TEST",
+  "_type": "#SETTING",
+  "name": "TEST",
+  "description":"My local copy",
+  "tags":["setting","mine"],
+  "value": 1234.3
+}
+
+### Get a merged public object
+GET {{url}}/object/v1/public/%23TEST
+Authorization: Bearer {{usertoken}}
+
+### Get a public object with a different user
+GET {{url}}/object/v1/public/%23TEST
+Authorization: Bearer {{token}}
+
+### Get a private version of a public object
+GET {{url}}/object/v1/private/%23TEST
+Authorization: Bearer {{usertoken}}
+
+### Get a public object version
+GET {{url}}/object/v1/public/%23TEST/1
+Authorization: Bearer {{usertoken}}

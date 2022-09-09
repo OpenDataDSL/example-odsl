@@ -1,0 +1,264 @@
+@token={{auth.response.body.access_token}}
+@iid={{add.response.headers.x-odsl-invocationid}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Add some TimeSeries and Curves
+# @name add
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CONV_TEST",
+    "_type":"#Object",
+    "source": "ODSL",
+    "C":
+    {
+        "_id":"C",
+        "_type":"VarTimeSeries",
+        "start":"2022-01-01",
+        "calendar":"MONTHLY",
+        "units":"C",
+        "data":[
+            {"time":"2022-01-01", "value":10},
+            {"time":"2022-02-01", "value":20},
+            {"time":"2022-03-01", "value":30},
+            {"time":"2022-04-01", "value":40},
+            {"time":"2022-05-01", "value":50},
+            {"time":"2022-06-01", "value":60}
+        ]
+    },
+    "EUR_MT":
+    {
+        "_id":"EUR_MT",
+        "_type":"VarTimeSeries",
+        "start":"2022-01-01",
+        "calendar":"MONTHLY",
+        "currency":"EUR",
+        "units":"MT",
+        "properties": {
+            "density": 870
+        },
+        "data":[
+            {"time":"2022-01-01", "value":10},
+            {"time":"2022-02-01", "value":20},
+            {"time":"2022-03-01", "value":30},
+            {"time":"2022-04-01", "value":40},
+            {"time":"2022-05-01", "value":50},
+            {"time":"2022-06-01", "value":60}
+        ]
+    },
+    "BBL":
+    {
+        "_id":"BBL",
+        "_type":"VarTimeSeries",
+        "start":"2022-01-01",
+        "calendar":"MONTHLY",
+        "units":"BBL",
+        "properties": {
+            "density": 870
+        },
+        "data":[
+            {"time":"2022-01-01", "value":1},
+            {"time":"2022-02-01", "value":2},
+            {"time":"2022-03-01", "value":3},
+            {"time":"2022-04-01", "value":4},
+            {"time":"2022-05-01", "value":5},
+            {"time":"2022-06-01", "value":6}
+        ]
+    },
+    "C_EUR_MT": {
+        "_id": "C_EUR_MT",
+        "_type": "VarCurve",
+        "currency" : "EUR",
+        "units": "MT",
+        "properties" : {
+            "density": 870
+        },
+        "ondate": {
+            "curveDate": "2022-05-16",
+            "expiryCalendar": "#REOMHENG"
+        },
+        "contracts": [
+            {"tenor": "M01", "value": 10},
+            {"tenor": "M02", "value": 20},
+            {"tenor": "M03", "value": 30},
+            {"tenor": "M04", "value": 40},
+            {"tenor": "M05", "value": 50},
+            {"tenor": "M06", "value": 60}
+        ]
+    },
+    "C_BBL": {
+        "_id": "C_BBL",
+        "_type": "VarCurve",
+        "units": "BBL",
+        "properties" : {
+            "density": 870
+        },
+        "ondate": {
+            "curveDate": "2022-05-16",
+            "expiryCalendar": "#REOMHENG"
+        },
+        "contracts": [
+            {"tenor": "M01", "value": 1},
+            {"tenor": "M02", "value": 2},
+            {"tenor": "M03", "value": 3},
+            {"tenor": "M04", "value": 4},
+            {"tenor": "M05", "value": 5},
+            {"tenor": "M06", "value": 6},
+            {"tenor": "M07", "value": 7}
+        ]
+    },
+    "SC_MT": {
+        "_id":"SC_MT",
+        "_type":"VarSmartCurve",
+        "baseCurve":"${data:'CONV_TEST:C_BBL'}",
+        "expression":"BASE",
+        "units":"MT",
+        "cacheOptions": {
+            "type": "OnDependencies"
+        }
+    },
+    "ST_MT": {
+        "_id":"ST_MT",
+        "_type":"VarSmartTimeSeries",
+        "baseTimeSeries":"${data:'CONV_TEST:BBL'}",
+        "expression":"BASE",
+        "units":"MT",
+        "cacheOptions": {
+            "type": "Never"
+        }
+    },
+    "C_CUSTOM_FACTOR": {
+        "_id":"C_CUSTOM_FACTOR",
+        "_type": "VarCurve",
+        "units": "BBL",
+        "properties" : {
+            "toUnit": "MT",
+            "conversionFactor": 7.65
+        },
+        "ondate": {
+            "curveDate": "2022-05-16",
+            "expiryCalendar": "#REOMHENG"
+        },
+        "contracts": [
+            {"tenor": "M01", "value": 1},
+            {"tenor": "M02", "value": 2},
+            {"tenor": "M03", "value": 3},
+            {"tenor": "M04", "value": 4},
+            {"tenor": "M05", "value": 5},
+            {"tenor": "M06", "value": 6}
+        ]
+    },
+}
+
+### Audit records
+GET {{url}}/audit/v1/private
+    ?invocationId={{iid}}
+    &_sort=timestamp
+Authorization: Bearer {{token}}
+
+### Delete the object
+DELETE {{url}}/object/v1/private/CONV_TEST
+Authorization: Bearer {{token}}
+
+### Delete a smart curve
+DELETE {{url}}/data/v1/private/CONV_TEST%3aSC_MT
+Authorization: Bearer {{token}}
+
+### Currency and Unit Conversion - EUR/MT to USD/BBL
+GET {{url}}/data/v1/all/CONV_TEST%3aC_EUR_MT%3a2022-05-16
+    ?currency=EUR
+    &units=BBL
+Authorization: Bearer {{token}}
+
+### DYNAMIC Currency and Unit Conversion - EUR/MT to USD/BBL
+GET {{url}}/data/v1/all/CONV_TEST%3aC_EUR_MT%3a2022-05-16
+    ?expression=BASE
+    &script=%23CurveScript
+    &currency=USD
+    &units=BBL
+    # &__density=700
+Authorization: Bearer {{token}}
+
+### C to F
+GET {{url}}/data/v1/private/CONV_TEST%3aC
+    ?units=F
+Authorization: Bearer {{token}}
+
+### C to K
+GET {{url}}/data/v1/private/CONV_TEST%3aC
+    ?units=K
+Authorization: Bearer {{token}}
+
+### EUR/MT to USD/BBL
+GET {{url}}/data/v1/private/CONV_TEST%3aEUR_MT
+    ?currency=USD
+Authorization: Bearer {{token}}
+
+### BBL to MT
+GET {{url}}/data/v1/private/CONV_TEST%3aBBL
+    ?units=MT
+Authorization: Bearer {{token}}
+
+### BBL to MT override density
+GET {{url}}/data/v1/private/CONV_TEST%3aBBL
+    ?units=MT
+    &__density=800
+Authorization: Bearer {{token}}
+
+### Curve BBL to MT
+GET {{url}}/data/v1/private/CONV_TEST%3aC_BBL%3aL
+    ?units=MT
+Authorization: Bearer {{token}}
+
+### Curve BBL to MT override density
+GET {{url}}/data/v1/private/CONV_TEST%3aC_BBL%3aL
+    ?units=MT
+    &__density=800
+Authorization: Bearer {{token}}
+
+### Smart Curve
+GET {{url}}/data/v1/private/CONV_TEST%3aSC_MT%3aL
+Authorization: Bearer {{token}}
+
+### Smart Curve conversion
+GET {{url}}/data/v1/private/CONV_TEST%3aSC_MT%3aL
+    ?units=BBL
+Authorization: Bearer {{token}}
+
+### Dynamic Curve
+GET {{url}}/data/v1/private/CONV_TEST%3aC_BBL%3aL
+    ?expression=BASE
+    &units=MT
+Authorization: Bearer {{token}}
+
+### Smart TimeSeries
+GET {{url}}/data/v1/private/CONV_TEST%3aST_MT
+Authorization: Bearer {{token}}
+
+### Smart TimeSeries conversion
+GET {{url}}/data/v1/private/CONV_TEST%3aST_MT
+    ?units=BBL
+Authorization: Bearer {{token}}
+
+### Dynamic TimeSeries
+GET {{url}}/data/v1/private/CONV_TEST%3aBBL
+    ?expression=BASE
+    &units=MT
+Authorization: Bearer {{token}}
+
+### Custom Factors
+GET {{url}}/data/v1/private/CONV_TEST%3aC_CUSTOM_FACTOR%3aL
+    ?units=MT
+Authorization: Bearer {{token}}

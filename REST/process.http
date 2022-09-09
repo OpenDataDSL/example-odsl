@@ -1,0 +1,149 @@
+@token={{auth.response.body.access_token}}
+@size={{list.response.body.length}}
+{{size}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process
+Authorization: Bearer {{token}}
+
+### List all processes
+# @name list
+GET {{url}}/process/v1
+    ?_limit=-1
+Authorization: Bearer {{token}}
+
+### List all process names
+GET {{url}}/process/v1?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a process
+GET {{url}}/process/v1/CURRENCY_METADATA_LOADER
+Authorization: Bearer {{token}}
+
+### List all crontab entries
+GET {{url}}/crontab/v1
+Authorization: Bearer {{token}}
+
+### Get a crontab entry
+GET {{url}}/crontab/v1/600d4f10d07204f18e1640c6
+Authorization: Bearer {{token}}
+
+### Add a process
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+
+{
+    "_type": "VarProcess",
+    "service": "ETL",
+    "name": "AZURE_TEST",
+    "description": "Azure Test Process",
+    "enabled": true,
+    "workflow": "#wf_xml_data_loader",
+    "cron": "12 46 ? * * *",
+    "environment": "production",
+    "input": {
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+        "tx": "#ECB_FX"
+    }
+}
+
+### Add a process - should fail - invalid CRON
+DELETE {{url}}/process/v1/AZURE_TEST_FAIL
+Authorization: Bearer {{token}}
+
+### Add a process - should fail - invalid CRON
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+
+{
+    "_type": "VarProcess",
+    "service": "ETL",
+    "name": "AZURE_TEST_FAIL",
+    "description": "Azure Test Process",
+    "enabled": true,
+    "workflow": "#wf_xml_data_loader",
+    "cron": "61 46 ? * * *",
+    "environment": "production",
+    "input": {
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+        "tx": "#ECB_FX"
+    }
+}
+
+### Update a process
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+
+{
+    "_type": "VarProcess",
+    "service": "ETL",
+    "name": "AZURE_TEST",
+    "description": "Azure Test Process",
+    "enabled": true,
+    "workflow": "#wf_xml_data_loader",
+    "cron": "00 15 ? * * *",
+    "input": {
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+        "tx": "#ECB_FX"
+    }
+}
+
+### Rename a process
+PUT {{url}}/process/v1/AZURE_TEST
+Authorization: Bearer {{token}}
+
+{
+    "_id": "AZURE_TEST1"
+}
+
+### Get a list of versions
+GET {{url}}/process/v1/AZURE_TEST/*
+Authorization: Bearer {{token}}
+
+### Get a process version
+GET {{url}}/process/v1/AZURE_TEST/1
+Authorization: Bearer {{token}}
+
+### Tag a process version
+PUT {{url}}/process/v1/AZURE_TEST/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version
+GET {{url}}/process/v1/AZURE_TEST/PROD
+Authorization: Bearer {{token}}
+
+### Test 404 error
+GET {{url}}/process/v1/public/AZURE_TEST1
+Authorization: Bearer {{token}}
+
+### Test 400 error - missing body
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+
+### Test 400 error - invalid json
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+
+{
+    invalid: []
+}
+
+### Delete a version
+DELETE {{url}}/process/v1/AZURE_TEST
+Authorization: Bearer {{token}}
+
+### Fully delete
+DELETE {{url}}/process/v1/AZURE_TEST/*
+Authorization: Bearer {{token}}

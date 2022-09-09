@@ -1,0 +1,30 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+###############################################################
+### ODSL LOCAL
+GET http://localhost:7071/api/action
+Authorization: Bearer {{token}}
+
+### ODSL DEV
+GET https://odsl-dev.azurewebsites.net/api/action
+Authorization: Bearer {{token}}
+
+### ODSL PREVIEW
+GET https://odsl-preview.azurewebsites.net/api/action
+Authorization: Bearer {{token}}
+
+### ODSL PROD
+GET https://odsl.azurewebsites.net/api/action
+Authorization: Bearer {{token}}

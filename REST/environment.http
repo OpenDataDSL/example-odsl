@@ -1,0 +1,95 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/environment
+Authorization: Bearer {{token}}
+
+### List all environments
+GET {{url}}/environment/v1
+Authorization: Bearer {{token}}
+
+### List all environments from another environment
+GET {{url}}/environment/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: dev
+
+### Get a specific environment
+GET {{url}}/environment/v1/production
+Authorization: Bearer {{token}}
+
+### Create a new environment
+POST {{url}}/environment/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "test1"
+}
+
+### Create another new environment
+POST {{url}}/environment/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "test2",
+    "description": "Test 2 Environment"
+}
+
+### Should fail quota - Create a new environment
+POST {{url}}/environment/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "test3"
+}
+
+### update the environment
+POST {{url}}/environment/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "test1",
+    "name": "My Test Environment"
+}
+
+### update the environment
+POST {{url}}/environment/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: dev
+
+{
+    "_id": "test1",
+    "name": "My Test Environment :)"
+}
+
+### Add something in the environment
+POST {{url}}/action/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: test1
+
+{
+  "_id": "test1",
+  "_type": "VarAction",
+  "category": "general",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+
+### Delete an environment
+DELETE {{url}}/environment/v1/test1
+Authorization: Bearer {{token}}
+x-odsl-environment: test1

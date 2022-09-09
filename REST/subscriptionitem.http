@@ -1,0 +1,268 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/subscriptionitem
+Authorization: Bearer {{token}}
+
+### Create a subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "QAExample",
+    "targets":[{
+      "name": "EmailTarget",
+      "to": "colin.hartley@opendatadsl.com",
+      "html": "Hello\nThe id is ${_id}\nThe name is ${name}"
+    }]
+}
+
+### Add a subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "QAExample",
+    "key": "PRIMARY",
+    "service": "object",
+    "id": "TEST"
+}
+
+### Add a calendar subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "QAExample",
+    "key": "MYHENG",
+    "service": "calendar",
+    "id": "MYHENG"
+}
+
+### List all my subscription items
+GET {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+### List all subscription items for a subscription
+GET {{url}}/subscriptionitem/v1
+    ?subscription=QAExample
+    &_project=key
+Authorization: Bearer {{token}}
+
+### Update a private object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "#Object",
+  "name": "TEST Object name",
+  "value": 1234.56,
+  "description":"Test Objectaszsdzd"
+}
+
+### Save a holiday calendar only using rules
+POST {{url}}/calendar/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id":"MYHENG",  
+  "_type":"HolidayCalendar",
+  "name":"England and Wales Holiday Calendar",
+  "rules": [
+    "Every Saturday",
+    "Every Sunday",
+    "1st of January named 'New Year' on Saturday shift 2 day on Sunday shift 1 day",
+    "Good Friday",
+    "Easter Monday",
+    "First Monday in May named 'Early Bank Holiday'",
+    "Last Monday in May named 'Spring Bank Holiday'",
+    "Last Monday in August named 'Summer Bank Holiday'",
+    "25th of December named 'Christmas Day' on saturday shift 2 day on sunday shift 1 day",
+    "26th of December named 'Boxing Day' on saturday shift 2 day on sunday shift 2 day"
+  ]
+}
+
+### Create a curve subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "CurveExample",
+    "targets":[{
+      "name": "CurveTarget",
+      "curve": "CORN_TEST:CLOSE"
+    }]
+}
+
+### Add a subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "CurveExample",
+    "key": "BASE",
+    "service": "data",
+    "id": "TEST:CLOSE"
+}
+
+### Update a curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "#Object",
+  "CLOSE": {
+      "_id":"CLOSE",
+      "_type": "VarCurve",
+      "ondate":{"curveDate":"2022-04-05","expiryCalendar":"#REOMHENG"},
+      "currency":"EUR",
+      "units":"MWH",
+      "properties":{},
+      "contracts":[
+          {"tenor":"M01","value":25.75,"status":{},"ondate":{"curveDate":"2022-04-05","expiryCalendar":"#REOMHENG"},"properties":{"absolute":"2020M11","end":"2020-11-30T00:00:00","expiry":"2020-10-30T00:00:00","relative":"M01","start":"2020-11-01T00:00:00"}},
+          {"tenor":"M03","value":25.85,"status":{},"ondate":{"curveDate":"2022-04-05","expiryCalendar":"#REOMHENG"},"properties":{"absolute":"2020M12","end":"2020-12-31T00:00:00","expiry":"2020-11-30T00:00:00","relative":"M02","start":"2020-12-01T00:00:00"}}
+      ]
+  }
+}
+
+### Get base curve
+GET {{url}}/data/v1/private/TEST:CLOSE:2022-04-07
+Authorization: Bearer {{token}}
+
+### Create a queue subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "AllCalendars",
+    "targets":[{
+      "name": "QueueTarget",
+      "queue": "test1"
+    }]
+}
+
+### Add a subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "AllCalendars",
+    "service": "calendar",
+    "id": "*",
+    "action": "create"
+}
+
+### Add a subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "AllCalendars",
+    "service": "calendar",
+    "id": "*",
+    "action": "delete"
+}
+
+
+### Create a queue subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "QueueExample",
+    "targets":[{
+      "name": "QueueTarget",
+      "queue": "test2"
+    }]
+}
+
+### Add a subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "QueueExample",
+    "key": "CORN_TEST:CLOSE",
+    "service": "data",
+    "id": "CORN_TEST:CLOSE"
+}
+
+### Find audit records
+GET {{url}}/audit/v1/private
+    ?service=data
+    &id=CORN_TEST:CLOSE:2022-04-05
+Authorization: Bearer {{token}}
+
+### Create a dummy subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Dummy",
+    "targets":[{
+      "name": "QueueTarget",
+      "queue": "test2"
+    }]
+}
+
+### Add a subscription item
+POST {{url}}/subscriptionitem/v1
+Authorization: Bearer {{token}}
+
+{
+    "subscription": "Dummy",
+    "key": "CORN_TEST:CLOSE",
+    "service": "data",
+    "id": "CORN_TEST:CLOSE"
+}
+
+
+### Delete the dummy subscription
+DELETE {{url}}/subscription/v1/Dummy
+Authorization: Bearer {{token}}
+
+### Get the dummy subscription
+GET {{url}}/subscription/v1/Dummy
+Authorization: Bearer {{token}}
+
+### Get the dummy subscription items
+GET {{url}}/subscriptionitem/v1?subscription=Dummy
+Authorization: Bearer {{token}}
+
+### Rename the dummy subscription
+PUT {{url}}/subscription/v1/Dummy
+Authorization: Bearer {{token}}
+
+{
+    "name": "Dummy2",
+    "targets":[{
+      "name": "QueueTarget",
+      "queue": "test2"
+    }]
+}
+
+### Get the dummy2 subscription
+GET {{url}}/subscription/v1/Dummy2
+Authorization: Bearer {{token}}
+
+### Get the dummy2 subscription items
+GET {{url}}/subscriptionitem/v1?subscription=Dummy2
+Authorization: Bearer {{token}}
+
+### Delete the dummy2 subscription
+DELETE {{url}}/subscription/v1/Dummy2
+Authorization: Bearer {{token}}

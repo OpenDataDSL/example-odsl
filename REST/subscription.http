@@ -1,0 +1,193 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/subscription
+Authorization: Bearer {{token}}
+
+### List all my subscriptions
+GET {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+### List all my subscription names
+GET {{url}}/subscription/v1?_distinct=name
+Authorization: Bearer {{token}}
+
+### Get a specific subscription
+GET {{url}}/subscription/v1/624d7581e97478154d5f9fda
+Authorization: Bearer {{token}}
+
+### Create a subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "QAExample",
+    "objects": [{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE",
+        "optional": false,
+        "offset": 0
+    }],
+    "targets":[{
+      "name": "ProcessTarget",
+      "process": "SimpleScript"
+    }]
+}
+
+### Update a subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "QAExample",
+    "description": "Example QA process subscription",
+    "objects": [{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE",
+        "optional": false,
+        "offset": 0
+    }],
+    "targets":[{
+      "name": "ProcessTarget",
+      "process": "SimpleScript"
+    }]
+}
+
+### List all subscriptions
+GET {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+### Error 404 - Get an invalid subscription
+GET {{url}}/subscription/v1/OTHER
+Authorization: Bearer {{token}}
+
+### Get a subscription
+GET {{url}}/subscription/v1/624d7863eee4bb29b808ee20
+Authorization: Bearer {{token}}
+
+### List all versions of a subscriptions
+GET {{url}}/subscription/v1/624d7863eee4bb29b808ee20/*
+Authorization: Bearer {{token}}
+
+### Get a version of the subscription
+GET {{url}}/subscription/v1/624d7863eee4bb29b808ee20/1
+Authorization: Bearer {{token}}
+
+### tag a version of the subscription
+PUT {{url}}/subscription/v1/624d7863eee4bb29b808ee20/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a taggedversion of the subscription
+GET {{url}}/subscription/v1/624d7863eee4bb29b808ee20/PROD
+Authorization: Bearer {{token}}
+
+### Delete a subscription
+DELETE {{url}}/subscription/v1/624d7863eee4bb29b808ee20
+Authorization: Bearer {{token}}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Invalid"
+}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Invalid",
+    "objects": [{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE",
+        "optional": false,
+        "offset": 0
+    }]
+}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Invalid",
+    "objects": [{
+        "key": "PRIMARY"
+    }],
+    "targets": [{
+        "name": "Invalid"
+    }
+    ]
+}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Invalid",
+    "objects": [{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE"
+    },{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE"
+    }],
+    "targets": [{
+        "name": "Invalid"
+    }
+    ]
+}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Invalid",
+    "objects": [{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE"
+    }],
+    "targets": [{
+        "name": "Invalid"
+    }
+    ]
+}
+
+### Invalid subscription
+POST {{url}}/subscription/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Invalid",
+    "objects": [{
+        "key": "PRIMARY",
+        "id": "NZ_FONTERRA_SALTED_25KG_NZ:CURVE"
+    }],
+    "targets": [{
+        "name": "ProcessTarget"
+    }
+    ]
+}

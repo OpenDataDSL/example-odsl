@@ -1,0 +1,32 @@
+@token={{auth.response.body.access_token}}
+
+### Get token for the service bus
+# @name auth
+
+GET /{{tenantId}}/oauth2/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+resource=https://servicebus.azure.net
+
+### Send Message
+POST https://sb-odsl-dev.servicebus.windows.net/test/messages?api-version=2015-01
+Authorization: Bearer {{token}}
+Content-Type: application/json
+BrokerProperties:  {"Label": "crontab()", "CorrelationId": 701332F3-B37B-4D29-AA0A-E367906C206E, "UserProperties" : {"info": "test"}}
+
+{"tid":"ef34dc37-9d55-43c4-99ad-a35f3c96f8f4","name":"ECB_FX"}
+
+###
+GET https://sb-odsl-dev.servicebus.windows.net/run-process/messages?api-version=2015-01
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+### Peek Message
+GET https://sb-odsl.servicebus.windows.net/test/run-process/messages?api-version=2015-01
+Authorization: Bearer {{token}}
+Content-Type: application/json

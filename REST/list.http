@@ -1,0 +1,92 @@
+@token={{auth.response.body.access_token}}
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/list
+Authorization: Bearer {{token}}
+
+### Add a basic private list
+POST {{url}}/list/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "First List",
+    "objects": [
+        "#ABN_FX.EURAED",
+        "#ABN_FX.EURCAD"
+    ]
+}
+
+### Add a shared list
+POST {{url}}/list/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "Shared List",
+    "visibility": "shared",
+    "objects": [
+        "#ABN_FX.EURAED",
+        "#ABN_FX.EURCAD"
+    ]
+}
+
+### Update a shared list
+POST {{url}}/list/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "626bdb8fa84bdd4bc4bb94b3",
+    "name": "Shared List",
+    "visibility": "shared",
+    "objects": [
+        "#ABN_FX.EURAED",
+        "#ABN_FX.EURCAD"
+    ]
+}
+
+### Add an item to a shared list
+PUT {{url}}/list/v1/626bdb8fa84bdd4bc4bb94b3/%23ABN_FX.EURGBP
+Authorization: Bearer {{token}}
+
+### List lists
+GET {{url}}/list/v1
+Authorization: Bearer {{token}}
+
+### List list id and names
+GET {{url}}/list/v1
+    ?_project=name
+Authorization: Bearer {{token}}
+
+### Get a specific list
+GET {{url}}/list/v1/626bd50b5fbb9b216c82d70f
+Authorization: Bearer {{token}}
+
+### Delete a list
+DELETE {{url}}/list/v1/626bd7b1436fbc3d42271965
+Authorization: Bearer {{token}}
+
+### Get lists for an object
+GET {{url}}/list/v1/%23ABN_FX.EURCAD
+    ?_function=listsForObject
+Authorization: Bearer {{token}}
+
+### Get objects for list
+GET {{url}}/list/v1/626bdb8fa84bdd4bc4bb94b3
+    ?_function=objectsForList
+Authorization: Bearer {{token}}
+
+### Get objects for list with projection
+GET {{url}}/list/v1/626bdb8fa84bdd4bc4bb94b3
+    ?_function=objectsForList
+    &_project=name
+Authorization: Bearer {{token}}

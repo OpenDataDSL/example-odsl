@@ -1,0 +1,4 @@
+GET http://stats.oecd.org/sdmx-json/data/QNA/AUS+AUT.GDP+B1_GE.CUR+VOBARSA.Q/all?startTime=2015-Q1&endTime=2015-Q4
+
+###
+GET http://stats.oecd.org/sdmx-json/data/OECD-FAO

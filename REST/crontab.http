@@ -1,0 +1,30 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/crontab
+Authorization: Bearer {{token}}
+
+### Get list
+GET {{url}}/crontab/v1
+Authorization: Bearer {{token}}
+
+### Get a crontab
+GET {{url}}/crontab/v1/621f61f944a2daf60b1f82a4
+Authorization: Bearer {{token}}
+
+
+### Get a crontab
+GET {{url}}/crontab/v1?name=ECB_FX
+Authorization: Bearer {{token}}

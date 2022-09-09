@@ -1,0 +1,224 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD using odsl.online credentials
+# @name auth
+
+# GET /5fd70b76-c73b-4aa4-b871-7dd9902474dc/oauth2/v2.0/token
+# Host: login.microsoftonline.com
+# Content-Type: application/x-www-form-urlencoded
+
+# grant_type=client_credentials&
+# client_id=9bf2b457-cb31-4eed-90be-fb9402059b3c&
+# client_secret=3Op8Q~jdFjE0oLQx4UUq~OH7yxQ5YMP9b3yPeb_z&
+# scope=api://opendatadsl/.default
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/object
+Authorization: Bearer {{token}}
+
+### Get list of sources
+GET {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/scalar
+    ?_limit=5    
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/m101:sample_training.trips
+    ?_limit=5    
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/m101:sample_training.zips
+    ?_limit=1
+    &_sort={pop:-1}
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_limit=1
+    # &_project=name
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_distinct=founded_year
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_distinct=offices.city
+Authorization: Bearer {{token}}
+
+### Sort By Count
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_sortbycount=category_code
+Authorization: Bearer {{token}}
+
+### Distinct Count
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$sortByCount:"$category_code"},{$sort:{_id:1}}]
+Authorization: Bearer {{token}}
+
+### Distinct Count
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_distinctcount=category_code
+Authorization: Bearer {{token}}
+
+### Aggregate
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$sortByCount:"$category_code"}]
+Authorization: Bearer {{token}}
+
+### Bucket (using bucketAuto)
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_bucket=founded_year buckets 5
+Authorization: Bearer {{token}}
+
+### Aggregate
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$bucketAuto:{groupBy:"$founded_year",buckets: 5}}]
+Authorization: Bearer {{token}}
+
+### Aggregate
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$bucket:{groupBy:"$founded_year",boundaries:[1700, 1800, 2003, 2008, 2013],default:"other"}}]
+Authorization: Bearer {{token}}
+
+### Aggregate
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$match:{founded_year:{$lt:1800}}},{$count:"tot"}]
+Authorization: Bearer {{token}}
+
+### Bucket and Filter
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_bucket=founded_year buckets 5
+    &category_code=web
+Authorization: Bearer {{token}}
+
+### Bucket
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_bucket=founded_year boundaries [0, 1800, 2003, 2008, 2020]
+Authorization: Bearer {{token}}
+
+### Aggregate
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$match:{founded_year:{$gte:1980,$lt:1990}}},{$count:"tot"}]
+Authorization: Bearer {{token}}
+
+### Aggregate other
+GET {{url}}/object/v1/m101:sample_training.companies
+    ?_aggregate=[{$match:{$or:[{founded_year:{$lt:0}},{founded_year:{$gte:2010}},{founded_year:null}]}},{$count:"tot"}]
+Authorization: Bearer {{token}}
+
+### Bucket shipwreck depths
+GET {{url}}/object/v1/m101:sample_geospatial.shipwrecks
+    ?_bucket=depth boundaries [-10, 0, 1, 5, 10, 100, 1000]
+Authorization: Bearer {{token}}
+
+### Get some public data
+GET {{url}}/object/v1/public
+    ?_limit=5
+    &_project=name
+Authorization: Bearer {{token}}
+
+### Get some private data
+GET {{url}}/object/v1/private
+    ?_limit=5
+    &_project=name
+Authorization: Bearer {{token}}
+
+### Update some data
+POST {{url}}/object/v1/scalar
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TESTUPDATE",
+  "description": "Test updating scalar"
+}
+
+### Get some private data
+GET {{url}}/object/v1/private/TESTUPDATE
+Authorization: Bearer {{token}}
+
+### Distinct list of states
+GET {{url}}/object/v1/m101:sample_training.zips
+  ?_distinct=state
+Authorization: Bearer {{token}}
+
+### Distinct list of cities in IL
+GET {{url}}/object/v1/m101:sample_training.zips
+  ?state=IL
+  &_distinct=city
+Authorization: Bearer {{token}}
+
+### All ALBANY cities
+GET {{url}}/object/v1/m101:sample_training.zips
+  ?city=ALBANY
+Authorization: Bearer {{token}}
+
+### Get some data
+GET {{url}}/object/v1/m101:sample_guides.planets
+    ?_project=name
+Authorization: Bearer {{token}}
+
+### Get a planet
+GET {{url}}/object/v1/m101:sample_guides.planets
+    ?name=Earth
+Authorization: Bearer {{token}}
+
+### Get planets
+GET {{url}}/object/v1/m101:sample_guides.planets
+    ?_sort=orderFromSun
+    &_project={name:1,_id:0}
+Authorization: Bearer {{token}}
+
+### Add a planet
+POST {{url}}/object/v1/m101:sample_guides.planets
+Authorization: Bearer {{token}}
+
+{
+  "name": "OpenDataDSL",
+  "orderFromSun": 9,
+  "hasRings": false,
+  "mainAtmosphere": ["Wine"],
+  "surfaceTemperature":{
+    "min": 16,
+    "max": 32,
+    "mean": 24
+  }
+}
+
+### Delete a planet
+DELETE {{url}}/object/v1/m101:sample_guides.planets/
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:7071/api/object/v1/m101:sample_airbnb.listingsAndReviews
+    ?_limit=10
+    &_skip=0
+    &_aggregate=[{"$match":{"$and":[{"amenities":"Wifi"},{}]}},{"$project":{"price":1,"address":1,"_id":0}}]
+Authorization: Bearer {{token}}
+
+### Aggregations DB
+GET {{url}}/object/v1/m121:aggregations.movies
+  ?_limit=1
+Authorization: Bearer {{token}}
+
+### Basic DB
+GET {{url}}/object/v1/m101:sample_training.companies
+  ?_limit=1
+Authorization: Bearer {{token}}
+
+

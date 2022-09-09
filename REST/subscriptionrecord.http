@@ -1,0 +1,52 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/subscriptionrecord
+Authorization: Bearer {{token}}
+
+### List all my subscription records
+GET {{url}}/subscriptionrecord/v1
+Authorization: Bearer {{token}}
+
+### List all my subscription records distinct by subscription
+GET {{url}}/subscriptionrecord/v1
+    ?_distinct=name
+Authorization: Bearer {{token}}
+
+### Get all records for a subscription
+GET {{url}}/subscriptionrecord/v1/TEST_FX
+Authorization: Bearer {{token}}
+
+### Get all date records for a subscription
+GET {{url}}/subscriptionrecord/v1/TEST_FX
+    ?_distinct=date
+Authorization: Bearer {{token}}
+
+### Get a subscription record for a date
+GET {{url}}/subscriptionrecord/v1/TEST_FX/2021-02-22
+Authorization: Bearer {{token}}
+
+### Get a subscription record for a date
+GET {{url}}/subscriptionrecord/v1/TUTORIAL_ODSL_CURVE/2021-06-01
+Authorization: Bearer {{token}}
+
+### Trigger a subscription
+POST {{url}}/subscriptionrecord/v1
+Authorization: Bearer {{token}}
+
+{
+    "name": "TEST_FX",
+    "date": "2021-06-09"
+}

@@ -1,0 +1,74 @@
+@token={{auth.response.body.access_token}}
+
+@lurl=http://localhost:7071/api
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get a virtual curve
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=BASE*1.3
+Authorization: Bearer {{token}}
+
+### Get a virtual curve - currency conversion
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=BASE
+    &currency=EUR
+Authorization: Bearer {{token}}
+
+### Get a virtual curve - unit conversion
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=BASE
+    &units=BBL
+    &density=720
+Authorization: Bearer {{token}}
+
+### Get a virtual curve - currency and unit conversion
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=BASE
+    &currency=EUR
+    &units=BBL
+    &density=720
+Authorization: Bearer {{token}}
+
+### Get a virtual curve from a base Smart Curve
+GET {{url}}/data/v1/private/CORN_TEST_TYPE%3aCLOSE%3a2022-01-12
+    ?expression=BASE*1.2
+Authorization: Bearer {{token}}
+
+### Get a virtual curve with a script function
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=interpolate(BASE, 'BACKWARD')
+Authorization: Bearer {{token}}
+
+### Get a virtual curve with additional data
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=(BASE%2bMAX)/2
+    &MAX=%23MATBAROFEX.ROS.CORN.FUT%3aMAX
+Authorization: Bearer {{token}}
+
+### Get a virtual curve with a custom script
+GET {{url}}/data/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=agricultural(BASE)
+    &script=agricultural_curves
+Authorization: Bearer {{token}}
+
+### Get a direct virtual curve
+GET {{lurl}}/smart-curve/v1/public/%23MATBAROFEX.ROS.CORN.FUT%3aMIN%3a2022-01-12
+    ?expression=interpolate(BASE, 'BACKWARD')
+Authorization: Bearer {{token}}
+
+### test action
+GET http://localhost:7071/api/action/v1/all/TEST
+
+### test audit
+GET http://localhost:7071/api/audit

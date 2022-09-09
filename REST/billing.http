@@ -1,0 +1,33 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/billing
+Authorization: Bearer {{token}}
+
+### List invoices
+GET {{url}}/billing/v1
+Authorization: Bearer {{token}}
+
+### Get an invoice
+GET {{url}}/billing/v1/com_walkfares_2021_AUG
+Authorization: Bearer {{token}}
+
+### Get current invoice
+GET {{url}}/billing/v1/current
+Authorization: Bearer {{token}}
+
+### Get pricing info
+GET {{url}}/billing/v1/pricing
+Authorization: Bearer {{token}}

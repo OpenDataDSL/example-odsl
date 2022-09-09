@@ -1,0 +1,78 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/data
+Authorization: Bearer {{token}}
+
+### Create a basic Smart TimeSeries
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id":"CORN_TEST_TYPE",
+    "_type":"#Agriculture",
+    "RESCALED":
+    {
+        "_id":"RESCALED",
+        "_type":"VarSmartTimeSeries",
+        "baseTimeSeries":"${data:'TEST:TS'}",
+        "expression":"BASE+1"                
+    }    
+}
+
+
+### GetPrivate TS
+GET {{url}}/data/v1/private/TEST%3aTS
+Authorization: Bearer {{token}}
+
+### GetPrivate TS
+GET {{url}}/data/v1/private/TEST%3aTS
+Authorization: Bearer {{token}}
+
+### Get a smart timeseries without data or properties
+GET {{url}}/data/v1/all
+    ?_id=BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M%3aDAILY_USAGE
+    &_project={"data"%3afalse%2c"properties"%3afalse%2c"_tag"%3afalse}
+Authorization: Bearer {{token}}
+
+### Get a smart timeseries
+GET {{url}}/data/v1/all?_id=BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M%3aDAILY_USAGE
+Authorization: Bearer {{token}}
+
+### Get a smart timeseries
+GET {{url}}/data/v1/all?_id=BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M%3aMONTHLY_USAGE
+Authorization: Bearer {{token}}
+
+### Get a smart timeseries with a range
+GET {{url}}/data/v1/all
+    ?_id=BWSSB.WA.FLOW.DMA.MAG8000_197705H355.15M%3aDAILY_USAGE
+    &_range=last(2)
+Authorization: Bearer {{token}}
+
+### List
+GET {{url}}/data/v1/private
+    ?_filter={"%24and"%3a%5b{"_type"%3a{"$in":["VarTimeSeries","VarSmartTimeSeries"]}}%2c{"properties.dataset"%3a{"%24exists"%3atrue%2c"%24in"%3a%5b"BWSSB_WA_FLOW"%5d}}%5d}
+    &_project={"data"%3afalse%2c"properties"%3afalse%2c"_tag"%3afalse}
+    &_sort={"_id"%3a1}
+    &_limit=800
+    &_skip=0
+Authorization: Bearer {{token}}
+
+### Dynamic
+GET {{url}}/data/v1/all/%23CLALIT.AMF.AVGAUC.AWP%3aAVG
+    ?expression=M01
+    &script=%23TimeSeriesScript
+    &M01=%23CLALIT.AMF.AVGAUC.WP%3aCURVE%3aM01
+Authorization: Bearer {{token}}

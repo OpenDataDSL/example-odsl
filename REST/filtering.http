@@ -1,0 +1,43 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/process-exec
+Authorization: Bearer {{token}}
+
+### Filter statuses
+GET {{url}}/process-exec/v1
+    ?_filter={"status":"success"}
+Authorization: Bearer {{token}}
+
+### Filter statuses
+GET {{url}}/process-exec/v1
+    ?status=success
+Authorization: Bearer {{token}}
+
+### Filter name
+GET {{url}}/process-exec/v1
+    ?name=ENTSOE_A71_A01_POWER_GEN_AGG_FC_DE_DA
+Authorization: Bearer {{token}}
+
+### Filter dates
+GET {{url}}/process-exec/v1
+    ?start=range("2021-02-14T08:00:00","2021-02-14T09:00:00")
+Authorization: Bearer {{token}}
+
+### Filter dates and name
+GET {{url}}/process-exec/v1
+    ?name=ENTSOE_A71_A01_POWER_GEN_AGG_FC_DE_DA
+    &start=range("2021-02-14T08:00:00","2021-02-14T09:00:00")
+Authorization: Bearer {{token}}

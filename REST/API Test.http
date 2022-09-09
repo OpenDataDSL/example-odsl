@@ -1,0 +1,60 @@
+@token={{auth.response.body.access_token}}
+@dev=https://dev.api.opendatadsl.com
+@prod=https://api.opendatadsl.com
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### DEV Service
+GET {{dev}}/service/action/info
+Authorization: Bearer {{token}}
+
+### DEV Process
+GET {{dev}}/process/curve-build
+Authorization: Bearer {{token}}
+
+### Dev Process calendar info
+GET {{dev}}/process/calendar/v1
+Authorization: Bearer {{token}}
+
+### Dev Process calendar id list
+GET {{dev}}/process/calendar/v1/public
+Authorization: Bearer {{token}}
+
+### Dev Process calendar 
+GET {{dev}}/process/calendar/v1/public/%23HENG
+Authorization: Bearer {{token}}
+
+### Dev Process calendar holidays
+GET {{dev}}/process/calendar/v1/public/%23HENG/holidays?year=2021
+Authorization: Bearer {{token}}
+
+### Dev Process calendar holidays multiple years
+GET {{dev}}/process/calendar/v1/public/%23HENG/holidays?year=2021&year=2022
+Authorization: Bearer {{token}}
+
+### Dev direct calendar list
+GET https://process-runner-dev.azurewebsites.net/api/calendar/v1/public
+Authorization: Bearer {{token}}
+
+
+### PROD Service build info
+GET {{prod}}/service/action/info
+Authorization: Bearer {{token}}
+
+### PROD Process build info
+GET {{prod}}/process/curve-build
+Authorization: Bearer {{token}}
+
+### Local Process
+GET http://localhost:7071/api/calendar/v1/private/hrfgy/getDates(2021-06-01,2021-12-01)
+Authorization: Bearer {{token}}

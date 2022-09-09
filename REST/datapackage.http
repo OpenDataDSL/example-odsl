@@ -1,0 +1,51 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/datapackage
+Authorization: Bearer {{token}}
+
+
+### Add a datapackage process
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+
+{
+    "_type": "VarProcess",
+    "service": "ETL",
+    "name": "AZURE_TEST",
+    "description": "Azure Test Process - for data packages",
+    "enabled": false,
+    "dataPackage": true,
+    "workflow": "#wf_xml_data_loader",
+    "cron": "12 46 ? * * *",
+    "environment": "production",
+    "input": {
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+        "tx": "#ECB_FX"
+    },
+    "tags": ["AZURE", "TEST"]
+}
+
+### List DataPackages
+GET {{url}}/datapackage/v1
+Authorization: Bearer {{token}}
+
+### Get a DataPackage
+GET {{url}}/datapackage/v1/AZURE_TEST
+Authorization: Bearer {{token}}
+
+### Deploy a DataPackage
+GET {{url}}/datapackage/v1/AZURE_TEST?_function=deploy
+Authorization: Bearer {{token}}

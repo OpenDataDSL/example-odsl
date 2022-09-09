@@ -1,0 +1,60 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+
+### Get build info
+GET {{url}}/queue
+Authorization: Bearer {{token}}
+
+### Add a queue
+POST {{url}}/queue/v1
+Authorization: Bearer {{token}}
+
+{
+  "queue": "test2",
+  "description": "Test 2 queue"
+}
+
+### Get all queues
+GET {{url}}/queue/v1
+Authorization: Bearer {{token}}
+
+### Get a queue
+GET {{url}}/queue/v1/default
+Authorization: Bearer {{token}}
+
+### Delete a queue
+DELETE {{url}}/queue/v1/test2
+Authorization: Bearer {{token}}
+
+### GetToken
+# @name test
+
+@client_appid=61bfc625-5cb3-462e-b2fd-1bffd24e18ed
+@client_tenantid=9fbf6424-eafa-4bdc-bd40-6008c3fdb934
+@client_secret=g4-2Y45l69w0wRl5~fEMo6w6.bQEupDpx-
+@scope = https://servicebus.azure.net/.default
+
+GET /{{client_tenantid}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{client_appid}}&
+client_secret={{client_secret}}&
+scope={{scope}}
+
+### List SB Queues
+GET https://sb-odsl.servicebus.windows.net/$Resources/queues
+Authorization: Bearer {{test.response.body.access_token}}

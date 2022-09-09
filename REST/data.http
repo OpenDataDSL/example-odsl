@@ -1,0 +1,171 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/data
+Authorization: Bearer {{token}}
+
+### Portal request for public data
+GET {{url}}/data/v1/public
+    ?_filter={"_type":{"$in":["VarCurveDates","VarSmartCurve"]}}
+    &_project={"data":false,"properties":false,"contracts":false,"ondate":false,"_tag":false}
+    &_sort={"_id":1}
+    &_limit=100
+    &_skip=0
+Authorization: Bearer {{token}}
+
+### Portal request for public data
+GET {{url}}/data/v1/public
+    ?_filter={"_type":{"$in":["VarCurveDates","VarSmartCurve"]}}
+    &_limit=100
+    &_skip=0
+Authorization: Bearer {{token}}
+
+### Portal request for public data
+GET {{url}}/data/v1/public
+    ?_filter={"_type":{"$in":["VarTimeSeries","VarSmartCurve"]}}
+    &_objfilter={"dataset":{"$exists":true,"$in":["BNM_FX"]}}
+    &_project={"data":false,"properties":false,"contracts":false,"ondate":false,"_tag":false}
+    &_sort={"_id":1}
+    &_limit=100
+    &_skip=0
+Authorization: Bearer {{token}}
+
+### Get all public data types
+GET {{url}}/data/v1/public?_distinct=_objtype
+Authorization: Bearer {{token}}
+
+### Get a public data
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT
+Authorization: Bearer {{token}}
+
+### Get a public data with projection
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT
+    ?_project=start
+Authorization: Bearer {{token}}
+
+### Get a public data from a date
+GET {{url}}/data/v1/public/%23EIA.PET.RBRTE.D:SPOT
+    ?_range=from(T-1M4D)
+Authorization: Bearer {{token}}
+
+### Get a public data between 2 dates
+GET {{url}}/data/v1/public/%23EIA.PET.RBRTE.D:SPOT
+    ?_range=between(2021-12-30,2022-01-10)
+Authorization: Bearer {{token}}
+
+### Get a public data last 2 dates
+GET {{url}}/data/v1/public/%23EIA.PET.RBRTE.D:SPOT
+    ?_range=last(2)
+Authorization: Bearer {{token}}
+
+### Get a time-series range using last(n)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT?_range=last(3)
+Authorization: Bearer {{token}}
+
+### Get a time-series range using from(d)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT?_range=from(2021-03-08)
+Authorization: Bearer {{token}}
+
+### Get a time-series range using between(d,d)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT?_range=between(2021-02-26,2021-03-01)
+Authorization: Bearer {{token}}
+
+### Get a time-series range using between(d,d)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT?_range=between(T-5D,T-1D)
+Authorization: Bearer {{token}}
+
+### Get a time-series range using from(d)
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT?_range=from(t-D1h0m0s0)
+Authorization: Bearer {{token}}
+
+### Get a time-series range for a list of data
+GET {{url}}/data/v1/public
+    ?_filter={"_objtype":"%23ForeignExchange"}
+    &_range=last(1)
+Authorization: Bearer {{token}}
+
+### Get a time-series range for a list of data
+GET {{url}}/data/v1/public
+    ?dataset=ECB_FX
+    &_range=last(1)
+Authorization: Bearer {{token}}
+
+### Get a time-series range for a list of data using object filtering
+GET {{url}}/object/v1/public
+    ?_filter={"_type":"%23ForeignExchange"}
+    &_profile=SPOT
+    &_range=last(1)
+Authorization: Bearer {{token}}
+
+### Get a time-series range using from(n) with a rule date
+GET {{url}}/data/v1/public/%23ECB_FX.EURGBP:SPOT?_range=from(t-D1h0m0s0)
+Authorization: Bearer {{token}}
+
+### Get a curve
+GET {{url}}/data/v1/private/TUTORIAL_ODSL_CURVE:PREMIUM:L-1
+Authorization: Bearer {{token}}
+
+### Get ALL
+GET {{url}}/data/v1/public
+    ?_project={"_type":1}
+    &_sort={"_id":1}
+    &_limit=-1
+Authorization: Bearer {{token}}
+
+### Get data for multiple ids both private and public
+GET {{url}}/data/v1/all
+    ?_id=%23ECB_FX.EURGBP:SPOT
+    &_id=tsobj:SPOT
+Authorization: Bearer {{token}}
+
+### Filter distinct
+GET {{url}}/data/v1/private
+    ?_filter={"_type"%3a{"%24in"%3a%5b"VarTimeSeries"%2c"VarCurveDates"%2c"VarSmartCurve"%5d}}
+    &_distinct=properties.category
+    &_limit=-1
+Authorization: Bearer {{token}}
+
+### Filter data
+GET {{url}}/data/v1/private
+    ?_filter={"%24and"%3a%5b{"_type"%3a{"%24in"%3a%5b"VarTimeSeries"%2c"VarCurveDates"%2c"VarSmartCurve"%5d}}%2c{"properties.category"%3a{"%24exists"%3atrue%2c"%24in"%3a%5b"TUTORIAL"%5d}}%5d}
+    &_project={"data"%3afalse%2c"properties"%3afalse%2c"_tag"%3afalse}
+    &_sort={"_id"%3a1}
+    &_limit=800
+    &_skip=0
+Authorization: Bearer {{token}}
+
+### Performance
+GET {{url}}/data/v1/all?_id=DME.CR.ME.ODO.FUT%3aSETTLE%3a2022-05-05
+Authorization: Bearer {{token}}
+x-odsl-environment: dev99
+
+### Performance
+GET {{url}}/data/v1/private/DME.CR.ME.ODO.FUT%3aSETTLE%3a2022-05-05
+Authorization: Bearer {{token}}
+x-odsl-environment: dev99
+
+### Issue
+{{url}}/data/v1/all?_id=EEX.EL.DE.B.FUT%3aMID%3a2021-01-12
+Authorization: Bearer {{token}}
+
+### Last3
+{{url}}/data/v1/all?_id=%23ABN_FX.EURAED%3aSPOT&_range=last(3)
+Authorization: Bearer {{token}}
+
+### Dynamic range
+{{url}}/data/v1/all
+    ?_id=%23ABN_FX.EURAED%3aSPOT
+    &_range=T-5d
+Authorization: Bearer {{token}}

@@ -1,0 +1,52 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### List issues
+GET {{url}}/portal/support
+Authorization: Bearer {{token}}
+
+### Get an issue
+GET {{url}}/portal/support/CUST-4
+Authorization: Bearer {{token}}
+
+### Get an issue
+GET {{url}}/portal/support/CUST-8
+Authorization: Bearer {{token}}
+
+### Create an issue
+POST {{url}}/portal/support
+Authorization: Bearer {{token}}
+
+{
+    "issuetype": "Bug",
+    "component": "Excel",
+    "summary": "First Issue",
+    "description": "This is my first issue"
+}
+
+### Edit an issue
+PUT {{url}}/portal/support/CUST-8
+Authorization: Bearer {{token}}
+
+{
+    "description": "Description"
+}
+
+### Comment on an issue
+POST {{url}}/portal/support/CUST-8
+Authorization: Bearer {{token}}
+
+{    
+    "comment": "Java"
+}

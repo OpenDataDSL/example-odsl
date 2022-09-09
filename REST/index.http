@@ -1,0 +1,60 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/index
+Authorization: Bearer {{token}}
+
+### List all indexes
+GET {{url}}/index/v1
+Authorization: Bearer {{token}}
+
+### Get an index for private Widget
+GET {{url}}/index/v1/_id_
+Authorization: Bearer {{token}}
+
+### Add an index
+POST {{url}}/index/v1
+Authorization: Bearer {{token}}
+
+{
+    "source": "private",
+    "name": "name",
+    "keys": {
+        "dataset":1
+    }
+}
+
+### Delete an index
+DELETE {{url}}/index/v1/name
+Authorization: Bearer {{token}}
+
+### Test 400 error - invalid JSON
+POST {{url}}/index/v1
+Authorization: Bearer {{token}}
+
+{
+  "source": "private",
+  "name": "name",
+  "keys": [
+      "name": 1
+  ]
+}
+
+
+
+### Test 404 error - missing index
+GET {{url}}/index/v1/invalid
+Authorization: Bearer {{token}}
+

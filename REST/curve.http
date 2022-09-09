@@ -1,0 +1,162 @@
+@jurl=https://process-runner-dev.azurewebsites.net/api
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/data
+Authorization: Bearer {{token}}
+
+### Get a list of ondates for a curve ALL
+GET {{url}}/data/v1/all/%23CLALIT.AMF.AVGAUC.WP:CURVE
+Authorization: Bearer {{token}}
+
+### Get a list of ondates for a curve
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE
+Authorization: Bearer {{token}}
+
+### Get a list of tenors for a curve
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE
+    ?_listTenors=true
+Authorization: Bearer {{token}}
+
+### Get a tenor timeseries for a curve
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE
+    ?_tenor=M01
+Authorization: Bearer {{token}}
+
+### Get a tenor timeseries for a curve limited with a range
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE
+    ?_tenor=M01
+    &_range=from(2021-11-01)
+Authorization: Bearer {{token}}
+
+### Get a relative curve
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE:L
+Authorization: Bearer {{token}}
+
+### Get a relative curve
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE:L-1
+Authorization: Bearer {{token}}
+
+### Get a relative curve
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE:-2022-05-03
+Authorization: Bearer {{token}}
+
+### Get a list of ondates for a curve like the portal
+GET {{url}}/data/v1/public/%23CLALIT.AMF.AVGAUC.WP:CURVE?_project={"data":false,"properties":false}
+Authorization: Bearer {{token}}
+
+### Update a curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "CURVEBASE",
+    "_type": "#Object",
+    "CURVE": {
+        "_id": "CURVE",
+        "_type": "VarCurve",
+        "ondate": {
+            "curveDate": "2022-02-28",
+            "expiryCalendar": "#REOMHENG"
+        },
+        "properties":{"timezone":"BST"},
+        "contracts": [
+            {"tenor": "M01", "value": 1.4},
+            {"tenor": "M02", "value": 2.2},
+            {"tenor": "M03", "value": 3.3},
+            {"tenor": "M04", "value": 4.4},
+            {"tenor": "M05", "value": 5.5},
+            {"tenor": "M06", "value": 6.6}
+        ]
+    }
+}
+
+### Get the curve
+GET {{url}}/data/v1/private/CURVEBASE:CURVE:2022-02-28
+Authorization: Bearer {{token}}
+
+### Get the curve dates
+GET {{url}}/data/v1/private/CURVEBASE:CURVE:2022-02-26
+Authorization: Bearer {{token}}
+
+### Ram
+https://odsl-temp.azurewebsites.net/api/data/v1/all?_id=%23BSP.EL.SI.HOURLY.DA:PRICE:2022-05-04
+Authorization: Bearer {{token}}
+
+### Ram
+GET {{url}}/data/v1/all/EEX.EL.DE.B.FUT%3aHIGH%3a2021-01-12
+    ?expression=(BASE%2bLOW)
+    &script=%23CurveScript
+    &LOW=EEX.EL.DE.B.FUT:LOW
+Authorization: Bearer {{token}}
+
+### Ram
+GET {{url}}/data/v1/all/EEX.EL.DE.B.FUT%3aMID%3a2021-01-12
+Authorization: Bearer {{token}}
+
+### Minimal New Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "MINIMAL",
+    "CURVE": {
+        "_id": "CURVE",
+        "_type": "VarCurve",
+        "ondate": {
+            "curveDate": "2022-02-28",
+            "expiryCalendar": "#REOMHENG"
+        },
+        "contracts": [
+            {"tenor": "M01", "value": 1.4}
+        ]
+    }
+}
+
+### Minimal Existing Curve
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "MINIMAL",
+    "CURVE": {
+        "_id": "CURVE",
+        "_type": "VarCurve",
+        "curveDate": "2022-03-01",
+        "contracts": [
+            {"tenor": "M01", "value": 1.4}
+        ]
+    }
+}
+
+### Tenor
+GET {{url}}/data/v1/all/%23BSP.EL.SI.BASE.DA:PRICE?_tenor=D01
+Authorization: Bearer {{token}}
+
+### List Dates and Tenors
+GET {{url}}/data/v1/all/%23BSP.EL.SI.BASE.DA:PRICE
+Authorization: Bearer {{token}}
+
+### Tenor
+GET {{url}}/data/v1/all/%23BSP.EL.SI.BASE.DA:PRICE:D01
+Authorization: Bearer {{token}}
+
+### List Dates and Tenors
+GET {{url}}/data/v1/public/%23CLALIT.BMP.AVGAUC.WP:CURVE
+Authorization: Bearer {{token}}
+
+### Tenor
+GET {{url}}/data/v1/public/%23CLALIT.BMP.AVGAUC.WP:CURVE:M01
+Authorization: Bearer {{token}}

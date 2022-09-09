@@ -1,0 +1,68 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Create a TimeSeries
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "#Object",
+  "name": "TEST",
+  "dataset":"TEST21",
+  "TS": {
+      "_id": "TS",
+      "_type":"VarTimeSeries",
+      "start":"2022-03-17",
+      "calendar": "DAILY",
+      "data": [
+          {
+              "_type": "TimeValue",
+              "time": "2022-03-17",
+              "value": 22.3176
+          }
+      ]
+  }
+}
+
+### Minimal New TimeSeries
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "MINIMAL_TS",
+  "TS": {
+        "_id": "TS",
+        "_type":"VarTimeSeries",
+        "calendar": "DAILY",
+        "data":[
+            {"time":"2022-01-01", "value":0.82}
+        ]
+  }
+}
+
+### Minimal Existing TimeSeries
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "MINIMAL_TS",
+  "TS": {
+        "_id": "TS",
+        "_type":"VarTimeSeries",
+        "data":[
+            {"time":"2022-01-04", "value":0.86}
+        ]
+  }
+}

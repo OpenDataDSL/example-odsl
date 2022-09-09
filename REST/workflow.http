@@ -1,0 +1,92 @@
+@url = http://localhost:7071/api
+#@url = https://func-odsl-dev-js.azurewebsites.net/api
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZWYzNGRjMzctOWQ1NS00M2M0LTk5YWQtYTM1ZjNjOTZmOGY0L3YyLjAiLCJpYXQiOjE2MTA3MTkzMjIsIm5iZiI6MTYxMDcxOTMyMiwiZXhwIjoxNjEwNzIzMjIyLCJhaW8iOiJBVlFBcS84U0FBQUFWRjdLRlZZRUZPM1FwQ0JaK3pDc25jTk1nNThPRE5qMmxQYjd5cEU5em9pR3BDUU5IZSt6TUlyR3pxSE9XK2VnbGZJS0pndUtaUWdPbjZ4SXhrU0RXbzZ0V05vMzFxaEhYcGk1WDdYdjJyWT0iLCJhenAiOiJkMzc0MmY1Zi0zZDRkLTQ1NjUtYTgwYS1lYmRlZmFhYjhkMDgiLCJhenBhY3IiOiIwIiwibmFtZSI6IkNvbGluIEhhcnRsZXkiLCJvaWQiOiIyZTVkY2E1Ny1hZDZjLTRlYmMtODBjMC02ZDE5MGQzMmU3YTMiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJjb2xpbi5oYXJ0bGV5QG9wZW5kYXRhZHNsLmNvbSIsInJoIjoiMC5BQUFBTjl3MDcxV2R4RU9acmFOZlBKYjQ5Rjh2ZE5OTlBXVkZxQXJyM3ZxcmpRaGdBT2cuIiwicm9sZXMiOlsiT0RTTC5hZG1pbiJdLCJzY3AiOiJhcGlfdXNlciIsInN1YiI6ImRoQThkUjhRMU9tRlNvSWVrWjNvcC1GX1pmSjlMTHNuaUkwY3VDZHVfaVkiLCJ0aWQiOiJlZjM0ZGMzNy05ZDU1LTQzYzQtOTlhZC1hMzVmM2M5NmY4ZjQiLCJ1dGkiOiJzbk9qSDNXVGlFQ0Y3dzRrVUZJVUFBIiwidmVyIjoiMi4wIn0.PvMKGqeRAct592T-qLog9BjPPrc0YAfmBmEsKryufDLrxzvpALUQCBrvmhBwMOZrgW0sMq8IXEd6Q_3c5yJhYOVIkjZ-JR2Vi0T_1zL_d-VXUT3kEamRkboT6zJVEoc8cEDAnnSgFV5RyUOnBokhJA-PfnTAC3zQyu_JzYrUexrgZbDO7BUQE4bcAMa0JdY7-Jm1NBp8uDV9WqdoCA-eQLeRZkslT2CJJvpgWTfQJ7fJ8zKDcA57unNqNLJgg5F3U7eRS9ERnEGVG2_LFg7veNDGWTYCH6vQPl3uetk5wiQKKoZScd9ljA2AQIhf-vkjqR83xr8PpDGO3Z4peVYhWQ
+
+### Get build info
+GET {{url}}/workflow
+Authorization: Bearer {{token}}
+
+### List all public workflows
+GET {{url}}/workflow/v1/public
+Authorization: Bearer {{token}}
+
+### List all public workflow names
+GET {{url}}/workflow/v1/public?_distinct=_id
+Authorization: Bearer {{token}}
+
+### List all private workflows
+GET {{url}}/workflow/v1/private
+Authorization: Bearer {{token}}
+
+### List all private workflow names
+GET {{url}}/workflow/v1/private?_distinct=_id
+Authorization: Bearer {{token}}
+
+### Get a private workflow
+GET {{url}}/workflow/v1/private/workflow_test
+Authorization: Bearer {{token}}
+
+### Update a private workflow
+POST {{url}}/workflow/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "test",
+  "_type": "VarWorkflow",
+  "category": "general",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+### Change the private workflow
+POST {{url}}/workflow/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "test",
+  "_type": "VarWorkflow",
+  "category": "general",
+  "inputs": [],
+  "outputs": [],
+  "exits": []
+}
+
+### Get a list of versions of private workflow
+GET {{url}}/workflow/v1/private/test/*
+Authorization: Bearer {{token}}
+
+### Get a version of private workflow
+GET {{url}}/workflow/v1/private/test/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a private workflow
+PUT {{url}}/workflow/v1/private/test/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of workflow
+GET {{url}}/workflow/v1/private/test/PROD
+Authorization: Bearer {{token}}
+
+### Test 404 error
+GET {{url}}/workflow/v1/private/test1
+Authorization: Bearer {{token}}
+
+### Test 400 error - missing _id
+POST {{url}}/workflow/v1
+Authorization: Bearer {{token}}
+
+{
+  "_type": "VarWorkflow",
+  "category": "test",
+  "script": "I2xvYWRfdHlwZXMgPSBhY3Rpb24gaW4gImdlbmVyYWwiDQogICAgcHJpbnQgImxvYWRpbmcgdHlwZXMiDQogICAgbG9hZFR5cGVzKCkNCmVuZA0K",
+}
+
+### Delete a version of workflow
+DELETE {{url}}/workflow/v1/private/test
+Authorization: Bearer {{token}}
+
+### Fully delete a workflow
+DELETE {{url}}/workflow/v1/private/test/*
+Authorization: Bearer {{token}}

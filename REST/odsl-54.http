@@ -1,0 +1,1471 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/object
+Authorization: Bearer {{token}}
+
+### Delete the environment
+DELETE {{url}}/environment/v1/odsl54
+Authorization: Bearer {{token}}
+
+### Create Environment
+POST {{url}}/environment/v1
+Authorization: Bearer {{token}}
+
+{
+    "_id": "odsl54"
+}
+
+### Create a private object with a reason query string
+POST {{url}}/object/v1?_reason=A%20new%20setting
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+  "_id": "TEST",
+  "_type": "#SETTING",
+  "name": "TEST",
+  "value": 1234.5
+}
+
+### Fail 400 - cannot change the type of an object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+  "_id": "TEST",
+  "_type": "#MetadataMapping",
+  "name": "TEST",
+  "value": 1234
+}
+
+### Change a private object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+  "_id": "TEST",
+  "_type": "#SETTING",
+  "name": "TEST",
+  "value": 1234.56
+}
+
+### Get a private object
+GET {{url}}/object/v1/private/TEST
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a list of versions of private object
+GET {{url}}/object/v1/private/TEST/*
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a version of private object
+GET {{url}}/object/v1/private/TEST/1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Tag a version of a private object
+PUT {{url}}/object/v1/private/TEST/1/PROD
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Get a tagged version of private object
+GET {{url}}/object/v1/private/TEST/PROD
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Delete a version of private object
+DELETE {{url}}/object/v1/private/TEST
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Fully delete a private object
+DELETE {{url}}/object/v1/private/TEST/*
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+### Update an array of objects
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+[
+  {
+    "_id": "TEST1",
+    "_type": "#SETTING",
+    "name": "TEST1",
+    "value": 1
+  },
+  {
+    "_id": "TEST2",
+    "_type": "#SETTING",
+    "name": "TEST2",
+    "value": 2.5
+  },
+  {
+    "_id": "TEST3",
+    "_type": "#SETTING",
+    "name": "TEST3",
+    "value": 3
+  },
+  {
+    "_id": "TEST4",
+    "_type": "#SETTING",
+    "name": "TEST4",
+    "value": 4
+  }
+]
+
+### Test Transaction Abort
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+[
+  {
+    "_id": "TESTOK",
+    "_type": "#SETTING",
+    "name": "TEST1",
+    "value": 1
+  },
+  {
+    "_id": "TESTFAIL",
+    "_type": "#SETTING",
+    "name": "TEST3",
+    "value": 3,
+    "$dodgy.field.name": true
+  }
+]
+
+### Test TimeSeries Create
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+    "_id" : "BULK_CREAM",
+    "_type" : "#Agriculture",
+    "_links" : {},
+    "_access" : "#F1",
+    "AVERAGE" : {
+        "_id": "AVERAGE",
+        "_type" : "VarTimeSeries",
+        "description" : "",
+        "start" : "2000-07-09T00:00:00",
+        "currency": "EUR",
+        "units": "KG",
+        "data" : [ 
+            {
+                "time" : "2000-07-09T00:00:00",
+                "value" : 1031,
+                "_type" : "TimeValue"
+            }],
+        "properties" : {}
+    },
+    "category" : "Agriculture",
+    "class" : "SPOT",
+    "collection" : "F1",
+    "description" : "AHDB Indicative average prices for UK dairy wholesale markets, including bulk cream, butter, skimmed milk powder (SMP) and mild Cheddar cheese",
+    "location" : "UK",
+    "name" : "Bulk cream",
+    "product" : "AHDB_DAIRY",
+    "source" : "Agriculture and Horticulture Development Board",
+    "tags" : [ 
+        "AGS", 
+        "AHDB", 
+        "DAIRY"
+    ]
+}
+
+### Test TimeSeries Update
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+    "_id" : "BULK_CREAM",
+    "_type" : "#Agriculture",
+    "_links" : {},
+    "_access" : "#F1",
+    "AVERAGE" : {
+        "_id": "AVERAGE",
+        "_type" : "VarTimeSeries",
+        "description" : "",
+        "start" : "2000-07-02T00:00:00",
+        "currency": "EUR",
+        "units": "KG",
+        "data" : [ 
+            {
+                "time" : "2000-07-02T00:00:00",
+                "value" : 1026,
+                "_type" : "TimeValue"
+            },
+            {
+                "time" : "2000-07-03T00:00:00",
+                "value" : 1027,
+                "_type" : "TimeValue"
+            }
+        ],
+        "properties" : {}
+    },
+    "category" : "Agriculture",
+    "class" : "SPOT",
+    "collection" : "F1",
+    "description" : "AHDB Indicative average prices for UK dairy wholesale markets, including bulk cream, butter, skimmed milk powder (SMP) and mild Cheddar cheese",
+    "location" : "UK",
+    "name" : "Bulk cream",
+    "product" : "AHDB_DAIRY",
+    "source" : "Agriculture and Horticulture Development Board",
+    "tags" : [ 
+        "AGS", 
+        "AHDB", 
+        "DAIRY"
+    ]
+}
+
+### Update a private transformer
+POST {{url}}/transformer/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+  "_id": "test",
+  "_type": "VarTransformer",
+  "description": "Transform Test",
+  "transformer": {
+    "id": "fx",
+    "output": "#ForeignExchange",
+    "outputid": "ECB_FX",
+    "createIds": [
+      "Cube"
+    ],
+    "clearProperties": []
+  }
+}
+
+### Update an incorrect private transformer
+POST {{url}}/transformer/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+  "_id": "test",
+  "_type": "VarTransformer",
+  "description": "Transform Test",
+  "transformer": {
+    "id": "fx",
+    "output": "#ForeignExchange",
+    "outputid": "ECB_FX",
+    "createIds": [
+      "Cube"
+    ],
+    "clearProperties": [],
+    "$test": null
+  }
+}
+
+
+### Update a process
+POST {{url}}/process/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+    "_id" : "ECB_FX",
+    "_type" : "VarProcess",
+    "service" : "ETL",
+    "name" : "ECB_FX",
+    "description" : "ETL Process for European Central Bank Exchange Rates",
+    "enabled" : true,
+    "processType" : "Ristretto",
+    "workflow" : "#wf_xml_data_loader",
+    "settings" : {},
+    "input" : {
+        "tx" : "#ECB_FX",
+        "url" : "\"https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml\""
+    },
+    "event" : {},
+    "cron" : "22 13 ? * MON,TUE,WED,THU,FRI *",
+    "environment" : "odsl54"
+}
+
+### Update a batch
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+x-odsl-environment: odsl54
+
+{
+  "_type": "VarBatch",
+  "_id": "79e36a9a-b419-44aa-922d-5b53152d6b97",
+  "service": "ETL",
+  "name": "ECB_FX",
+  "elements": [
+    {
+      "_id": "ECB_FX.EURAUD",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.5744,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "AUD",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/AUD",
+      "location": "EUROPE",
+      "model": "EURAUD",
+      "name": "EUR to AUD",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURBGN",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.9558,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "BGN",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/BGN",
+      "location": "EUROPE",
+      "model": "EURBGN",
+      "name": "EUR to BGN",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURBRL",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 6.4967,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "BRL",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/BRL",
+      "location": "EUROPE",
+      "model": "EURBRL",
+      "name": "EUR to BRL",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURCAD",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.5453,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "CAD",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/CAD",
+      "location": "EUROPE",
+      "model": "EURCAD",
+      "name": "EUR to CAD",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURCHF",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.0759,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "CHF",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/CHF",
+      "location": "EUROPE",
+      "model": "EURCHF",
+      "name": "EUR to CHF",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURCNY",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 7.8411,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "CNY",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/CNY",
+      "location": "EUROPE",
+      "model": "EURCNY",
+      "name": "EUR to CNY",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURCZK",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 26.025,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "CZK",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/CZK",
+      "location": "EUROPE",
+      "model": "EURCZK",
+      "name": "EUR to CZK",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURDKK",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 7.4377,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "DKK",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/DKK",
+      "location": "EUROPE",
+      "model": "EURDKK",
+      "name": "EUR to DKK",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURGBP",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 0.88395,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "GBP",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/GBP",
+      "location": "EUROPE",
+      "model": "EURGBP",
+      "name": "EUR to GBP",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURHKD",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 9.3911,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "HKD",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/HKD",
+      "location": "EUROPE",
+      "model": "EURHKD",
+      "name": "EUR to HKD",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURHRK",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 7.559,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "HRK",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/HRK",
+      "location": "EUROPE",
+      "model": "EURHRK",
+      "name": "EUR to HRK",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURHUF",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 360.9,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "HUF",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/HUF",
+      "location": "EUROPE",
+      "model": "EURHUF",
+      "name": "EUR to HUF",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURIDR",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 17123.2,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "IDR",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/IDR",
+      "location": "EUROPE",
+      "model": "EURIDR",
+      "name": "EUR to IDR",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURILS",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 3.9556,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "ILS",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/ILS",
+      "location": "EUROPE",
+      "model": "EURILS",
+      "name": "EUR to ILS",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURINR",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 88.438,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "INR",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/INR",
+      "location": "EUROPE",
+      "model": "EURINR",
+      "name": "EUR to INR",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURISK",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 157,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "ISK",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/ISK",
+      "location": "EUROPE",
+      "model": "EURISK",
+      "name": "EUR to ISK",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURJPY",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 125.87,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "JPY",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/JPY",
+      "location": "EUROPE",
+      "model": "EURJPY",
+      "name": "EUR to JPY",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURKRW",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1340.79,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "KRW",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/KRW",
+      "location": "EUROPE",
+      "model": "EURKRW",
+      "name": "EUR to KRW",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURMXN",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 24.4497,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "MXN",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/MXN",
+      "location": "EUROPE",
+      "model": "EURMXN",
+      "name": "EUR to MXN",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURMYR",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 4.9007,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "MYR",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/MYR",
+      "location": "EUROPE",
+      "model": "EURMYR",
+      "name": "EUR to MYR",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURNOK",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 10.4555,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "NOK",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/NOK",
+      "location": "EUROPE",
+      "model": "EURNOK",
+      "name": "EUR to NOK",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURNZD",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.6844,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "NZD",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/NZD",
+      "location": "EUROPE",
+      "model": "EURNZD",
+      "name": "EUR to NZD",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURPHP",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 58.27,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "PHP",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/PHP",
+      "location": "EUROPE",
+      "model": "EURPHP",
+      "name": "EUR to PHP",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURPLN",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 4.552,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "PLN",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/PLN",
+      "location": "EUROPE",
+      "model": "EURPLN",
+      "name": "EUR to PLN",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURRON",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 4.8753,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "RON",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/RON",
+      "location": "EUROPE",
+      "model": "EURRON",
+      "name": "EUR to RON",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURRUB",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 91.7258,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "RUB",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/RUB",
+      "location": "EUROPE",
+      "model": "EURRUB",
+      "name": "EUR to RUB",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURSEK",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 10.1139,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "SEK",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/SEK",
+      "location": "EUROPE",
+      "model": "EURSEK",
+      "name": "EUR to SEK",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURSGD",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.6088,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "SGD",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/SGD",
+      "location": "EUROPE",
+      "model": "EURSGD",
+      "name": "EUR to SGD",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURTHB",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 36.342,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "THB",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/THB",
+      "location": "EUROPE",
+      "model": "EURTHB",
+      "name": "EUR to THB",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURTRY",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 8.9542,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "TRY",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/TRY",
+      "location": "EUROPE",
+      "model": "EURTRY",
+      "name": "EUR to TRY",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURUSD",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 1.2114,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "USD",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/USD",
+      "location": "EUROPE",
+      "model": "EURUSD",
+      "name": "EUR to USD",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    },
+    {
+      "_id": "ECB_FX.EURZAR",
+      "_type": "#ForeignExchange",
+      "_links": {},
+      "_access": "#F1",
+      "SPOT": {
+        "_type": "VarTimeSeries",
+        "_id": "SPOT",
+        "description": "",
+        "start": "2021-01-27T00:00:00",
+        "calendar": "BUSINESS",
+        "data": [
+          {
+            "time": "2021-01-27T00:00:00",
+            "value": 18.4379,
+            "_type": "TimeValue"
+          }
+        ],
+        "properties": {}
+      },
+      "base": "EUR",
+      "category": "Foreign Exchange",
+      "class": "SPOT",
+      "currency": "ZAR",
+      "description": "European Central Bank Euro foreign exchange reference rates EUR/ZAR",
+      "location": "EUROPE",
+      "model": "EURZAR",
+      "name": "EUR to ZAR",
+      "source": "ECB_FX",
+      "sourceName": "European Central Bank",
+      "tags": [
+        "FX",
+        "ECB",
+        "EUR"
+      ]
+    }
+  ]
+}

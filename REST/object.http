@@ -1,0 +1,426 @@
+@token={{auth.response.body.access_token}}
+
+### Log into AAD
+# @name auth
+
+GET /{{tenantId}}/oauth2/v2.0/token
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id={{clientId}}&
+client_secret={{secret}}&
+scope=api://opendatadsl/.default
+
+### Get build info
+GET {{url}}/object
+Authorization: Bearer {{token}}
+
+### Get all public object types
+GET {{url}}/object/v1/public
+Authorization: Bearer {{token}}
+
+### List all public objects of type #ForeignExchange and all sub types
+GET {{url}}/object/v1/public?_filter={"%23type":"%23ForeignExchange"}
+Authorization: Bearer {{token}}
+
+### List all public objects of type #ForeignExchange
+GET {{url}}/object/v1/public?_filter={"_type":"%23ForeignExchange"}
+Authorization: Bearer {{token}}
+
+### Distinct list of types
+GET {{url}}/object/v1/public
+  ?_distinct=_type
+Authorization: Bearer {{token}}
+
+### Simple filter
+GET {{url}}/object/v1/public?currency=EUR&class=SPOT
+Authorization: Bearer {{token}}
+
+### Simple filter 2
+GET {{url}}/object/v1/public?location=Europe
+Authorization: Bearer {{token}}
+
+### Simple filter 2
+GET {{url}}/object/v1/public?name=regex(.*Bank.*)
+Authorization: Bearer {{token}}
+
+### Search for objects
+GET {{url}}/object/v1/public
+  ?_search=ecb
+  &_type=%23AssetClass
+Authorization: Bearer {{token}}
+
+### List all distinct base currencies of public objects of type #ForeignExchange
+GET {{url}}/object/v1/public?_type=%23ForeignExchange&_distinct=base
+Authorization: Bearer {{token}}
+
+### Filter by _type
+GET {{url}}/object/v1/public
+  ?_type=%23Company
+  &_project=name
+Authorization: Bearer {{token}}
+
+### Filter by #type
+GET {{url}}/object/v1/public
+  ?%23type=%23MarketData
+  &_project=name
+Authorization: Bearer {{token}}
+
+### Get a public object
+GET {{url}}/object/v1/public/%23BNM_FX_AEDMYR_1200
+Authorization: Bearer {{token}}
+
+### Get a public object
+GET {{url}}/object/v1/public/%23ECB
+  ?_project=base,currency
+Authorization: Bearer {{token}}
+
+### Get a public object
+GET {{url}}/object/v1/public/%23EUROSTAT.SK04.LS.A2110C.THS_HD.A
+Authorization: Bearer {{token}}
+
+### Get a public object
+GET {{url}}/object/v1/public/%23EUROSTAT
+Authorization: Bearer {{token}}
+
+### Get a public object
+GET {{url}}/object/v1/public/%23ECB_FX.EURAUD
+  # ?_project={"base":1,"currency":1}
+Authorization: Bearer {{token}}
+
+### Search for objects with a location field
+GET {{url}}/object/v1/public
+  ?location=ne(null)
+  &_project=location
+Authorization: Bearer {{token}}
+
+### Search for objects where location is a list of places
+GET {{url}}/object/v1/public
+  ?location=in(Malaysia, United Kingdom)
+  &_project=location
+Authorization: Bearer {{token}}
+
+### Search for objects where value is lte a value
+GET {{url}}/object/v1/private
+  ?value=lte(3)
+Authorization: Bearer {{token}}
+
+### Search for objects where value is within a range
+GET {{url}}/object/v1/private
+  ?value=range(2,3)
+Authorization: Bearer {{token}}
+
+### Get DATA for a public object
+GET https://odsl-dev.azurewebsites.net/api/object/v1/public?_limit=10&_skip=0&_filter=%7B%22%24and%22%3A%5B%7B%22_id%22%3A%22%23ECB_FX.EURZAR%22%7D%2C%7B%7D%5D%7D&_profile=SPOT&_range=between%282021-05-25%2C2021-05-25%29
+#GET {{url}}/object/v1/public/%23BNM_FX_AEDMYR_1200?_profile=SPOT&_range=last(1)
+Authorization: Bearer {{token}}
+
+### Get DATA for multiple public objects
+GET {{url}}/object/v1/public
+  ?_type=%23ForeignExchange
+  &dataset=ECB_FX
+  &currency=in(GBP,USD)
+  &_profile=SPOT
+  &_range=last(1)
+Authorization: Bearer {{token}}
+
+### Get DATA for a single public object
+GET {{url}}/object/v1/public/%23ECB_FX.EURGBP
+  ?_profile=SPOT
+  &_range=last(1)
+Authorization: Bearer {{token}}
+
+### Update a private object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "#Object",
+  "name": "TEST",
+  "value": 1234.56,
+  "description":"Test Object"
+}
+
+### Minimal update of object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "MINIMAL_OBJECT"
+}
+
+### Change a private object
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TEST",
+  "_type": "#SETTING",
+  "name": "TEST",
+  "value": 1234.56
+}
+
+### Get a private object
+GET {{url}}/object/v1/all/TEST
+Authorization: Bearer {{token}}
+
+### Get a list of versions of private object
+GET {{url}}/object/v1/private/TEST/*
+Authorization: Bearer {{token}}
+
+### Get a version of private object
+GET {{url}}/object/v1/private/TEST/1
+Authorization: Bearer {{token}}
+
+### Tag a version of a private object
+PUT {{url}}/object/v1/private/TEST/1/PROD
+Authorization: Bearer {{token}}
+
+### Get a tagged version of private object
+GET {{url}}/object/v1/private/TEST/PROD
+Authorization: Bearer {{token}}
+
+### Delete a version of private object
+DELETE {{url}}/object/v1/private/TEST
+Authorization: Bearer {{token}}
+
+### Fully delete a private object
+DELETE {{url}}/object/v1/private/TEST/*
+Authorization: Bearer {{token}}
+
+### Update an array of objects
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+[
+  {
+    "_id": "TEST1",
+    "_type": "#Object",
+    "name": "TEST1",
+    "value": 1
+  },
+  {
+    "_id": "TEST2",
+    "_type": "#Object",
+    "name": "TEST2",
+    "value": 2
+  },
+  {
+    "_id": "TEST3",
+    "_type": "#Object",
+    "name": "TEST3",
+    "value": 3
+  },
+  {
+    "_id": "TEST4",
+    "_type": "#Object",
+    "name": "TEST4",
+    "value": 4
+  }
+]
+
+### Test Transaction
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+[
+  {
+    "_id": "TESTOK",
+    "_type": "#SETTING",
+    "name": "TEST1",
+    "value": 1
+  },
+  {
+    "_id": "TESTFAIL",
+    "_type": "#SETTING",
+    "name": "TEST3",
+    "value": 3,
+    "$dodgy.field.name": true
+  }
+]
+
+
+### Test merge/replace
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TESTMERGE",
+  "_type": "#SETTING",
+  "name": "TESTMERGE",
+  "value": 1
+}
+
+### Get the merged object
+GET {{url}}/object/v1/private/TESTMERGE
+Authorization: Bearer {{token}}
+
+### Test merging
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TESTMERGE",
+  "_type": "#SETTING",
+  "description": "Test merging"
+}
+
+### Test replacing
+POST {{url}}/object/v1?_replace=true
+Authorization: Bearer {{token}}
+
+{
+  "_id": "TESTMERGE",
+  "_type": "#SETTING",
+  "description": "Test merging"
+}
+
+### Test Deleting
+DELETE {{url}}/object/v1/private/TESTMERGE/*
+Authorization: Bearer {{token}}
+
+### GUI Request
+GET https://odsl.azurewebsites.net/api/object/v1/public
+  ?_filter={%22%24and%22%3a%5b{%22_type%22%3a{%22%24exists%22%3atrue%2c%22%24in%22%3a%5b%22%23Location%22%5d}}%5d}
+  &_project={%22_id%22%3atrue%2c%22_type%22%3atrue%2c%22_access%22%3atrue%2c%22_access%22%3atrue%2c%22_oid%22%3atrue%2c%22_version%22%3atrue%2c%22_tag%22%3atrue%2c%22_user%22%3atrue%2c%22name%22%3atrue}
+  &_sort={%22_id%22%3a1}
+  &_limit=100
+  &_skip=0
+Authorization: Bearer {{token}}
+
+### Get objects from both public and private
+GET {{url}}/object/v1/all
+  ?_id=%23AHDB
+  &_id=%23AHDB_DR_PR
+  &_id=ABC
+Authorization: Bearer {{token}}
+
+### Get objects from both public and private with projection
+GET {{url}}/object/v1/all
+  ?_id=%23AHDB
+  &_id=%23AHDB_DR_PR
+  &_id=ABC
+  &_project=name,description
+Authorization: Bearer {{token}}
+
+### Filter by _type
+GET {{url}}/object/v1/public
+  ?commodity=Agriculture
+Authorization: Bearer {{token}}
+
+### Update geo location
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+{
+"_id": "BWSSB.WA.FLOW.DMA.MAG8000_197705H104.15M",
+"_type": "#Water",
+"geoLocation": {
+"type": "Point",
+"coordinates": [77.55861749657565, 12.749941973612]
+}
+}
+
+###
+GET {{url}}/object/v1/all
+  ?_project=%7B%22_id%22:true,%22_type%22:true%7D
+  &_id=%23BSP.EL.SI.BASE.DA,%23CLALIT.AMF.AVGAUC.WP,%23CLALIT.BUTTER_82.AVGAUC.WP
+Authorization: Bearer {{token}}
+
+
+### Test Transaction
+POST {{url}}/object/v1
+Authorization: Bearer {{token}}
+
+[{
+		"_id": "#BSP.EL.SI.BASE.DA",
+		"PRICE": {
+			"_id": "PRICE",
+			"_type": "VarCurve",
+			"ondate": {
+				"curveDate": "2022-06-05",
+				"expiryCalendar": "#REOD"
+			},
+			"contracts": [{
+					"tenor": "D01",
+					"properties": {
+						"absolute": "2022D0606",
+						"expiry": "2022-06-05T00:00:00.000Z",
+						"start": "2022-06-06T00:00:00.000Z",
+						"end": "2022-06-06T00:00:00.000Z"
+					},
+					"value": 167.63
+				}
+			]
+		},
+		"_type": "#Electricity"
+	}, {
+		"_id": "#CLALIT.AMF.AVGAUC.WP",
+		"CURVE": {
+			"_id": "CURVE",
+			"_type": "VarCurve",
+			"ondate": {
+				"curveDate": "2022-05-17"
+			},
+			"contracts": [{
+					"tenor": "M01",
+					"properties": {
+						"absolute": "2022M06",
+						"expiry": "2022-05-31T00:00:00.000Z",
+						"start": "2022-06-01T00:00:00.000Z",
+						"end": "2022-06-30T00:00:00.000Z"
+					},
+					"value": 6.019
+				}, {
+					"tenor": "M02",
+					"properties": {
+						"absolute": "2022M07",
+						"expiry": "2022-06-30T00:00:00.000Z",
+						"start": "2022-07-01T00:00:00.000Z",
+						"end": "2022-07-31T00:00:00.000Z"
+					},
+					"value": 6.036
+				}, {
+					"tenor": "M03",
+					"properties": {
+						"absolute": "2022M08",
+						"expiry": "2022-07-31T00:00:00.000Z",
+						"start": "2022-08-01T00:00:00.000Z",
+						"end": "2022-08-31T00:00:00.000Z"
+					},
+					"value": 6.091
+				}, {
+					"tenor": "M04",
+					"properties": {
+						"absolute": "2022M09",
+						"expiry": "2022-08-31T00:00:00.000Z",
+						"start": "2022-09-01T00:00:00.000Z",
+						"end": "2022-09-30T00:00:00.000Z"
+					},
+					"value": 6.072
+				}, {
+					"tenor": "M05",
+					"properties": {
+						"absolute": "2022M10",
+						"expiry": "2022-09-30T00:00:00.000Z",
+						"start": "2022-10-01T00:00:00.000Z",
+						"end": "2022-10-31T00:00:00.000Z"
+					},
+					"value": 6.092
+				}, {
+					"tenor": "M06",
+					"properties": {
+						"absolute": "2022M11",
+						"expiry": "2022-10-31T00:00:00.000Z",
+						"start": "2022-11-01T00:00:00.000Z",
+						"end": "2022-11-30T00:00:00.000Z"
+					},
+					"value": 6.044
+				}
+			]
+		},
+		"_type": "#ForwardCurve"
+	}
+]

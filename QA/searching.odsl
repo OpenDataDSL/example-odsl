@@ -4,15 +4,16 @@ print "**************************************************************"
 
 // use production
 // loadTypes()
+use test
 
 
 // Data ranges
 yesterday = ${date:"yesterday"}
-// data = find profile SPOT for ${date:"yesterday"} from ${object:public} where _id == "#ECB_FX.EURZAR"
-// data = find profile SPOT for yesterday from ${object:public} where _id == "#ECB_FX.EURZAR"
-// data = find profile SPOT for last(3) from ${object:public} where _id == "#ECB_FX.EURZAR"
-// data = find profile SPOT for from(${date:"yesterday"}) from ${object:public} where _id == "#ECB_FX.EURZAR"
-// data = find profile SPOT for between(${date:"yesterday"},"2021-12-31") from ${object:public} where _id == "#ECB_FX.EURZAR"
+data = find profile SPOT for ${date:"yesterday"} from ${object:public} where _id == "#ECB_FX.EURZAR"
+data = find profile SPOT for yesterday from ${object:public} where _id == "#ECB_FX.EURZAR"
+data = find profile SPOT for last(3) from ${object:public} where _id == "#ECB_FX.EURZAR"
+data = find profile SPOT for from(${date:"yesterday"}) from ${object:public} where _id == "#ECB_FX.EURZAR"
+data = find profile SPOT for between(${date:"yesterday"},"2021-12-31") from ${object:public} where _id == "#ECB_FX.EURZAR"
 
 data = find profile SPOT for yesterday from ${object:public} where dataset == "ECB_FX"
 print json(data)

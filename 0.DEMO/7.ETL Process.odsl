@@ -1,5 +1,5 @@
+// Create a generic xml data loader workflow
 xml_data_loader = workflow in "data-loaders"
-    // Extract the FX XML file from ECB, transform it and load it to the HUB
     in url as Scalar
     in tx as Scalar
     out batch as Batch
@@ -8,12 +8,12 @@ xml_data_loader = workflow in "data-loaders"
         "ok" -> getxml
     end
 
-    phase "EXTRACT"
+    phase "EXTRACT" retries 4 delay 15 minutes then reschedule 30 minutes
         WF_ACTION getxml ai
             "ok" -> transformxml
             "failed" -> stopfailed
             ai.url = input.url
-            result = ${action:private/"xml_url"}.run(ai, output)    
+            result = ${action:"xml_url"}.run(ai, output)    
         end
     end
 
@@ -21,9 +21,9 @@ xml_data_loader = workflow in "data-loaders"
         WF_ACTION transformxml ai
             "ok" -> sendbatch
             "failed" -> stopfailed
-            ai.data = output.xml_url.xml
+            ai.data = output.getxml.xml
             ai.tx = input.tx
-            result = ${action:private/"transform_data"}.run(ai, output)
+            result = ${action:"transform_data"}.run(ai, output)
         end
     end
 
@@ -31,9 +31,12 @@ xml_data_loader = workflow in "data-loaders"
         WF_ACTION sendbatch ai
             "ok" -> stopok
             "failed" -> stopfailed
-            ai.batch = output.transform_data.batch
-            result = ${action:private/"send_batch"}.run(ai, output)
+            ai.batch = output.transformxml.batch
+            result = ${action:"send_batch"}.run(ai, output)
         end
+    end
+
+    phase "LOAD" external
     end
 
     WF_EVENT stopok as "success"
@@ -46,12 +49,13 @@ xml_data_loader = workflow in "data-loaders"
 end
 save ${workflow:private/xml_data_loader}
 
+// Create a process to configure the workflow to load ECB FX data and run as a scheduled job
 process = Process()
 process.service = "ETL"
 process.name = "ECB_FX_WORKFLOW"
 process.description = "ETL Process for ECB_FX"
 process.enabled = true
-process.workflow = "public/xml_data_loader"
+process.workflow = "xml_data_loader"
 process.input.url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
 process.input.tx = "ECB_FX"
 process.cron = "0 17 ? * MON,TUE,WED,THU,FRI *"

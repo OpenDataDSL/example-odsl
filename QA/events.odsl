@@ -1,0 +1,22 @@
+// Create some event types
+
+#EVENT = type
+    eventtime as date() sort 1
+    eventstart as date() sort 2
+    eventend as date() sort 3
+end
+#EVENT.event = true
+save ${type:#EVENT}
+
+#UMM = type
+    quantity as number()
+    area as dimension()
+    type as dimension()
+    reasonCode as dimension()
+    reasonDesc as string()
+    generationUnit as string()
+    generationUnitName as string()
+    locationName as string()
+end
+#UMM.event = true
+save ${type:#UMM}

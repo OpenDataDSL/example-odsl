@@ -1,0 +1,47 @@
+print "**************************************************************"
+print "*********************** Searching Test ***********************"
+print "**************************************************************"
+
+// use production
+// loadTypes()
+use test
+
+
+
+
+// Data ranges
+yesterday = ${date:"yesterday"}
+data = find profile SPOT for ${date:"yesterday"} from ${object} where _id == "TS_TEST"
+data = find profile SPOT for yesterday from ${object} where _id == "TS_TEST"
+data = find profile SPOT for last(3) from ${object} where _id == "TS_TEST"
+data = find profile SPOT for from(${date:"yesterday"}) from ${object} where _id == "TS_TEST"
+data = find profile SPOT for between(${date:"yesterday"},"2021-12-31") from ${object} where _id == "TS_TEST"
+
+// Data in get query
+data = ${data:"TS_TEST:SPOT"} for ${date:"yesterday"}
+data = ${data:"TS_TEST:SPOT"} for yesterday
+data = ${data:"TS_TEST:SPOT"} for last(3)
+data = ${data:"TS_TEST:SPOT"} for from(yesterday)
+data = ${data:"TS_TEST:SPOT"} for between("2021-05-01",yesterday)
+
+// Audit
+services = find unique service from ${audit}
+print services
+records = find ${audit}
+records = find ${audit} where timestamp > "2020-11-03T12:23:40"
+records = find ${audit} where timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+print records.size
+
+sr = find ${audit} where service == "calendar"
+
+print ${date:"today"}
+print ${date:"tomorrow"}
+records = find ${audit} where timestamp > ${date:"today"} and timestamp < ${date:"tomorrow"}
+print records.size
+
+// Calendars
+loadCalendars()
+calendars = find ${calendar}
+pcalendars = find ${calendar:public}
+
+print "Completed Searching"

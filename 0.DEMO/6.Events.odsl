@@ -1,0 +1,36 @@
+//#region Create some events
+evtemp = Event(${date:"now"})
+evtemp.eventtype = "#SENSOR_VALUE"
+evtemp.type = "temperature"
+evtemp.value = 14
+evtemp.id = ObjectId()
+evhum = Event(${date:"now"})
+evhum.eventtype = "#SENSOR_VALUE"
+evhum.type = "humidity"
+evhum.value = 25
+evhum.id = ObjectId()
+s9754 = ${object:"s9754"}
+s9754.MESSAGE = [evtemp, evhum]
+save ${object:s9754}
+//#endregion
+
+
+//#region Create an event Timeseries
+ets = EventTimeSeries("s9754:MESSAGE", "value")
+ets.filter = '{type:"temperature"}'
+ets.calendar = Calendar("HOURLY")
+ts = ets.build()
+print json(ts)
+//#endregion
+
+//#region Save the EventTimeSeries
+s9754 = ${object:"s9754"}
+s9754.TEMP = EventTimeSeries("s9754:MESSAGE", "value")
+s9754.TEMP.filter = '{type:"temperature"}'
+s9754.TEMPH = EventTimeSeries("s9754:MESSAGE", "value")
+s9754.TEMPH.filter = '{type:"temperature"}'
+s9754.TEMPH.calendar = Calendar("DAILY")
+s9754.HUM = EventTimeSeries("s9754:MESSAGE", "value")
+s9754.HUM.filter = '{type:"humidity"}'
+save ${object:s9754}
+//#endregion

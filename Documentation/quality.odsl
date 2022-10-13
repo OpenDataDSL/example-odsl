@@ -1,0 +1,27 @@
+//#region 
+sensor = type
+    name as String() not null
+    temperature as timeseries()
+    humidity as timeseries()
+end
+save ${type:sensor}
+//#endregion
+
+//#region 
+sensor = type
+    type as String() not null
+    name as String() default ${object:"sensor_metadata"}[type].name
+end
+
+//#endregion
+
+//#region 
+sensor = type
+    type as String() not null
+    name as String() not null
+    zip as String() not null
+
+    constraint zip_valid check mark (zip matches "^\d{5}(-\d{4})?$")
+end
+
+//#endregion

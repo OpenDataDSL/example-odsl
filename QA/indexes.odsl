@@ -28,7 +28,6 @@ ix = Index()
 ix.objectType = "ixtest"
 ix.name = "test"
 ix.keys.name = 1
-ix.unique = true
 save ${index:ix}
 
 print "Creating spatial index"

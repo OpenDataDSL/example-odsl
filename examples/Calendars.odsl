@@ -1,3 +1,11 @@
+//#region 
+#SPARSE = Calendar("SPARSE")
+#SPARSE.id = "#SPARSE"
+save ${calendar:#SPARSE}
+
+//#endregion
+
+
 WC = WeeklyCalendar("Tuesday")
 save ${calendar: WC}
 

@@ -7,5 +7,5 @@ print json(ts1)
 ts1 = TimeSeries("BUSINESS")
 ts1.add("2021-01-01", 21.5)
 ts1["2021-01-01"].status.quality = "Valid"
-ts1["2021-01-01"].status.quality.info = "Tested for missing and spikes"
+ts1["2021-01-01"].status.qualityInfo = "Tested for missing and spikes"
 print json(ts1)

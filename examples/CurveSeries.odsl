@@ -1,0 +1,6 @@
+
+o = ${object:"EXAMPLE01"}
+print o
+
+// cs = ${data:"MINIMAL:CURVESERIES:2022-09-28"}
+// print cs

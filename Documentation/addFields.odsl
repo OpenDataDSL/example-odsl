@@ -1,0 +1,57 @@
+//#region 2 addFields
+// Create a new collection in the private database called scores and add 2 documents
+o1 = object as #Object
+    student = "Maya"
+    homework = [ 10, 5, 10 ]
+    quiz = [ 10, 8 ]
+    extraCredit = 0
+end
+o1.id = 1
+save ${object:"scores"/o1}
+
+o2 = object as #Object
+    student = "Ryan"
+    homework = [ 5, 6, 5 ]
+    quiz = [ 8, 8 ]
+    extraCredit = 8
+end
+o2.id = 2
+save ${object:"scores"/o2}
+
+// Use 2 addFields operations to include 3 new fields in the output documents
+aggregate ${object:"scores"}
+    addFields totalHomework = sum("$homework"), totalQuiz = sum("$quiz")
+    addFields totalScore=add("$totalHomework","$totalQuiz","$extraCredit")
+end
+
+//#endregion
+
+//#region 
+json = `
+[
+      { _id: 1, type: "car", specs: { doors: 4, wheels: 4 } },
+      { _id: 2, type: "motorcycle", specs: { doors: 0, wheels: 2 } },
+      { _id: 3, type: "jet ski" }
+   ] 
+`
+objects = ${json:json}
+save ${object:"vehicles"/objects}
+
+aggregate ${object:"vehicles"}
+    addFields "specs.fuel_type"="unleaded" 
+end
+//#endregion
+
+//#region 
+aggregate ${object:"vehicles"}
+    match _id=1
+    addFields type="Motor Car" 
+end
+//#endregion
+
+//#region 
+aggregate ${object:"scores"}
+    match _id=1
+    addFields homework=concatArrays("$homework", [7]) 
+end
+//#endregion

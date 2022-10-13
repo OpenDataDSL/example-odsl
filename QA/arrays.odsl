@@ -1,0 +1,91 @@
+print "**************************************************************"
+print "*********************** Arrays Test **************************"
+print "**************************************************************"
+
+use test
+
+print "> Basic Arrays"
+numbers = [1,3,5,7,9]
+strings = ["a", "b", "f", "d", "a", "d", "b"]
+dates = [Date("2022-01-01"), Date("2022-02-01"), Date("2022-03-01")]
+
+assertTrue(numbers[0] == 1)
+assertTrue(strings[0] == "a")
+assertTrue(dates[0] == Date("2022-01-01"))
+assertTrue(dates[0] == "2022-01-01")
+
+assertEquals(5, numbers.size)
+assertEquals(7, strings.size)
+
+print "> Var indexing"
+i = 0
+assertTrue(numbers[i] == 1)
+assertTrue(strings[i] == "a")
+assertTrue(dates[i] == Date("2022-01-01"))
+assertTrue(dates[i] == "2022-01-01")
+assertTrue(strings[numbers[i]] == "b")
+
+print "> Looping arrays"
+for i=0 to numbers.size-1
+    assertEquals((i * 2) + 1, numbers[i])
+next
+
+i=0
+for num in numbers
+    assertEquals((i * 2) + 1, num)
+    i = i + 1
+next
+
+print "> Nested Arrays"
+nest1 = [numbers, strings]
+assertTrue(nest1[0][0] == 1)
+
+
+print "> Objects as Arrays"
+obj = Object()
+obj.a = "Apple"
+obj.b = "Bear"
+obj.c = "Cat"
+obj.d = "Dog"
+
+assertTrue(obj["a"] == "Apple")
+assertTrue(obj[nest1[1][0]] == "Apple")
+
+print "> Timeseries as Arrays"
+ts = TimeSeries("2022-09-01", "DAILY", 1)
+ts.addValue(2)
+ts.addValue(3)
+ts.addValue(4)
+ts.addValue(5)
+
+assertEquals(1, ts[0].value)
+assertEquals(3, ts["2022-09-03"].value)
+assertEquals(3, ts[Date("2022-09-03")].value)
+
+
+print "> Curves as Arrays"
+expiry = ExpiryCalendar(BusinessCalendar())
+expiry.addRule("go back 1 day using calendar")
+
+ondate = CurveDate(Date("2020-12-01"), expiry)
+c1 = Curve(ondate)
+
+c1.add(Contract(ondate, "2021M01", 12.5))
+c1.add(Contract(ondate, "2021M02", 12.75))
+c1.add(Contract(ondate, "2021M03", 13.0))
+c1.add(Contract(ondate, "2021M04", 13.5))
+c1.add(Contract(ondate, "2021Q01", 12.75))
+c1.add(Contract(ondate, "2021Q02", 13.25))
+c1.add(Contract(ondate, "2021Q03", 13.75))
+c1.add(Contract(ondate, "2021Y", 13.5))
+c1.add(Contract(ondate, "2022Y", 14))
+
+assertEquals(12.5, c1["M01"].value)
+assertEquals(12.75, c1["2021Q01"].value)
+assertEquals(13.5, c1[3].value)
+
+
+
+print "**************************************************************"
+print "*********************** Arrays Test Passed! ******************"
+print "**************************************************************"

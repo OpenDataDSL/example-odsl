@@ -1,0 +1,55 @@
+/*
+ * Data Discovery
+ */
+//#region A sample document
+find top 1 from ${object:"m101:sample_training.zips"}
+//#endregion
+
+//#region A distinct list of values for a field
+find unique state ${object:"m101:sample_training.zips"} 
+//#endregion
+
+//#region A detailed list of values for a field
+find info state ${object:"m101:sample_training.zips"} 
+//#endregion
+
+//#region 
+find ${object:"m101:sample_training.zips"} where state='DE'
+//#endregion
+
+/*
+ * Create a data model using a type
+ */
+//#region 
+zips = type
+    city as Dimension()
+    state as Dimension()
+    zip as Number()
+    pop as Dimension(Number) bucket buckets 10
+end
+zips.id = "m101:sample_training.zips"
+save ${type:zips}
+//#endregion
+
+//#region 
+find info pop ${object:"m101:sample_training.zips"}
+//#endregion
+
+//#region A detailed list of values for a field
+info = find info pop ${object:"m101:sample_training.zips"} 
+print info[0]
+find top 1 ${object:"m101:sample_training.zips"} where info[0].filter
+//#endregion
+
+//#region 
+sensor = type
+    name as String() not null
+    temperature as timeseries()
+    humidity as timeseries()
+end
+save ${type:sensor}
+//#endregion
+
+//#region 
+print ${type:"sensor"}
+//#endregion

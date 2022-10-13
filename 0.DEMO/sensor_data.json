@@ -1,0 +1,15 @@
+{
+    "time": "2022-10-07T14:30:00",
+    "sensors": [
+        {
+            "id": "s9754",
+            "temperature": 10.5,
+            "humidity": 32
+        },
+        {
+            "id": "s9879",
+            "temperature": 12.5,
+            "humidity": 22
+        }
+    ]
+}

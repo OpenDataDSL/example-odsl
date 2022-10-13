@@ -1,0 +1,6 @@
+// Create an event time series
+UMM_SPARSE = EventTimeSeries("#AEMO.EL.AU.OUTAGES.WPGENER.MUJA_G7:UMM", "exAnte")
+
+AEMO = ${object:"#AEMO.EL.AU.OUTAGES.WPGENER.MUJA_G7"}
+AEMO.UMM_SPARSE = UMM_SPARSE
+save ${object:AEMO}

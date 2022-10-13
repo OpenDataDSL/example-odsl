@@ -128,3 +128,12 @@ events = find ${event} where event = "HYLEN:COMMENTS"
 print events
 
 //#endregion
+
+//#region 
+#SENSOR_VALUE = type
+    type as dimension() sort 4
+    value as Number() sort 5
+end
+#SENSOR_VALUE.event = true
+save ${type:#SENSOR_VALUE}
+//#endregion

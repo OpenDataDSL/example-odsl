@@ -77,3 +77,7 @@ assertEquals("FX", array[cat=="FX"][0].tags[0])
 assertEquals("AG", array[cat=="AG"][0].tags[0])
 assertEquals("AGS", array[cat=="AG"][0].tags[1])
 
+
+print "*************************************************************"
+print "*********************** Syntax Test Complete ****************"
+print "*************************************************************"

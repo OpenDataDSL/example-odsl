@@ -16,4 +16,6 @@ assertTrue("90210" matches "^\d{5}(-\d{4})?$")
 assertTrue("90210-1045" matches "^\d{5}(-\d{4})?$")
 assertFalse("90210-ZIP" matches "^\d{5}(-\d{4})?$")
 
-
+print "> operator precedence"
+assertEquals(5, 2 * 2 + 1)
+assertEquals(5, 1 + 2 * 2)

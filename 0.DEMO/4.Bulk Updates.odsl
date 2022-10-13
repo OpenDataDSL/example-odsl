@@ -1,0 +1,76 @@
+//#region 
+update ${object:"bulk"}
+    set(name="test",type="real")
+    set(description=Hello)
+    inc(count=1,test=5)    
+    rename(temp="real")
+    unset(test)    
+end
+update ${object:"bulk"}
+    addFields status="Modified", comments=["$misc1", "$misc2"]
+    project misc1, misc2
+end
+update ${object:"bulk"} where _id=1 
+    currentDate(lastModified=true, "cancellation.date"={type:timestamp})
+    set("cancellation.reason"="user request", status="D")
+end
+
+update ${object:"bulk"} where _id=1 
+    set("lastModified"="$$NOW","cancellation"={date:"$$CLUSTER_TIME",reason:"user request"}, status="D")
+end
+
+update ${object:"bulk"} where _id=1 
+    min(lowScore=150)
+end
+
+update ${object:"bulk"} where _id=1 
+    mul(price=1.25,quantity=2)
+end
+
+update ${object:"bulk"} where _id=12 upsert
+    set(item="apple")
+    setOnInsert(defaultQty=100)
+end
+
+update ${object:"bulk"} where _id=1 
+    addToSet(letters=["c","d"])
+end
+
+update ${object:"bulk"} where _id=10
+    pop(scores=1)
+end
+
+update ${object:"bulk"} where _id=1
+    bit(expdata={"and":1})
+end
+//#endregion
+
+//#region 
+update ${object:"bulk"} where name="b4"
+    set(test="Hello World",count=1)
+end
+//#endregion
+
+//#region 
+update ${object:"bulk"} where name="b4"
+    log "Reason I updated it"
+    set(test="Hello Again")
+    inc(count=1)
+end
+//#endregion
+
+//#region 
+update ${object:"bulk"} where name="bc" upsert
+    set(item="apple")
+    setOnInsert(defaultQty=100)
+end
+//#endregion
+
+//#region 
+delete ${object:"bulk"} log "Delete bt" where name="bt"
+//#endregion
+
+//#region 
+delete ${object:"bulk"} log "Delete anything that starts with b" where name matches "b.*"
+//#endregion
+

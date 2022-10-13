@@ -4,24 +4,24 @@ print "**************************************************************"
 
 use test
 
-#SETTING = versioned type
+SETTING = versioned type
     name as String()
 end
-save ${type:#SETTING}
+save ${type:SETTING}
 
 print "Checking there are no settings"
-settings = find ${object} where #type == "#SETTING"
+settings = find ${object} where #type == "SETTING"
 assertEquals(0, settings.size, "There should be no settings")
 
 print "Create a setting"
-ABC_FACTOR = object as #SETTING
+ABC_FACTOR = object as SETTING
     name = "ABC_FACTOR"
     value = 1.234
 end
 save ${object:ABC_FACTOR}
 
 print "Checking there is 1 setting"
-settings = find ${object} where #type == "#SETTING"
+settings = find ${object} where #type == "SETTING"
 assertEquals(1, settings.size, "There should be 1 setting")
 
 print "Changing the setting value"
@@ -43,7 +43,7 @@ print "Rollback"
 delete ${object:"ABC_FACTOR"}
 test2 = ${object:"ABC_FACTOR"}
 assertEquals(1, test2.version.version, "Version should be 1")
-settings = find ${object} where #type == "#SETTING"
+settings = find ${object} where #type == "SETTING"
 assertEquals(1, settings.size, "There should be 1 setting")
 
 print "Changing the setting value"
@@ -52,6 +52,6 @@ save ${object:ABC_FACTOR}
 
 print "Delete All"
 delete ${object:"ABC_FACTOR":*}
-settings = find ${object} where #type == "#SETTING"
+settings = find ${object} where #type == "SETTING"
 assertEquals(0, settings.size, "There should be no settings")
 

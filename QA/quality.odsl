@@ -1,0 +1,51 @@
+print "**************************************************************"
+print "*********************** Quality Test *************************"
+print "**************************************************************"
+
+use test
+
+// Create a type
+QCTEST = type
+    TS1 as TimeSeries
+    constraint qc_ts1 check mark TS1 for missing
+end
+save ${type:QCTEST}
+
+// Create objects
+QC01 = object as QCTEST
+    TS1 = TimeSeries("2021-10-01", "BUSINESS", [12.5,12.6,12.7,12.8,12.9,NaN,13])
+end
+save ${object:QC01}
+QC02 = object as QCTEST
+    TS1 = TimeSeries("2021-10-01", "BUSINESS", [12.5,12.6,12.7,12.8,12.9,13.1,13])
+end
+save ${object:QC02}
+
+// Run a manual check
+test = check ${object:"QC01"}
+    TS1 for missing
+end
+print test
+
+// Iterate through a bunch of objects
+objects = find ${object} where _type="QCTEST"
+for o in objects
+    check o save
+next
+
+// QC01 should fail
+QC01 = ${object:"QC01"}
+assertEquals("FAILED", QC01.status.Quality)
+
+// QC02 should pass
+QC02 = ${object:"QC02"}
+assertEquals("VALID", QC02.status.Quality)
+
+// Add a quality check directly on a TimeSeries
+QC01.TS2 = TimeSeries("2021-10-01", "BUSINESS", [12.5,12.6,12.7,12.8,12.9,NaN,13])
+QC01.TS2.addCheck("missing")
+save ${object: QC01}
+
+print "**************************************************************"
+print "*********************** End Quality Test *********************"
+print "**************************************************************"

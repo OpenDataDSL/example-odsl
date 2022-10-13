@@ -128,7 +128,7 @@ print gn
 // Another example - more ODSL like
 mongodb = Point([73.98769,40.75734])
 gn = aggregate ${object:"m121:aggregations.nycFacilities"}
-    geoNear near=mongodb, distanceField="distanceFromMongoDB", spherical=true, query={"type":"Hospital"}
+    geoNear near=mongodb, distanceField="distanceFromMongoDB", spherical=true, query=doc(type="Hospital")
     project name, distanceFromMongoDB
     sort distanceFromMongoDB asc
     limit 3
@@ -337,7 +337,7 @@ print m
 m = aggregate ${object:"m121:aggregations.movies"}
     match "imdb.rating" > 0 and year >= 2010 and year <= 2015 and runtime >= 90
     unwind "$genres"
-    group _id={"year":"$year","genre":"$genres"}, average_rating=avg("$imdb.rating")
+    group _id=doc(year="$year",genre="$genres"), average_rating=avg("$imdb.rating")
     sort "_id.year" desc, "average_rating" desc
 end
 print m
@@ -384,7 +384,7 @@ print m
 m = aggregate ${object:"m121:aggregations.movies"}
     match "imdb.rating" > 0 and year >= 2010 and year <= 2015 and runtime >= 90
     unwind "$genres"
-    group _id={"year":"$year","genre":"$genres"}, average_rating=avg("$imdb.rating")
+    group _id=doc(year="$year",genre="$genres"), average_rating=avg("$imdb.rating")
     sort "_id.year" desc, "average_rating" desc
     group _id="$_id.year", genre=first("$_id.genre"), average_rating=first("$average_rating")
     sort _id desc

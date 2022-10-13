@@ -1,0 +1,48 @@
+//#region Create some meta data
+abc_metadata = object as #MetadataMapping
+    types = ["A","B","C"]
+    A = object as #Object
+        name = "Type A"
+    end
+    B = object as #Object
+        name = "Type B"
+    end
+    C = object as #Object
+        name = "Type C"
+    end
+end
+save ${object:abc_metadata}
+//#endregion
+
+//#region Create a type with constraints
+checker = type
+    name as String() not null
+    type as Dimension()
+    typeName as String() default ${object:"abc_metadata"}[type].name
+    year as Dimension(number) not null bucket boundaries [1980, 1990, 2000, 2010, 2020, 2030]
+    zip as String() not null
+    hl as String() not null
+    greeting as String() default "Hello " + name
+
+    constraint type_valid check (type in ${object:"abc_metadata"}.types)
+    constraint zip_valid check mark (zip matches "^\d{5}(-\d{4})?$")
+    constraint hl_valid check mark (hl in ["high","low"])
+end
+save ${type:checker}
+//#endregion
+
+//#region Add some invalid data
+check2 = object as checker
+    name = "Colin"
+    zip = "1"
+    year = 1965
+    hl = "test"
+    type = "C"
+end
+save ${object:check2}
+//#endregion
+
+//#region 
+c1 = ${object:"check2"}
+print c1.status
+//#endregion

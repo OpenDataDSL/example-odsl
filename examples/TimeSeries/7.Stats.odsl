@@ -1,0 +1,13 @@
+// Create a TimeSeries
+t1 = TimeSeries("DAILY")
+
+// Add some values
+values = []
+for i=0 to 100
+    values.add(i)
+next
+
+t1.add("2022-01-01", values)
+
+sma = sma(t1, 10)
+print sma

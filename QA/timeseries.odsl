@@ -2,6 +2,8 @@ print "**************************************************************"
 print "*********************** TimeSeries Test **********************"
 print "**************************************************************"
 
+use test
+
 ts = TimeSeries("SPARSE")
 
 // Add initial data
@@ -96,4 +98,8 @@ ts3 = ts1 + ts2
 assertEquals(23.5, ts3["2021-01-01"])
 assertNull(ts3["2021-01-04"])
 
+// Save some timeseries
+TS_TEST = Object()
+TS_TEST.SPOT = TimeSeries("2022-01-01", "BUSINESS", [1,2,3,4,5,6,7,8,9,10])
+save ${object:TS_TEST}
 

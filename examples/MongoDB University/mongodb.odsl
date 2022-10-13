@@ -3,6 +3,14 @@ companies = type
     category_code as Dimension()
     founded_year as Dimension(number) bucket buckets 5
     offices.city as Dimension()
+    permalink as String()
+    crunchbase_url as String()
+    homepage_url as String()
+    blog_url as String()
+    twitter_username as String()
+    number_of_employees as Number()
+    email_address as String()
+    phone_number as String()
 end
 companies.id = "m101:sample_training.companies"
 save ${type:companies}
@@ -34,6 +42,7 @@ shipwrecks = type
     depth as Dimension(number) bucket boundaries [-10, 0, 1, 5, 10, 100, 1000]
     feature_type as Dimension()
     watlev as Dimension()
+    coordinates as Geometry()
 end
 shipwrecks.id = "m101:sample_geospatial.shipwrecks"
 save ${type:shipwrecks}
@@ -48,6 +57,8 @@ print f
 zips = type
     city as Dimension()
     state as Dimension()
+    zip as Number()
+    pop as Number() bucket buckets 10
 end
 zips.id = "m101:sample_training.zips"
 save ${type:zips}
@@ -72,7 +83,11 @@ print f
 //#endregion
 
 //#region 
+
+
 movies = type
+    title as Name()
+    plot as Description()
     cast as Dimension()
     countries as Dimension()
     genres as Dimension()
@@ -80,7 +95,10 @@ movies = type
     tomatoes.viewer.rating as Dimension(number)
     rated as Dimension()
     year as Dimension(number) bucket buckets 10
+    released as Date()
 end
+
+
 movies.id = "m121:aggregations.movies"
 save ${type:movies}
 //#endregion
@@ -88,4 +106,15 @@ save ${type:movies}
 //#region 
 f=find top 1 ${object:"m121:aggregations.movies"} 
 print f
+//#endregion
+
+//#region 
+t=type
+    team as Dimension()
+    gender as Dimension()
+    employee_grade as Dimension(Number)
+    acl as Dimension()
+end
+t.id="m121:aggregations.employees"
+save ${type:t}
 //#endregion

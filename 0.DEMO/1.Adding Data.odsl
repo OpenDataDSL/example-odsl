@@ -1,0 +1,89 @@
+//#region Create an object from a type
+s9755 = object as sensor    
+    name = "Chelmsford"
+    temperature = TimeSeries("2022-10-13T09:30:27", "SPARSE", 12)
+    humidity = TimeSeries("2022-10-13T09:30:27", "SPARSE", 18)
+end
+save ${object:s9755}
+//#endregion
+
+//#region Create an object
+s9879 = Object()
+s9879._type = "sensor"
+s9879.name = "Crawley"
+save ${object:s9879}
+//#endregion
+
+//#region Create from json
+json = `{
+            "time":"2022-10-03T11:30:00",
+            "sensors":[
+                {"id":"s9754", "temperature":15.5,"humidity":33},
+                {"id":"s9879", "temperature":14.5,"humidity":19}
+            ]
+        }`
+input = ${json:json}
+
+tx = transform input into sensor as var
+    create with sensors
+    unique id = var.id
+    temperature = TimeSeries(input.time, "SPARSE", var.temperature)
+    humidity = TimeSeries(input.time, "SPARSE", var.humidity)
+end
+result = tx.run(input)
+print result
+save ${object:result}
+//#endregion
+
+// Run separately
+//#region Create a transformer
+sensor_tx = transform input into sensor as var
+    create with sensors
+    unique id = var.id
+    temperature = TimeSeries(input.time, "SPARSE", var.temperature)
+    humidity = TimeSeries(input.time, "SPARSE", var.humidity)
+end
+save ${transformer:sensor_tx}
+//#endregion
+
+//#region Create from json
+input = ${file:"/src/example-odsl/0.DEMO/sensor_data.json"}
+result = ${transformer:"sensor_tx"}.run(input)
+print result
+save ${object:result}
+//#endregion
+
+//#region Display the sensor data
+s = ${data:"s9754:temperature"}
+print s
+//#endregion
+
+//#region Find all the sensors
+sensors = find ${object:"private"} where _type="sensor"
+for s in sensors
+    print s.id + " : " + s.name
+next
+//#endregion
+
+//#region Delete all the sensors
+sensors = find ${object:"private"} where _type="sensor"
+for s in sensors
+    delete ${object:s.id}
+next
+//#endregion
+
+//#region Save to our own collection
+s9797 = object as sensor
+    name = "Bromley"
+    temperature = TimeSeries("2022-10-03T09:30:27", "SPARSE", 15)
+    humidity = TimeSeries("2022-10-03T09:30:27", "SPARSE", 32)
+end
+save ${object:"sensors"/s9797}
+//#endregion
+
+//#region Find in our own collection
+// find ${object:"sensors"}
+
+item = ${object:"sensors"/"s9797"}
+print item
+//#endregion

@@ -1,0 +1,28 @@
+//#region 
+find top 1 from ${object:"m101:sample_guides.planets"}
+
+json=`{
+  "hasRings": false,
+  "mainAtmosphere": [],
+  "name": "ODSL",
+  "orderFromSun": 1,
+  "surfaceTemperatureC": {
+    "max": 40,
+    "mean": 30,
+    "min": 20
+  }
+}`
+odsl = ${json:json}
+odsl.id = null
+save ${object:"m101:sample_guides.planets"/odsl}
+
+//#endregion
+
+//#region 
+find ${object:"m101:sample_guides.planets"} where name="ODSL"
+//#endregion
+
+//#region 
+delete ${object:"m101:sample_guides.planets"} where name="ODSL"
+
+//#endregion

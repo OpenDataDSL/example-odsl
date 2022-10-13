@@ -70,28 +70,79 @@ delete ${type:"Person"} log "Rolled back to version 2"
 test = ${type:"Person"}
 assertEquals(2, test.version.version)
 
-print "> Constraints"
+//#region Constraints
+use test
+
 address = type
-    name as String()
+    name as String() not null
+    type as Dimension()
+    typeName as String() default ${object:"abc_metadata"}[type].name
+    year as Dimension(number) not null bucket boundaries [1980, 1990, 2000, 2010, 2020, 2030]
     zip as String() not null
-    hl as String() not null
-    ts as Timeseries()
+    hl as String() not null default "low"
+    greeting as String() default "Hello " + name
+    OPEN as Timeseries() group "prices"
+    HIGH as Timeseries() group "prices"
+    LOW as Timeseries() group "prices"
+    CLOSE as Timeseries() group "prices"
     dur as Duration()
-    category as Dimension(date)
-    constraint zip_value check mark (zip matches "^\d{5}(-\d{4})?$")
-    constraint hl_value check mark (hl in ["high","low"])
+    category as Dimension()
+
+    constraint type_valid check (type in ${object:"abc_metadata"}.types)
+    constraint zip_valid check mark (zip matches "^\d{5}(-\d{4})?$")
+    constraint hl_valid check mark (hl in ["high","low"])
     constraint zip_index unique (zip,hl)
 end
 save ${type:address}
 
+metadata = type
+    types as List()
+end
+save ${type:metadata}
+metaitem = type
+    name as String()
+end
+save ${type:metadata}
+save ${type:metaitem}
+
+abc_metadata = object as metadata
+    types = ["A","B","C"]
+    A = object as metaitem
+        name = "Type A"
+    end
+    B = object as metaitem
+        name = "Type B"
+    end
+    C = object as metaitem
+        name = "Type C"
+    end
+end
+save ${object:abc_metadata}
+
 adread = ${type:"address"}
-print adread
+// print adread
 
 walkfares = object as address
+    name = "Walkfares"
     zip = "50210d"
-    hl = "hello"
+    year = 1995
+    type = "C"
 end
+walkfares.ts = TimeSeries("BUSINESS")
 
-walkfares.category = "2022-09-01"
 walkfares.checkConstraints()
 print walkfares
+//#endregion
+
+
+
+address = type
+    name as String() not null
+    type as Dimension()
+    typeName as String() default ${object:"abc_metadata"}[type].name
+    zip as String() not null
+
+    constraint type_valid check (type in ${object:"abc_metadata"}.types)
+    constraint zip_valid check mark (zip matches "^\d{5}(-\d{4})?$")
+end
+
